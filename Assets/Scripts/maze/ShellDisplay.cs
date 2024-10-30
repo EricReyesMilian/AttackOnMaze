@@ -1,0 +1,65 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+public class ShellDisplay : MonoBehaviour
+{
+    Image img_shell;
+
+    public Shell shell;
+    public Sprite default_sprite;
+
+    public Color obstacule_color = Color.gray;
+    public Color default_color = Color.white;
+    public Color reach_color;
+    public int distToShell = -5;
+    public TextMeshProUGUI num;
+    public TextMeshProUGUI cordText;
+
+    public Color player_color = Color.yellow;
+    void Start()
+    {
+        img_shell = GetComponent<Image>();
+        shell.obstacule = true;
+
+    }
+    void Update()
+    {
+        num.text = distToShell + "";
+        cordText.text = shell.coord + "";
+        if (shell.reach)
+        {
+            img_shell.color = reach_color;
+
+        }
+        if (shell.obstacule)
+        {
+            img_shell.color = obstacule_color;
+        }
+        if (shell.hasAplayer)
+        {
+            img_shell.sprite = shell.player.sprite;
+            img_shell.color = Color.white;
+
+        }
+        else
+        {
+            img_shell.sprite = default_sprite;
+        }
+        if (!(shell.hasAplayer || shell.obstacule || shell.reach))
+        {
+            img_shell.color = default_color;
+        }
+    }
+    public void Click()
+    {
+        print("click!");
+        GameManeger.gameManeger.MoveplayerTo(shell.coord);
+    }
+    public void Hover()
+    {
+        print("hover");
+
+    }
+}
