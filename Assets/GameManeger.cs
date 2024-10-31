@@ -8,10 +8,13 @@ public class GameManeger : MonoBehaviour
 
     public int n;
     public int playersCount;
+    [HideInInspector]
     public bool shellLoaded;
     public GameObject shellsContainer;
+
+    public CreateBoard createBoard;
     public List<List<Shell>> matriz = new List<List<Shell>>();
-    public PlayerManeger playerTurn;
+    public List<List<int>> distancia = new List<List<int>>();
 
     //turno
     int turn = 0;
@@ -20,21 +23,16 @@ public class GameManeger : MonoBehaviour
     [HideInInspector]
     public List<PlayerManeger> players = new List<PlayerManeger>();
 
-    public GameObject playerStatPrefb;
-    public GameObject playerManegerPrefbWrapper;
+
 
     public List<player> player_Scriptable = new List<player>();
 
     public int shellLimit;
     int shellsAmount = 0;
-    public List<List<int>> distancia = new List<List<int>>();
 
-    int dir = 3;
 
     public int currentSpeed;
 
-    [Range(1, 5)]
-    public int complexity;
     public List<Vector2> wayToPoint;
 
     private void Awake()
@@ -61,16 +59,11 @@ public class GameManeger : MonoBehaviour
 
             print(players[i].nameC);
         }
-        for (int i = 0; i < players.Count; i++)
-        {
-            Instantiate(playerStatPrefb, Vector3.zero, Quaternion.identity, playerManegerPrefbWrapper.transform);
-            playerStatPrefb.GetComponent<playerStatUI>().index = i;
-        }
 
         //sets
         players[0].Pos = new Vector2(8, 7);
         players[1].Pos = new Vector2(8, 8);
-        currentSpeed = players[turn].speed;
+        currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
         CreateDist();
         ReachPointInMatriz();
     }
@@ -78,15 +71,12 @@ public class GameManeger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         //asignar turno
-        for (int i = 0; i < player_Scriptable.Count; i++)
+        for (int i = 0; i < players.Count; i++)
         {
             if (turn == i)
             {
                 players[i].isPlayerTurn = true;
-                playerTurn = players[i];
             }
             else
             {
@@ -94,33 +84,38 @@ public class GameManeger : MonoBehaviour
 
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            NextTurn();
-        }
-
         if (shellLoaded)
         {
             AddShellsToMatriz();
-
-            AddShellsToObjects();
             MatrizInit();
-
-            DrawMaze(15 * 15, 8, 7);
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
 
             shellLoaded = false;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        #region DebugInputs
+        if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
+        {
+            NextTurn();
+        }
+        if (Input.GetKeyDown(KeyCode.Space))//regenera el laberinto
         {
             MatrizInit();
-            DrawMaze(15 * 15, 8, 7);
-            DrawMaze(15 * 15, 8, 6);
-            DrawMaze(15 * 15, 7, 7);
-            DrawMaze(15 * 15, 6, 7);
-
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
 
         }
+        #endregion
+
+        FindPlayersOnMaze();
+        PositioningShells();
+        ReachPointInMatriz();
+        UpdateDisplayMatriz();
+    }
+
+    private void FindPlayersOnMaze()
+    {
         for (int p = 0; p < players.Count; p++)
         {
             for (int i = 0; i < n; i++)
@@ -143,15 +138,7 @@ public class GameManeger : MonoBehaviour
             }
 
         }
-
-
-        PositioningShells();
-        print(players[turn].Pos);
-        ReachPointInMatriz();
-
-        UpdateDisplayMatriz();
     }
-
     public void PositioningShells()
     {
         for (int p = 0; p < players.Count; p++)
@@ -173,16 +160,14 @@ public class GameManeger : MonoBehaviour
 
         }
 
-
-
     }
-
     private void UpdateDisplayMatriz()
     {
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
             {
+                shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().coord = matriz[i][j].coord;
                 shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().obstacule = matriz[i][j].obstacule;
                 shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().hasAplayer = matriz[i][j].hasAplayer;
                 shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().player = matriz[i][j].player;
@@ -192,7 +177,6 @@ public class GameManeger : MonoBehaviour
             }
         }
     }
-
     public void ReachPointInMatriz()
     {
         int speed = currentSpeed;
@@ -259,9 +243,6 @@ public class GameManeger : MonoBehaviour
                         if (distancia[(int)aux.x][(int)aux.y] < speed)
                             distancia[(int)(aux.x + Vector2.right.x)][(int)(aux.y + Vector2.right.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
 
-
-
-
                     }
 
 
@@ -274,7 +255,6 @@ public class GameManeger : MonoBehaviour
         }
 
     }
-
     private void MatrizInit()
     {
         for (int i = 0; i < n; i++)
@@ -283,163 +263,20 @@ public class GameManeger : MonoBehaviour
             {
                 matriz[i][j].obstacule = true;
                 UpdateDisplayMatriz();
-
-
-
             }
         }
         shellsAmount = 0;
-
-    }
-    public void DrawMaze(int obstaclesAmount, int i, int j)
-    {
-        Vector2 cord = new Vector2(i, j);
-        Queue<Vector2> queue = new Queue<Vector2>();
-        bool[,] visited = new bool[n, n];
-        queue.Enqueue(cord);
-        int a = 0;
-        while (obstaclesAmount > 0 && queue.Count > 0)
-        {
-            Vector2 aux = queue.Dequeue();
-
-            a++;
-
-            BreakObstaculeIn(aux);
-
-
-            obstaclesAmount--;
-
-            if (aux.x > 0)
-            {
-                if (dir != 0)
-                {
-                    int r = Random.Range(0, complexity);
-                    if (r == 0 || a == 1)
-                    {
-                        if (ObstaculeIn(aux + Vector2.left) && !isVisited(visited, aux + Vector2.left))
-                        {
-                            queue.Enqueue(aux + Vector2.left);
-                            VisitShell(visited, aux + Vector2.left);
-                            dir = 0;
-
-
-                        }
-
-                    }
-                    VisitShell(visited, aux + Vector2.left);
-
-                }
-                else if (ObstaculeIn(aux + Vector2.left) && !isVisited(visited, aux + Vector2.left))
-                {
-                    queue.Enqueue(aux + Vector2.left);
-                    VisitShell(visited, aux + Vector2.left);
-                    dir = 0;
-
-
-                }
-            }
-            if (aux.y > 0)
-            {
-                if (dir != 1 || a == 1)
-                {
-                    int r = Random.Range(0, complexity);
-                    if (r == 0 || a == 1)
-                    {
-                        if (ObstaculeIn(aux + Vector2.down) && !isVisited(visited, aux + Vector2.down))
-                        {
-                            queue.Enqueue(aux + Vector2.down);
-                            VisitShell(visited, aux + Vector2.down);
-                            dir = 1;
-
-                        }
-
-                    }
-                    VisitShell(visited, aux + Vector2.down);
-
-                }
-                else if (ObstaculeIn(aux + Vector2.down) && !isVisited(visited, aux + Vector2.down))
-                {
-                    queue.Enqueue(aux + Vector2.down);
-                    VisitShell(visited, aux + Vector2.down);
-                    dir = 1;
-
-                }
-
-            }
-            if (aux.y < n - 1)
-            {
-                if (dir != 2)
-                {
-                    int r = Random.Range(0, complexity);
-                    if (r == 0 || a == 1)
-                    {
-                        if (ObstaculeIn(aux + Vector2.up) && !isVisited(visited, aux + Vector2.up))
-                        {
-                            queue.Enqueue(aux + Vector2.up);
-                            VisitShell(visited, aux + Vector2.up);
-                            dir = 2;
-
-
-                        }
-                    }
-                    VisitShell(visited, aux + Vector2.up);
-
-                }
-                else
-                if (ObstaculeIn(aux + Vector2.up) && !isVisited(visited, aux + Vector2.up))
-                {
-                    queue.Enqueue(aux + Vector2.up);
-                    VisitShell(visited, aux + Vector2.up);
-                    dir = 2;
-
-
-                }
-            }
-
-            if (aux.x < n - 1)
-            {
-                if (dir != 3)
-                {
-                    int r = Random.Range(0, complexity);
-                    if (r == 0 || a == 1)
-                    {
-                        if (ObstaculeIn(aux + Vector2.right) && !isVisited(visited, aux + Vector2.right))
-                        {
-                            queue.Enqueue(aux + Vector2.right);
-                            VisitShell(visited, aux + Vector2.right);
-                            dir = 3;
-
-
-                        }
-                    }
-                    VisitShell(visited, aux + Vector2.right);
-
-                }
-                else
-                if (ObstaculeIn(aux + Vector2.right) && !isVisited(visited, aux + Vector2.right))
-                {
-                    queue.Enqueue(aux + Vector2.right);
-                    VisitShell(visited, aux + Vector2.right);
-                    dir = 3;
-
-
-                }
-            }
-
-
-        }
 
     }
     bool ComparePlayerPos(int i, int j, int p)
     {
         return i == players[p].positionOnBoard.x && j == players[p].positionOnBoard.y;
     }
-    bool isVisited(bool[,] visited, Vector2 cord)
+    public bool isVisited(bool[,] visited, Vector2 cord)
     {
         return visited[int.Parse(cord.x.ToString()), int.Parse(cord.y.ToString())];
-
     }
-    void VisitShell(bool[,] visited, Vector2 cord)
+    public void VisitShell(bool[,] visited, Vector2 cord)
     {
         visited[int.Parse(cord.x.ToString()), int.Parse(cord.y.ToString())] = true;
 
@@ -448,15 +285,13 @@ public class GameManeger : MonoBehaviour
     {
         turn += 1;
         if (turn > players.Count - 1)
-        {
             turn = 0;
-        }
-        SetDist();
 
+        SetDist();
         InitReachShell();
         currentSpeed = players[turn].speed;
     }
-    bool ObstaculeIn(Vector2 cord)
+    public bool ObstaculeIn(Vector2 cord)
     {
         return matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].obstacule;
 
@@ -465,27 +300,28 @@ public class GameManeger : MonoBehaviour
     bool PlayerIn(Vector2 cord)
     {
         return matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].hasAplayer;
-
     }
     void CreateObstaculeIn(Vector2 cord)
     {
-
         matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].obstacule = true;
-        UpdateDisplayMatriz();
-
-
     }
     public void BreakObstaculeIn(Vector2 cord)
     {
-        //  print(cord);
         matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].obstacule = false;
         shellsAmount++;
-
 
     }
     public void ColorReachShell(Vector2 cord)
     {
-        matriz[(int)cord.x][(int)cord.y].reach = true;
+        try
+        {
+            matriz[(int)cord.x][(int)cord.y].reach = true;
+
+        }
+        catch
+        {
+            print(cord);
+        }
 
     }
     public void InitReachShell()
@@ -510,7 +346,6 @@ public class GameManeger : MonoBehaviour
     }
     public void MoveplayerTo(Vector2 target)
     {
-        print("point");
         if (ReachPoint(target))
         {
             currentSpeed -= distancia[(int)target.x][(int)target.y];
@@ -529,7 +364,6 @@ public class GameManeger : MonoBehaviour
     }
     void SavePath(Vector2 target)
     {
-        //
         wayToPoint.Add(target);
         if (target != players[turn].Pos)
         {
@@ -594,6 +428,7 @@ public class GameManeger : MonoBehaviour
             }
         }
     }
+    //crea la matriz de distancia
     void CreateDist()
     {
         for (int i = 0; i < n; i++)
@@ -608,6 +443,7 @@ public class GameManeger : MonoBehaviour
             }
         }
     }
+    //asigna -1 a los valores de la matriz de distancia
     void SetDist()
     {
         for (int i = 0; i < n; i++)
@@ -621,16 +457,5 @@ public class GameManeger : MonoBehaviour
             }
         }
     }
-    void AddShellsToObjects()
-    {
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().coord = matriz[i][j].coord;
-                //shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<ShellDisplay>().shell = matriz[i][j];
 
-            }
-        }
-    }
 }
