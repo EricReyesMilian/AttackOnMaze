@@ -12,7 +12,7 @@ public class PlayerManeger : MonoBehaviour
     public int power;
     public Sprite img;
     public bool isPlayerTurn;
-
+    public Color color;
     public Vector2 Pos;
     // Start is called before the first frame update
     //
@@ -32,6 +32,6 @@ public class PlayerManeger : MonoBehaviour
         cooldown = play.cooldown;
         power = play.power;
         img = play.sprite;
-
+        color = play.color;
     }
 }

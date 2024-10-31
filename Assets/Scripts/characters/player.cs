@@ -8,7 +8,7 @@ public class player : ScriptableObject
     public int speed;
     public int cooldown;
     public int power;
-
+    public Color color;
     //las siguientes caracteristicas son para el apartado visual en 2d
     //recomendado eliminar para mas generalidad
     public Sprite sprite;

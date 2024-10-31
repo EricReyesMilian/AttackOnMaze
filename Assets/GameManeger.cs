@@ -17,7 +17,7 @@ public class GameManeger : MonoBehaviour
     public List<List<int>> distancia = new List<List<int>>();
 
     //turno
-    int turn = 0;
+    public int turn = 0;
     //
     //Lista de jugadores
     [HideInInspector]
@@ -364,14 +364,14 @@ public class GameManeger : MonoBehaviour
         {
             if (ReachPoint(target))
             {
-                StartCoroutine(ExampleCoroutineFunction(target));
+                StartCoroutine(MovePlayerCorutine(target));
             }
 
         }
     }
 
 
-    IEnumerator ExampleCoroutineFunction(Vector2 target)
+    IEnumerator MovePlayerCorutine(Vector2 target)
     {
         playingCorrutine = true;
         currentSpeed -= distancia[(int)target.x][(int)target.y];
@@ -414,7 +414,7 @@ public class GameManeger : MonoBehaviour
                         shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().visitedOnMove = false;
 
                         UpdateWay();
-                        if (w != wayToPoint.Count - 1)
+                        if (w < wayToPoint.Count - 1)
                             yield return new WaitForSeconds(0.1f); // Espera 0.1 segundos
 
 
@@ -445,9 +445,9 @@ public class GameManeger : MonoBehaviour
         wayToPoint.Clear();
 
         InitReachShell();
-        ReachPointInMatriz();
         playingCorrutine = false;
-        StopCoroutine(ExampleCoroutineFunction(target));
+        ReachPointInMatriz();
+        StopCoroutine(MovePlayerCorutine(target));
 
     }
 
@@ -458,7 +458,7 @@ public class GameManeger : MonoBehaviour
         if (target != players[turn].Pos)
         {
             bool taken = false;
-            if (target.y + 1 < n - 1 && !taken)
+            if (target.y + 1 < n && !taken)
             {
                 if (distancia[(int)target.x][(int)target.y + 1] - distancia[(int)target.x][(int)target.y] == -1)
                 {
@@ -476,7 +476,7 @@ public class GameManeger : MonoBehaviour
 
                 }
             }
-            if (target.x + 1 < n - 1 && !taken)
+            if (target.x + 1 < n && !taken)
             {
                 if (distancia[(int)target.x + 1][(int)target.y] - distancia[(int)target.x][(int)target.y] == -1)
                 {

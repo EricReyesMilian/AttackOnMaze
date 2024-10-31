@@ -18,7 +18,7 @@ public class ShellDisplay : MonoBehaviour
     public TextMeshProUGUI cordText;
 
     public Color player_color = Color.yellow;
-    Color visited_color = Color.red;
+    Color visited_color;
 
     void Start()
     {
@@ -31,7 +31,7 @@ public class ShellDisplay : MonoBehaviour
 
         num.text = distToShell + "";
         cordText.text = shell.coord + "";
-
+        visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
         if (shell.reach && !shell.visitedOnMove)
         {
             if (!GameManeger.gameManeger.runningBackwards)
