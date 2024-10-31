@@ -24,7 +24,8 @@ public class GameManeger : MonoBehaviour
     public List<PlayerManeger> players = new List<PlayerManeger>();
 
 
-
+    public bool playingCorrutine;
+    public bool runningBackwards;
     public List<player> player_Scriptable = new List<player>();
 
     public int shellLimit;
@@ -173,6 +174,19 @@ public class GameManeger : MonoBehaviour
                 shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().player = matriz[i][j].player;
                 shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().reach = matriz[i][j].reach;
                 shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<ShellDisplay>().distToShell = distancia[i][j];
+                shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<ShellDisplay>().DrawWay();
+
+            }
+        }
+    }
+    private void UpdateWay()
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (players[turn].Pos != new Vector2(i, j))
+                    shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<ShellDisplay>().DrawWay();
 
             }
         }
@@ -346,22 +360,98 @@ public class GameManeger : MonoBehaviour
     }
     public void MoveplayerTo(Vector2 target)
     {
-        if (ReachPoint(target))
+        if (!playingCorrutine)
         {
-            currentSpeed -= distancia[(int)target.x][(int)target.y];
-            wayToPoint.Clear();
-            SavePath(target);
-            wayToPoint.Reverse();
-            matriz[(int)players[turn].Pos.x][(int)players[turn].Pos.y].hasAplayer = false;
-
-
-            players[turn].Pos = target;
-            //restar current velocity
-            InitReachShell();
-            ReachPointInMatriz();
+            if (ReachPoint(target))
+            {
+                StartCoroutine(ExampleCoroutineFunction(target));
+            }
 
         }
     }
+
+
+    IEnumerator ExampleCoroutineFunction(Vector2 target)
+    {
+        playingCorrutine = true;
+        currentSpeed -= distancia[(int)target.x][(int)target.y];
+        wayToPoint.Clear();
+        SavePath(target);
+        wayToPoint.Reverse();
+        matriz[(int)players[turn].Pos.x][(int)players[turn].Pos.y].hasAplayer = false;
+
+        for (int w = 0; w < wayToPoint.Count; w++)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == wayToPoint[w].x && j == wayToPoint[w].y)
+                    {
+                        shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().visitedOnMove = true;
+                        players[turn].Pos = new Vector2(wayToPoint[w].x, wayToPoint[w].y);
+
+                        UpdateDisplayMatriz();
+                        if (w > 0)
+                            yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
+
+                    }
+
+                }
+
+            }
+
+        }
+        runningBackwards = true;
+        for (int w = 0; w < wayToPoint.Count; w++)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == wayToPoint[w].x && j == wayToPoint[w].y)
+                    {
+                        shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().visitedOnMove = false;
+
+                        UpdateWay();
+                        if (w != wayToPoint.Count - 1)
+                            yield return new WaitForSeconds(0.1f); // Espera 0.1 segundos
+
+
+                    }
+
+                }
+
+            }
+
+        }
+        runningBackwards = false;
+
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>().visitedOnMove = false;
+                UpdateDisplayMatriz();
+
+
+
+            }
+
+        }
+
+        //restar current velocity
+        wayToPoint.Clear();
+
+        InitReachShell();
+        ReachPointInMatriz();
+        playingCorrutine = false;
+        StopCoroutine(ExampleCoroutineFunction(target));
+
+    }
+
+
     void SavePath(Vector2 target)
     {
         wayToPoint.Add(target);

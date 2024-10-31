@@ -18,6 +18,8 @@ public class ShellDisplay : MonoBehaviour
     public TextMeshProUGUI cordText;
 
     public Color player_color = Color.yellow;
+    Color visited_color = Color.red;
+
     void Start()
     {
         img_shell = GetComponent<Image>();
@@ -26,11 +28,17 @@ public class ShellDisplay : MonoBehaviour
     }
     void Update()
     {
+
         num.text = distToShell + "";
         cordText.text = shell.coord + "";
-        if (shell.reach)
+
+        if (shell.reach && !shell.visitedOnMove)
         {
-            img_shell.color = reach_color;
+            if (!GameManeger.gameManeger.runningBackwards)
+                img_shell.color = reach_color;
+            else
+                img_shell.color = default_color;
+
 
         }
         if (shell.obstacule)
@@ -52,6 +60,13 @@ public class ShellDisplay : MonoBehaviour
             img_shell.color = default_color;
         }
     }
+    public void DrawWay()
+    {
+        if (shell.visitedOnMove)
+        {
+            img_shell.color = visited_color;
+        }
+    }
     public void Click()
     {
         print("click!");
@@ -59,7 +74,7 @@ public class ShellDisplay : MonoBehaviour
     }
     public void Hover()
     {
-        print("hover");
+        //print("hover");
 
     }
 }

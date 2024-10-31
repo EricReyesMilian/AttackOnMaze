@@ -9,6 +9,8 @@ public class Shell : MonoBehaviour
     public player player;
     public bool reach;
     public Vector2 coord;
+    public bool visitedOnMove;
+
 
     void Start()
     {
