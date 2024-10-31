@@ -90,13 +90,17 @@ public class GameManeger : MonoBehaviour
             AddShellsToMatriz();
             MatrizInit();
             createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
 
             shellLoaded = false;
         }
         #region DebugInputs
         if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
         {
-            NextTurn();
+            if (!playingCorrutine)
+                NextTurn();
         }
         if (Input.GetKeyDown(KeyCode.Space))//regenera el laberinto
         {

@@ -16,4 +16,5 @@ MonoBehaviour:
   speed: 3
   cooldown: 3
   power: 5
+  color: {r: 0.5647059, g: 0.68235296, b: 0.69411767, a: 1}
   sprite: {fileID: 21300000, guid: 619da97f1967a884995dfe94b39b01ee, type: 3}
