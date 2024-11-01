@@ -27,9 +27,9 @@ public class displayPlayerTurnInfo : MonoBehaviour
             {
                 portrait.sprite = GameManeger.gameManeger.players[i].img;
                 name_c.text = "" + GameManeger.gameManeger.players[i].nameC;
-                speed.text = "speed: " + GameManeger.gameManeger.players[i].speed;
+                speed.text = "speed: " + GameManeger.gameManeger.players[i].speed + "(" + GameManeger.gameManeger.currentSpeed + ")";
                 power.text = "power: " + GameManeger.gameManeger.players[i].power;
-                skill_Cooldown.text = "cooldown: " + GameManeger.gameManeger.players[i].Pos;
+                skill_Cooldown.text = "cooldown: " + GameManeger.gameManeger.players[i].cooldown;
             }
         }
 

@@ -7,7 +7,7 @@ public class StatOnSide : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < GameManeger.gameManeger.players.Count; i++)
+        for (int i = 0; i < GameManeger.gameManeger.player_Scriptable.Count; i++)
         {
             Instantiate(playerStatPrefb, Vector3.zero, Quaternion.identity, playerManegerPrefbWrapper.transform);
             playerStatPrefb.GetComponent<playerStatUI>().index = i;

@@ -15,7 +15,7 @@ public class GameManeger : MonoBehaviour
     public CreateBoard createBoard;
     public List<List<Shell>> matriz = new List<List<Shell>>();
     public List<List<int>> distancia = new List<List<int>>();
-
+    public Shell genericShell;
     //turno
     public int turn = 0;
     //
@@ -35,6 +35,7 @@ public class GameManeger : MonoBehaviour
     public int currentSpeed;
 
     public List<Vector2> wayToPoint;
+    public GameObject playerContainer;
 
     private void Awake()
     {
@@ -52,9 +53,17 @@ public class GameManeger : MonoBehaviour
     void Start()
     {
         //este metodo debe ser sustituido por los jugadores seleccionados
+        // for (int i = 0; i < player_Scriptable.Count; i++)
+        // {
+        //     players.Add(new PlayerManeger());
+        //     players[i].play = player_Scriptable[i];
+        //     players[i].InitStats();
+
+        //     print(players[i].nameC);
+        // }
         for (int i = 0; i < player_Scriptable.Count; i++)
         {
-            players.Add(new PlayerManeger());
+            players.Add(playerContainer.transform.GetChild(i).GetComponent<PlayerManeger>());
             players[i].play = player_Scriptable[i];
             players[i].InitStats();
 
@@ -268,9 +277,6 @@ public class GameManeger : MonoBehaviour
                 }
             }
 
-
-
-
         }
 
     }
@@ -334,7 +340,11 @@ public class GameManeger : MonoBehaviour
     {
         try
         {
-            matriz[(int)cord.x][(int)cord.y].reach = true;
+            if (!PlayerIn(cord))
+            {
+                matriz[(int)cord.x][(int)cord.y].reach = true;
+
+            }
 
         }
         catch
@@ -516,7 +526,7 @@ public class GameManeger : MonoBehaviour
 
             for (int j = 0; j < n; j++)
             {
-                matriz[i].Add(new Shell());
+                matriz[i].Add(shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<Shell>());
                 matriz[i][j].coord = new Vector2(i, j);
 
 

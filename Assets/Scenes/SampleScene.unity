@@ -2301,6 +2301,7 @@ MonoBehaviour:
   shellLoaded: 0
   shellsContainer: {fileID: 1394349740}
   createBoard: {fileID: 1394349742}
+  genericShell: {fileID: 0}
   turn: 0
   players: []
   playingCorrutine: 0
@@ -2311,6 +2312,7 @@ MonoBehaviour:
   shellLimit: 180
   currentSpeed: 0
   wayToPoint: []
+  playerContainer: {fileID: 1306226169}
 --- !u!1001 &169646519
 PrefabInstance:
   m_ObjectHideFlags: 0

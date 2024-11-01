@@ -12,8 +12,6 @@ public class Shell : MonoBehaviour
     public bool visitedOnMove;
 
 
-    void Start()
-    {
-    }
+
 
 }

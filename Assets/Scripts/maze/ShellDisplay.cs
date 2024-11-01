@@ -68,7 +68,10 @@ public class ShellDisplay : MonoBehaviour
     {
         if (shell.visitedOnMove)
         {
-            img_shell.color = visited_color;
+            if (!shell.hasAplayer)
+            {
+                img_shell.color = visited_color;
+            }
         }
     }
     public void Click()
