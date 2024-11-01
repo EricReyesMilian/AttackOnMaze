@@ -12,11 +12,15 @@ public class ShellDisplay : MonoBehaviour
 
     public Color obstacule_color = Color.gray;
     public Color default_color = Color.white;
+    public Color hover_color = Color.white;
+
     public Color reach_color;
+    public Color reachHover_color;
+
     public int distToShell = -5;
     public TextMeshProUGUI num;
     public TextMeshProUGUI cordText;
-
+    public bool hover;
     public Color player_color = Color.yellow;
     Color visited_color;
 
@@ -32,7 +36,7 @@ public class ShellDisplay : MonoBehaviour
         num.text = distToShell + "";
         cordText.text = shell.coord + "";
         visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
-        if (shell.reach && !shell.visitedOnMove)
+        if (shell.reach && !shell.visitedOnMove && !hover)
         {
             if (!GameManeger.gameManeger.runningBackwards)
                 img_shell.color = reach_color;
@@ -55,7 +59,7 @@ public class ShellDisplay : MonoBehaviour
         {
             img_shell.sprite = default_sprite;
         }
-        if (!(shell.hasAplayer || shell.obstacule || shell.reach))
+        if (!(shell.hasAplayer || shell.obstacule || shell.reach || hover))
         {
             img_shell.color = default_color;
         }
@@ -75,6 +79,23 @@ public class ShellDisplay : MonoBehaviour
     public void Hover()
     {
         //print("hover");
+        if (!shell.reach)
+        {
+            img_shell.color = hover_color;
+
+        }
+        else
+        {
+            img_shell.color = reachHover_color;
+        }
+        hover = true;
+
+
+
+    }
+    public void No_Hover()
+    {
+        hover = false;
 
     }
 }

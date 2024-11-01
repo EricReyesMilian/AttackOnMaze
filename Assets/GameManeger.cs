@@ -66,7 +66,7 @@ public class GameManeger : MonoBehaviour
         players[1].Pos = new Vector2(8, 8);
         currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
         CreateDist();
-        ReachPointInMatriz();
+
     }
 
     // Update is called once per frame
@@ -93,6 +93,7 @@ public class GameManeger : MonoBehaviour
             createBoard.DrawMaze(15 * 15, n / 2, n / 2);
             createBoard.DrawMaze(15 * 15, n / 2, n / 2);
             createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+            ReachPointInMatriz();
 
             shellLoaded = false;
         }
@@ -317,7 +318,7 @@ public class GameManeger : MonoBehaviour
     }
     bool PlayerIn(Vector2 cord)
     {
-        return matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].hasAplayer;
+        return matriz[(int)cord.x][(int)cord.y].hasAplayer;
     }
     void CreateObstaculeIn(Vector2 cord)
     {

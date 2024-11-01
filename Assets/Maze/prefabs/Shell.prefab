@@ -96,10 +96,13 @@ MonoBehaviour:
   default_sprite: {fileID: 0}
   obstacule_color: {r: 0.447, g: 0.447, b: 0.447, a: 1}
   default_color: {r: 0.45882353, g: 0.5882353, b: 0.30588236, a: 0.12941177}
+  hover_color: {r: 0.45882353, g: 0.5882353, b: 0.30588236, a: 1}
   reach_color: {r: 0.5882353, g: 0.58417815, b: 0.30588236, a: 0.29803923}
+  reachHover_color: {r: 0.5882353, g: 0.58431375, b: 0.30588236, a: 1}
   distToShell: -5
   num: {fileID: 8452915830887998165}
   cordText: {fileID: 3262075542333640081}
+  hover: 0
   player_color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &5088132583706361436
 MonoBehaviour:
@@ -146,6 +149,38 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4794552946164292583}
+          m_TargetAssemblyTypeName: ShellDisplay, Assembly-CSharp
+          m_MethodName: No_Hover
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+  - eventID: 11
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4794552946164292583}
+          m_TargetAssemblyTypeName: ShellDisplay, Assembly-CSharp
+          m_MethodName: Hover
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
 --- !u!114 &-1221452685697810045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,6 +198,7 @@ MonoBehaviour:
   player: {fileID: 0}
   reach: 0
   coord: {x: 0, y: 0}
+  visitedOnMove: 0
 --- !u!1 &5622537629492252715
 GameObject:
   m_ObjectHideFlags: 0
