@@ -7,7 +7,7 @@ public class ShellDisplay : MonoBehaviour
 {
     Image img_shell;
 
-    public Shell shell;
+    private Shell shell;
     public Sprite default_sprite;
 
     public Color obstacule_color = Color.gray;
@@ -24,55 +24,62 @@ public class ShellDisplay : MonoBehaviour
     public bool hover;
     public Color player_color = Color.yellow;
     Color visited_color;
-
+    public Vector2 coord;
+    public bool obstacule;
     void Start()
     {
+
         img_shell = GetComponent<Image>();
-        shell.obstacule = true;
+        GameManeger.gameManeger.UpdateDisplay += AsignarCasillaCorrespondiente;
 
     }
     void Update()
     {
-
-        num.text = distToShell + "";
-        cordText.text = shell.coord + "";
-        visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
-        if (shell.reach && !shell.visitedOnMove && !hover && !shell.nearPlayer)
+        if (shell != null)
         {
-            if (!GameManeger.gameManeger.runningBackwards)
-                img_shell.color = reach_color;
+            obstacule = shell.obstacule;
+            distToShell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
+            num.text = distToShell + "";
+            cordText.text = shell.coord + "";
+            visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
+            if (shell.reach && !shell.visitedOnMove && !hover && !shell.nearPlayer)
+            {
+                if (!GameManeger.gameManeger.runningBackwards)
+                    img_shell.color = reach_color;
+                else
+                    img_shell.color = default_color;
+
+
+            }
+            else if (shell.reach && !shell.visitedOnMove && !hover && shell.nearPlayer)
+            {
+                if (!GameManeger.gameManeger.runningBackwards)
+                    img_shell.color = combat_color;
+                else
+                    img_shell.color = default_color;
+
+
+
+            }
+            if (shell.obstacule)
+            {
+                img_shell.color = obstacule_color;
+            }
+            if (shell.hasAplayer)
+            {
+                img_shell.sprite = shell.player.sprite;
+                img_shell.color = Color.white;
+
+            }
             else
+            {
+                img_shell.sprite = default_sprite;
+            }
+            if (!(shell.hasAplayer || shell.obstacule || shell.reach || hover))
+            {
                 img_shell.color = default_color;
-
-
-        }
-        else if (shell.reach && !shell.visitedOnMove && !hover && shell.nearPlayer)
-        {
-            if (!GameManeger.gameManeger.runningBackwards)
-                img_shell.color = combat_color;
-            else
-                img_shell.color = default_color;
-
-
-
-        }
-        if (shell.obstacule)
-        {
-            img_shell.color = obstacule_color;
-        }
-        if (shell.hasAplayer)
-        {
-            img_shell.sprite = shell.player.sprite;
-            img_shell.color = Color.white;
-
-        }
-        else
-        {
-            img_shell.sprite = default_sprite;
-        }
-        if (!(shell.hasAplayer || shell.obstacule || shell.reach || hover))
-        {
-            img_shell.color = default_color;
+            }
+            DrawWay();
         }
     }
     public void DrawWay()
@@ -117,6 +124,21 @@ public class ShellDisplay : MonoBehaviour
     public void No_Hover()
     {
         hover = false;
+
+    }
+    void AsignarCasillaCorrespondiente()
+    {
+        for (int i = 0; i < GameManeger.gameManeger.n; i++)
+        {
+            for (int j = 0; j < GameManeger.gameManeger.n; j++)
+            {
+                if (GameManeger.gameManeger.matriz[i][j].coord == coord)
+                {
+                    shell = GameManeger.gameManeger.matriz[i][j];
+                    break;
+                }
+            }
+        }
 
     }
 }

@@ -19,6 +19,8 @@ public class CreateBoard : MonoBehaviour
     int dir;
     [Range(0, 5)]
     public int complexity;
+
+    bool ready;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +32,18 @@ public class CreateBoard : MonoBehaviour
         gm = GameManeger.gameManeger;
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        if (ready)
+        {
+            if (gameObject.transform.childCount > 0)
+            {
+                Transform firstChild = gameObject.transform.GetChild(0);
+                firstChild.SetSiblingIndex(gameObject.transform.childCount - 1);
+            }
+            ready = false;
+        }
     }
-
     void GridLayoutConfig(int n)
     {
         grid.constraintCount = n;
@@ -45,12 +53,19 @@ public class CreateBoard : MonoBehaviour
     }
     void InstantiateShells(int n)
     {
-        for (int i = 0; i < n * n; i++)
+        for (int i = 0; i < n; i++)
         {
-            Instantiate(shellPref, Vector3.zero, Quaternion.identity, gameObject.transform);
+            for (int j = 0; j < n; j++)
+            {
+                Instantiate(shellPref, Vector3.zero, Quaternion.identity, gameObject.transform);
+                shellPref.GetComponent<ShellDisplay>().coord = new Vector2(i, j);
+            }
         }
+        ready = true;
+
         GameManeger.gameManeger.shellLoaded = true;
     }
+
     void DestroyShells()
     {
         for (int i = 0; i < gameObject.transform.childCount; i++)

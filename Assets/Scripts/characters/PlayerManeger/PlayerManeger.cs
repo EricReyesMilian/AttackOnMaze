@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManeger : MonoBehaviour
 {
     public player play;
+    public int index;
     public Vector2 positionOnBoard;
     public string nameC;
     public int speed;
@@ -23,7 +24,14 @@ public class PlayerManeger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (index == GameManeger.gameManeger.turn)
+        {
+            isPlayerTurn = true;
+        }
+        else
+        {
+            isPlayerTurn = false;
+        }
     }
     public void InitStats()
     {
