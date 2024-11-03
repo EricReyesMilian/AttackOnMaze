@@ -46,6 +46,9 @@ public class GameManeger : MonoBehaviour
 
     public delegate void Accion();
     public event Accion UpdateDisplay;
+    public bool player1Win;
+    public int power1Before;
+    public int power2Before;
 
     private void Awake()
     {
@@ -109,8 +112,8 @@ public class GameManeger : MonoBehaviour
         #region DebugInputs
         if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
         {
-            if (!playingCorrutine)
-                NextTurn();
+
+            NextTurn();
         }
         if (Input.GetKeyDown(KeyCode.Space))//regenera el laberinto
         {
@@ -364,16 +367,20 @@ public class GameManeger : MonoBehaviour
         visited[int.Parse(cord.x.ToString()), int.Parse(cord.y.ToString())] = true;
 
     }
-    void NextTurn()
+    public void NextTurn()
     {
-        turn += 1;
-        if (turn > players.Count - 1)
-            turn = 0;
+        if (!playingCorrutine)
+        {
+            turn += 1;
+            if (turn > players.Count - 1)
+                turn = 0;
 
-        SetDist();
-        InitReachShell();
-        currentSpeed = players[turn].speed;
-        ReachPointInMatriz();
+            SetDist();
+            InitReachShell();
+            currentSpeed = players[turn].speed;
+            ReachPointInMatriz();
+        }
+
     }
     public bool ObstaculeIn(Vector2 cord)
     {
@@ -522,21 +529,7 @@ public class GameManeger : MonoBehaviour
         playingCorrutine = false;
         if (matriz[(int)target.x][(int)target.y].nearPlayer)
         {
-            print("Combat!");
-            CombatPanel.SetActive(true);
-            CombatPanel.GetComponent<PanelCombat>().player1 = players[turn];
-            int i = 0;
-            while (true)
-            {
-                if (matriz[(int)target.x][(int)target.y].NearPlayers[i] != players[turn])
-                {
-                    CombatPanel.GetComponent<PanelCombat>().player2 = matriz[(int)target.x][(int)target.y].NearPlayers[i];
-                    break;
-
-                }
-                i++;
-            }
-
+            Combat(target);
 
         }
 
@@ -548,7 +541,129 @@ public class GameManeger : MonoBehaviour
 
     }
 
+    private void Combat(Vector2 target)
+    {
+        print("Combat!");
 
+        CombatPanel.SetActive(true);
+        CombatPanel.GetComponent<PanelCombat>().player1 = players[turn];
+        power1Before = players[turn].power;
+        int i = 0;
+        while (true)
+        {
+            if (matriz[(int)target.x][(int)target.y].NearPlayers[i] != players[turn])
+            {
+                CombatPanel.GetComponent<PanelCombat>().player2 = matriz[(int)target.x][(int)target.y].NearPlayers[i];
+                power2Before = matriz[(int)target.x][(int)target.y].NearPlayers[i].power;
+
+                break;
+
+            }
+
+            i++;
+        }
+
+        float ran = Random.Range(0, (float)1);
+        print(ran);
+        if (power1Before >= power2Before)//atacante mas fuerte
+        {
+            if ((float)(power1Before) / (power1Before + power2Before) >= ran)
+            {
+                //gana
+                if (power2Before == 1)
+                {
+                    players[turn].power += 1;
+                }
+                else
+                {
+                    players[turn].power += power2Before / 2;
+
+                }
+
+
+                matriz[(int)target.x][(int)target.y].NearPlayers[i].power /= 2;
+                player1Win = true;
+            }
+            else
+            {
+
+                //pierde menos
+                if (power1Before == 1)
+                {
+                    matriz[(int)target.x][(int)target.y].NearPlayers[i].power += 1;
+                }
+                else
+                {
+                    matriz[(int)target.x][(int)target.y].NearPlayers[i].power += power1Before / 4;
+
+                }
+                player1Win = false;
+
+            }
+
+        }
+        else
+        {
+            if ((float)(power1Before) / (power1Before + power2Before) >= ran)
+            {
+
+                //gana menos
+                if (power2Before == 1)
+                {
+                    players[turn].power += 1;
+                }
+                else
+                {
+                    players[turn].power += power2Before / 4;
+
+                }
+
+                if (power2Before == 1)
+                {
+                    matriz[(int)target.x][(int)target.y].NearPlayers[i].power -= 1;
+
+                }
+                else
+                {
+                    matriz[(int)target.x][(int)target.y].NearPlayers[i].power -= power2Before / 4;
+
+                }
+                player1Win = true;
+
+            }
+            else
+            {
+                //pierde mas
+                if (power1Before == 1)
+                {
+                    players[turn].power -= 1;
+
+                }
+                else
+                {
+                    players[turn].power -= power1Before / 2;
+
+                }
+                if (power1Before == 1)
+                {
+                    matriz[(int)target.x][(int)target.y].NearPlayers[i].power += 1;
+
+                }
+                else
+                {
+                    matriz[(int)target.x][(int)target.y].NearPlayers[i].power += power1Before / 2;
+
+                }
+                player1Win = false;
+
+
+            }
+        }
+
+
+    }
+
+    //metodo recursivo que luego de mover la ficha devuelve el camino mas corto
     void SavePath(Vector2 target)
     {
         wayToPoint.Add(target);
@@ -598,11 +713,13 @@ public class GameManeger : MonoBehaviour
 
         }
     }
+    //comprueba si la casilla puede ser accesible al caminar
     bool ReachPoint(Vector2 target)
     {
         return !(matriz[(int)target.x][(int)target.y].obstacule || matriz[(int)target.x][(int)target.y].hasAplayer) && matriz[(int)target.x][(int)target.y].reach;
 
     }
+    //agrega las clases shells a la matriz
     void AddShellsToMatriz()
     {
         for (int i = 0; i < n; i++)
@@ -637,7 +754,6 @@ public class GameManeger : MonoBehaviour
     {
         for (int i = 0; i < n; i++)
         {
-
             for (int j = 0; j < n; j++)
             {
                 distancia[i][j] = -1;
