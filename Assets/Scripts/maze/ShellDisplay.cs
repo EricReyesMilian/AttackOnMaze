@@ -16,6 +16,7 @@ public class ShellDisplay : MonoBehaviour
 
     public Color reach_color;
     public Color reachHover_color;
+    public Color combat_color;
 
     public int distToShell = -5;
     public TextMeshProUGUI num;
@@ -36,12 +37,22 @@ public class ShellDisplay : MonoBehaviour
         num.text = distToShell + "";
         cordText.text = shell.coord + "";
         visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
-        if (shell.reach && !shell.visitedOnMove && !hover)
+        if (shell.reach && !shell.visitedOnMove && !hover && !shell.nearPlayer)
         {
             if (!GameManeger.gameManeger.runningBackwards)
                 img_shell.color = reach_color;
             else
                 img_shell.color = default_color;
+
+
+        }
+        else if (shell.reach && !shell.visitedOnMove && !hover && shell.nearPlayer)
+        {
+            if (!GameManeger.gameManeger.runningBackwards)
+                img_shell.color = combat_color;
+            else
+                img_shell.color = default_color;
+
 
 
         }
@@ -70,13 +81,20 @@ public class ShellDisplay : MonoBehaviour
         {
             if (!shell.hasAplayer)
             {
+                img_shell.sprite = default_sprite;
+
                 img_shell.color = visited_color;
+            }
+            else
+            {
+                img_shell.sprite = shell.player.sprite;
+                img_shell.color = Color.white;
+
             }
         }
     }
     public void Click()
     {
-        print("click!");
         GameManeger.gameManeger.MoveplayerTo(shell.coord);
     }
     public void Hover()

@@ -10,6 +10,7 @@ public class Shell : MonoBehaviour
     public bool reach;
     public Vector2 coord;
     public bool visitedOnMove;
+    public bool nearPlayer;
 
 
 

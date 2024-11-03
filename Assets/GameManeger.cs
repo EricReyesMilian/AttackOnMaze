@@ -205,6 +205,54 @@ public class GameManeger : MonoBehaviour
             }
         }
     }
+    bool CanColorBattleZone(Vector2 aux, Vector2 dir)
+    {
+        return matriz[(int)((aux + dir).x)][(int)((aux + dir).y)].hasAplayer &&
+        matriz[(int)((aux + dir).x)][(int)((aux + dir).y)].player != players[turn].play;
+
+
+    }
+    public void ColorBattleZone()
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (matriz[i][j].hasAplayer && matriz[i][j].player != players[turn].play)
+                {
+
+                    if (i > 0)
+                    {
+                        if (matriz[i - 1][j].reach)
+                            matriz[i - 1][j].nearPlayer = true;
+                    }
+                    if (j > 0)
+                    {
+                        if (matriz[i][j - 1].reach)
+                            matriz[i][j - 1].nearPlayer = true;
+
+
+
+                    }
+                    if (i < n - 1)
+                    {
+                        if (matriz[i + 1][j].reach)
+                            matriz[i + 1][j].nearPlayer = true;
+
+                    }
+
+                    if (j < n - 1)
+                    {
+                        if (matriz[i][j + 1].reach)
+                            matriz[i][j + 1].nearPlayer = true;
+
+
+                    }
+                }
+
+            }
+        }
+    }
     public void ReachPointInMatriz()
     {
         int speed = currentSpeed;
@@ -224,11 +272,14 @@ public class GameManeger : MonoBehaviour
 
                 if (aux.x > 0)
                 {
+
+
                     if (!PlayerIn(aux + Vector2.left) && !ObstaculeIn(aux + Vector2.left)
                     && !isVisited(visited, aux + Vector2.left)
                     )
                     {
                         queue.Enqueue(aux + Vector2.left);
+
                         VisitShell(visited, aux + Vector2.left);
                         if (distancia[(int)aux.x][(int)aux.y] < speed)
                             distancia[(int)(aux.x + Vector2.left.x)][(int)(aux.y + Vector2.left.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
@@ -238,9 +289,13 @@ public class GameManeger : MonoBehaviour
                 }
                 if (aux.y > 0)
                 {
+
+
                     if (!PlayerIn(aux + Vector2.down) && !ObstaculeIn(aux + Vector2.down) && !isVisited(visited, aux + Vector2.down))
                     {
                         queue.Enqueue(aux + Vector2.down);
+
+
                         VisitShell(visited, aux + Vector2.down);
                         if (distancia[(int)aux.x][(int)aux.y] < speed)
                             distancia[(int)(aux.x + Vector2.down.x)][(int)(aux.y + Vector2.down.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
@@ -251,9 +306,13 @@ public class GameManeger : MonoBehaviour
                 }
                 if (aux.y < n - 1)
                 {
+
+
                     if (!PlayerIn(aux + Vector2.up) && !ObstaculeIn(aux + Vector2.up) && !isVisited(visited, aux + Vector2.up))
                     {
                         queue.Enqueue(aux + Vector2.up);
+
+
                         VisitShell(visited, aux + Vector2.up);
                         if (distancia[(int)aux.x][(int)aux.y] < speed)
                             distancia[(int)(aux.x + Vector2.up.x)][(int)(aux.y + Vector2.up.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
@@ -264,9 +323,12 @@ public class GameManeger : MonoBehaviour
 
                 if (aux.x < n - 1)
                 {
+
                     if (!PlayerIn(aux + Vector2.right) && !ObstaculeIn(aux + Vector2.right) && !isVisited(visited, aux + Vector2.right))
                     {
                         queue.Enqueue(aux + Vector2.right);
+
+
                         VisitShell(visited, aux + Vector2.right);
                         if (distancia[(int)aux.x][(int)aux.y] < speed)
                             distancia[(int)(aux.x + Vector2.right.x)][(int)(aux.y + Vector2.right.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
@@ -278,6 +340,7 @@ public class GameManeger : MonoBehaviour
             }
 
         }
+        ColorBattleZone();
 
     }
     private void MatrizInit()
@@ -360,6 +423,7 @@ public class GameManeger : MonoBehaviour
             for (int j = 0; j < n; j++)
             {
                 matriz[i][j].reach = false;
+                matriz[i][j].nearPlayer = false;
 
 
             }
@@ -417,6 +481,7 @@ public class GameManeger : MonoBehaviour
             }
 
         }
+
         runningBackwards = true;
         for (int w = 0; w < wayToPoint.Count; w++)
         {
@@ -459,8 +524,13 @@ public class GameManeger : MonoBehaviour
         //restar current velocity
         wayToPoint.Clear();
 
-        InitReachShell();
         playingCorrutine = false;
+        if (matriz[(int)target.x][(int)target.y].nearPlayer)
+        {
+            print("Combat!");
+        }
+
+        InitReachShell();
         ReachPointInMatriz();
         StopCoroutine(MovePlayerCorutine(target));
 
@@ -478,15 +548,17 @@ public class GameManeger : MonoBehaviour
                 if (distancia[(int)target.x][(int)target.y + 1] - distancia[(int)target.x][(int)target.y] == -1)
                 {
                     SavePath(new Vector2(target.x, target.y + 1));
+
                     taken = true;
 
                 }
             }
-            if (target.y - 1 > 0 && !taken)
+            if (target.y - 1 >= 0 && !taken)
             {
                 if (distancia[(int)target.x][(int)target.y - 1] - distancia[(int)target.x][(int)target.y] == -1)
                 {
                     SavePath(new Vector2(target.x, target.y - 1));
+
                     taken = true;
 
                 }
@@ -496,12 +568,13 @@ public class GameManeger : MonoBehaviour
                 if (distancia[(int)target.x + 1][(int)target.y] - distancia[(int)target.x][(int)target.y] == -1)
                 {
                     SavePath(new Vector2(target.x + 1, target.y));
+
                     taken = true;
 
                 }
 
             }
-            if (target.x - 1 > 0 && !taken)
+            if (target.x - 1 >= 0 && !taken)
             {
                 if (distancia[(int)target.x - 1][(int)target.y] - distancia[(int)target.x][(int)target.y] == -1)
                 {

@@ -99,6 +99,7 @@ MonoBehaviour:
   hover_color: {r: 0.45882353, g: 0.5882353, b: 0.30588236, a: 1}
   reach_color: {r: 0.5882353, g: 0.58417815, b: 0.30588236, a: 0.29803923}
   reachHover_color: {r: 0.5882353, g: 0.58431375, b: 0.30588236, a: 1}
+  combat_color: {r: 0.5882353, g: 0.34159058, b: 0.30588236, a: 0.29803923}
   distToShell: -5
   num: {fileID: 8452915830887998165}
   cordText: {fileID: 3262075542333640081}
@@ -199,6 +200,7 @@ MonoBehaviour:
   reach: 0
   coord: {x: 0, y: 0}
   visitedOnMove: 0
+  nearPlayer: 0
 --- !u!1 &5622537629492252715
 GameObject:
   m_ObjectHideFlags: 0
