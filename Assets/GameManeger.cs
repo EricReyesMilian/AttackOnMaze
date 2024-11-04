@@ -50,6 +50,12 @@ public class GameManeger : MonoBehaviour
     public int power1Before;
     public int power2Before;
 
+    public delegate void Combate();
+    public event Combate StartCombate;
+
+    public delegate void Stats();
+    public event Stats UpdateStats;
+
     private void Awake()
     {
         if (gameManeger)
@@ -80,7 +86,6 @@ public class GameManeger : MonoBehaviour
         players[0].Pos = new Vector2(8, 7);
         players[1].Pos = new Vector2(9, 8);
         currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
-
         CreateDist();//crea la matriz de distancia
 
 
@@ -106,6 +111,7 @@ public class GameManeger : MonoBehaviour
             UpdateDisplay();
 
             ReachPointInMatriz();
+            UpdateStats();
 
             shellLoaded = false;
         }
@@ -379,6 +385,7 @@ public class GameManeger : MonoBehaviour
             InitReachShell();
             currentSpeed = players[turn].speed;
             ReachPointInMatriz();
+            UpdateStats();
         }
 
     }
@@ -544,8 +551,7 @@ public class GameManeger : MonoBehaviour
     private void Combat(Vector2 target)
     {
         print("Combat!");
-
-        CombatPanel.SetActive(true);
+        StartCombate();
         CombatPanel.GetComponent<PanelCombat>().player1 = players[turn];
         power1Before = players[turn].power;
         int i = 0;

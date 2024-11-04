@@ -12,18 +12,25 @@ public class displayPlayerTurnInfo : MonoBehaviour
     public TextMeshProUGUI power;
     public TextMeshProUGUI skill_Cooldown;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
-
+        GameManeger.gameManeger.UpdateStats += UpdateStats;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+
+    }
+    public void UpdateStats()
+    {
         for (int i = 0; i < GameManeger.gameManeger.players.Count; i++)
         {
-            if (GameManeger.gameManeger.players[i].isPlayerTurn)
+            if (i == GameManeger.gameManeger.turn)
             {
                 portrait.sprite = GameManeger.gameManeger.players[i].img;
                 name_c.text = "" + GameManeger.gameManeger.players[i].nameC;
@@ -32,8 +39,5 @@ public class displayPlayerTurnInfo : MonoBehaviour
                 skill_Cooldown.text = "cooldown: " + GameManeger.gameManeger.players[i].cooldown;
             }
         }
-
-
-
     }
 }

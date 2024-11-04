@@ -14,15 +14,19 @@ public class PanelCombat : MonoBehaviour
 
     public TextMeshProUGUI power1;
     public TextMeshProUGUI power2;
+    public TextMeshProUGUI Next;
 
     public TextMeshProUGUI fight;
     Animator anim;
     bool fin;
+    public displayPlayerTurnInfo displayPlayerTurnInfo;
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
+        GameManeger.gameManeger.StartCombate += OpenPanel;
+
     }
 
     // Update is called once per frame
@@ -38,12 +42,14 @@ public class PanelCombat : MonoBehaviour
             {
                 power1.text = "power:" + GameManeger.gameManeger.power1Before.ToString();
                 power2.text = "power:" + GameManeger.gameManeger.power2Before.ToString();
+                Next.text = "Fight!!!";
 
             }
             else
             {
                 power1.text = "power:" + player1.power.ToString();
                 power2.text = "power:" + player2.power.ToString();
+                Next.text = "Next";
 
             }
 
@@ -75,7 +81,13 @@ public class PanelCombat : MonoBehaviour
     public void ClosePanel()
     {
         fin = false;
-        gameObject.SetActive(false);
+        displayPlayerTurnInfo.UpdateStats();
+        //  gameObject.SetActive(false);
+
+    }
+    public void OpenPanel()
+    {
+        anim.SetTrigger("combat");
 
     }
 }
