@@ -6,6 +6,7 @@ using TMPro;
 
 public class displayPlayerTurnInfo : MonoBehaviour
 {
+    public static displayPlayerTurnInfo statdisplay;
     public Image portrait;
     public TextMeshProUGUI name_c;
     public TextMeshProUGUI speed;
@@ -13,7 +14,18 @@ public class displayPlayerTurnInfo : MonoBehaviour
     public TextMeshProUGUI skill_Cooldown;
 
 
+    void Awake()
+    {
+        if (statdisplay)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            statdisplay = this;
 
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -26,18 +38,19 @@ public class displayPlayerTurnInfo : MonoBehaviour
 
 
     }
-    public void UpdateStats()
+    public void UpdateStats(int i)
     {
-        for (int i = 0; i < GameManeger.gameManeger.players.Count; i++)
-        {
-            if (i == GameManeger.gameManeger.turn)
-            {
-                portrait.sprite = GameManeger.gameManeger.players[i].img;
-                name_c.text = "" + GameManeger.gameManeger.players[i].nameC;
-                speed.text = "speed: " + GameManeger.gameManeger.players[i].speed + "(" + GameManeger.gameManeger.currentSpeed + ")";
-                power.text = "power: " + GameManeger.gameManeger.players[i].power;
-                skill_Cooldown.text = "cooldown: " + GameManeger.gameManeger.players[i].cooldown;
-            }
-        }
+
+        portrait.sprite = GameManeger.gameManeger.players[i].img;
+        name_c.text = "" + GameManeger.gameManeger.players[i].nameC;
+        power.text = "power: " + GameManeger.gameManeger.players[i].power;
+        skill_Cooldown.text = "cooldown: " + GameManeger.gameManeger.players[i].cooldown;
+
+        if (i == GameManeger.gameManeger.turn)
+            speed.text = "speed: " + GameManeger.gameManeger.players[i].speed + "(" + GameManeger.gameManeger.currentSpeed + ")";
+        else
+            speed.text = "speed: " + GameManeger.gameManeger.players[i].speed + "(" + GameManeger.gameManeger.players[i].speed + ")";
+
+
     }
 }

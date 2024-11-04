@@ -81,7 +81,7 @@ public class PanelCombat : MonoBehaviour
     public void ClosePanel()
     {
         fin = false;
-        displayPlayerTurnInfo.UpdateStats();
+        displayPlayerTurnInfo.UpdateStats(GameManeger.gameManeger.turn);
         //  gameObject.SetActive(false);
 
     }

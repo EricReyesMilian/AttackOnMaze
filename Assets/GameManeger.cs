@@ -8,7 +8,6 @@ public class GameManeger : MonoBehaviour
     public static GameManeger gameManeger;
 
     public int n;
-    public int playersCount;
     [HideInInspector]
     public bool shellLoaded;
     public GameObject shellsContainer;
@@ -53,7 +52,7 @@ public class GameManeger : MonoBehaviour
     public delegate void Combate();
     public event Combate StartCombate;
 
-    public delegate void Stats();
+    public delegate void Stats(int i);
     public event Stats UpdateStats;
 
     private void Awake()
@@ -111,7 +110,7 @@ public class GameManeger : MonoBehaviour
             UpdateDisplay();
 
             ReachPointInMatriz();
-            UpdateStats();
+            UpdateStats(turn);
 
             shellLoaded = false;
         }
@@ -385,7 +384,7 @@ public class GameManeger : MonoBehaviour
             InitReachShell();
             currentSpeed = players[turn].speed;
             ReachPointInMatriz();
-            UpdateStats();
+            UpdateStats(turn);
         }
 
     }

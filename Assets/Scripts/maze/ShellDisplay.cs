@@ -117,8 +117,23 @@ public class ShellDisplay : MonoBehaviour
             img_shell.color = reachHover_color;
         }
         hover = true;
+        if (shell.hasAplayer)
+        {
+            for (int p = 0; p < GameManeger.gameManeger.players.Count; p++)
+            {
+                if (shell.player == GameManeger.gameManeger.players[p].play)
+                {
+                    displayPlayerTurnInfo.statdisplay.UpdateStats(p);
 
+                }
+            }
 
+        }
+        else
+        {
+            displayPlayerTurnInfo.statdisplay.UpdateStats(GameManeger.gameManeger.turn);
+
+        }
 
     }
     public void No_Hover()
