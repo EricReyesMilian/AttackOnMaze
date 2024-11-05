@@ -73,6 +73,7 @@ public class CreateBoard : MonoBehaviour
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }
     }
+
     public void DrawMaze(int obstaclesAmount, int i, int j)
     {
         Vector2 cord = new Vector2(i, j);
@@ -86,7 +87,7 @@ public class CreateBoard : MonoBehaviour
 
             a++;
 
-            gm.BreakObstaculeIn(aux);
+            //    gm.BreakObstaculeIn(aux);
 
 
             obstaclesAmount--;

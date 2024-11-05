@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   namePlayer: {fileID: 1761321619602511233}
-  index: 0
+  player: {fileID: 7497241063663379719}
 --- !u!114 &7497241063663379719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   play: {fileID: 0}
+  index: 0
   positionOnBoard: {x: 0, y: 0}
   nameC: 
   speed: 0

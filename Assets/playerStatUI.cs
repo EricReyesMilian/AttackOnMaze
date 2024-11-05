@@ -7,7 +7,7 @@ using TMPro;
 public class playerStatUI : MonoBehaviour
 {
     public TextMeshProUGUI namePlayer;
-    public int index;
+    public PlayerManeger player;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +19,7 @@ public class playerStatUI : MonoBehaviour
     {
 
 
-        namePlayer.text = GameManeger.gameManeger.players[index].nameC;
+        namePlayer.text = player.play.Name;
 
     }
 }

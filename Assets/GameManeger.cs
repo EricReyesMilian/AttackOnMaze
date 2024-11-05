@@ -22,7 +22,7 @@ public class GameManeger : MonoBehaviour
     public Shell genericShell;
     //turno
     public int turn = 0;
-    //
+
     //Lista de jugadores
     [HideInInspector]
     public List<PlayerManeger> players = new List<PlayerManeger>();
@@ -55,6 +55,7 @@ public class GameManeger : MonoBehaviour
     public delegate void Stats(int i);
     public event Stats UpdateStats;
 
+    bool[,] walls;
     private void Awake()
     {
         if (gameManeger)
@@ -71,6 +72,7 @@ public class GameManeger : MonoBehaviour
     void Start()
     {
         //este metodo debe ser sustituido por los jugadores seleccionados
+        walls = new bool[n, n];
         for (int i = 0; i < player_Scriptable.Count; i++)
         {
             players.Add(playerContainer.transform.GetChild(i).GetComponent<PlayerManeger>());
@@ -84,6 +86,8 @@ public class GameManeger : MonoBehaviour
         //sets
         players[0].Pos = new Vector2(8, 7);
         players[1].Pos = new Vector2(9, 8);
+        players[2].Pos = new Vector2(9, 9);
+
         currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
         CreateDist();//crea la matriz de distancia
 
@@ -102,10 +106,12 @@ public class GameManeger : MonoBehaviour
             FindPlayersOnMaze();
             PositioningShells();
 
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+
+            //maze
+            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim);
+            //walls = maze.PrintMaze(n);
+
+            //maze
 
             UpdateDisplay();
 
@@ -125,11 +131,9 @@ public class GameManeger : MonoBehaviour
             MatrizInit();
             FindPlayersOnMaze();
             PositioningShells();
+            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Dfs);
 
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
-            createBoard.DrawMaze(15 * 15, n / 2, n / 2);
+
             UpdateDisplay();
 
             ReachPointInMatriz();
@@ -351,7 +355,7 @@ public class GameManeger : MonoBehaviour
         {
             for (int j = 0; j < n; j++)
             {
-                matriz[i][j].obstacule = true;
+                matriz[i][j].obstacle = true;
                 matriz[i][j].NearPlayers.Clear();
                 UpdateDisplay();
             }
@@ -390,7 +394,7 @@ public class GameManeger : MonoBehaviour
     }
     public bool ObstaculeIn(Vector2 cord)
     {
-        return matriz[(int)cord.x][(int)cord.y].obstacule;
+        return matriz[(int)cord.x][(int)cord.y].obstacle;
     }
     bool PlayerIn(Vector2 cord)
     {
@@ -398,13 +402,24 @@ public class GameManeger : MonoBehaviour
     }
     void CreateObstaculeIn(Vector2 cord)
     {
-        matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].obstacule = true;
+        matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].obstacle = true;
     }
-    public void BreakObstaculeIn(Vector2 cord)
+    public void BreakObstaculeIn(bool[,] walls)
     {
-        matriz[(int)cord.x][(int)cord.y].obstacule = false;
-        shellsAmount++;
+        for (int i = 0; i < walls.Length; i++)
+        {
+            for (int j = 0; j < walls.Length; j++)
+            {
+                if (!walls[i, j])
+                {
+                    matriz[i][j].obstacle = false;
+                    shellsAmount++;
 
+                }
+
+
+            }
+        }
     }
     public void ColorReachShell(Vector2 cord)
     {
@@ -721,7 +736,7 @@ public class GameManeger : MonoBehaviour
     //comprueba si la casilla puede ser accesible al caminar
     bool ReachPoint(Vector2 target)
     {
-        return !(matriz[(int)target.x][(int)target.y].obstacule || matriz[(int)target.x][(int)target.y].hasAplayer) && matriz[(int)target.x][(int)target.y].reach;
+        return !(matriz[(int)target.x][(int)target.y].obstacle || matriz[(int)target.x][(int)target.y].hasAplayer) && matriz[(int)target.x][(int)target.y].reach;
 
     }
     //agrega las clases shells a la matriz

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shell
 {
-    public bool obstacule = true;
+    public bool obstacle = true;
     public bool hasAplayer;
     public player player;
     public bool reach;

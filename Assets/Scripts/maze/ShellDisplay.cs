@@ -37,7 +37,7 @@ public class ShellDisplay : MonoBehaviour
     {
         if (shell != null)
         {
-            obstacule = shell.obstacule;
+            obstacule = shell.obstacle;
             distToShell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
             num.text = distToShell + "";
             cordText.text = shell.coord + "";
@@ -61,7 +61,7 @@ public class ShellDisplay : MonoBehaviour
 
 
             }
-            if (shell.obstacule)
+            if (shell.obstacle)
             {
                 img_shell.color = obstacule_color;
             }
@@ -75,7 +75,7 @@ public class ShellDisplay : MonoBehaviour
             {
                 img_shell.sprite = default_sprite;
             }
-            if (!(shell.hasAplayer || shell.obstacule || shell.reach || hover))
+            if (!(shell.hasAplayer || shell.obstacle || shell.reach || hover))
             {
                 img_shell.color = default_color;
             }
