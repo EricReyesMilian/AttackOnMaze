@@ -117,11 +117,9 @@ public class ShellDisplay : MonoBehaviour
         }
         else
         {
-            print("patada de canguro");
             GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.loserPlayer);
             GameManeger.gameManeger.InitReachShell();
             GameManeger.gameManeger.ReachPointInMatriz();
-            // GameManeger.gameManeger.combat = false;//cambiar
 
         }
     }

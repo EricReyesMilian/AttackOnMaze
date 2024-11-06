@@ -524,7 +524,6 @@ public class GameManeger : MonoBehaviour
     }
     public void MoveplayerTo(Vector2 target, int index)
     {
-
         if (!playingCorrutine)
         {
             if (index == turn && !combat)
@@ -537,10 +536,8 @@ public class GameManeger : MonoBehaviour
             }
             else if (combat)
             {
-                print("llamadi");
                 if (ReachPoint(target))
                 {
-                    print("reacheable");
                     StartCoroutine(MovePlayerCorutine(target, index));
                     combat = false;
                 }
@@ -548,8 +545,6 @@ public class GameManeger : MonoBehaviour
             }
 
         }
-
-
 
     }
 
@@ -654,7 +649,7 @@ public class GameManeger : MonoBehaviour
         else
         {
             players[index ?? turn].Pos = target;
-            matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = true;
+            matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = false;
             InitReachShell();
             SetDist();
 
