@@ -45,6 +45,10 @@ public class GameManeger : MonoBehaviour
 
     public delegate void Accion();
     public event Accion UpdateDisplay;
+
+    public delegate void Draw();
+    public event Draw DrawWay;
+
     public bool player1Win;
     public int power1Before;
     public int power2Before;
@@ -75,8 +79,8 @@ public class GameManeger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //este metodo debe ser sustituido por los jugadores seleccionados
         walls = new bool[n, n];
+        //este metodo debe ser sustituido por los jugadores seleccionados
         for (int i = 0; i < player_Scriptable.Count; i++)
         {
             players.Add(playerContainer.transform.GetChild(i).GetComponent<PlayerManeger>());
@@ -107,12 +111,11 @@ public class GameManeger : MonoBehaviour
         {
             AddShellsToMatriz();
             MatrizInit();
-            PositioningShells();
+            FindPlayers();
 
 
             //maze
             MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim);
-            //walls = maze.PrintMaze(n);
 
             //maze
 
@@ -146,15 +149,14 @@ public class GameManeger : MonoBehaviour
         }
         #endregion
 
-        PositioningShells();
+
 
 
     }
 
-
-    public void PositioningShells()
+    //asigna el jugador a la casilla correspondiente
+    public void FindPlayers()
     {
-
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
@@ -162,33 +164,15 @@ public class GameManeger : MonoBehaviour
                 matriz[i][j].hasAplayer = false;
                 matriz[i][j].player = null;
 
-
             }
         }
-
-
         for (int p = 0; p < players.Count; p++)
         {
             matriz[(int)players[p].Pos.x][(int)players[p].Pos.y].hasAplayer = true;
             matriz[(int)players[p].Pos.x][(int)players[p].Pos.y].player = players[p].play;
 
-
-
         }
 
-    }
-
-    private void UpdateWay()
-    {
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                if (players[turn].Pos != new Vector2(i, j))
-                    shellsContainer.transform.GetChild(i * (n) + j).gameObject.GetComponent<ShellDisplay>().DrawWay();
-
-            }
-        }
     }
 
     public void ColorBattleZone()
@@ -518,9 +502,10 @@ public class GameManeger : MonoBehaviour
                 {
 
                     players[index].Pos = target;
-                    ClearMatriz();
+                    FindPlayers();
+                    ClearMatrizNearPlayers();
                     combat = false;
-                    PositioningShells();
+                    FindPlayers();
                     InitReachShell();
                     SetDist();
 
@@ -558,7 +543,7 @@ public class GameManeger : MonoBehaviour
                         {
                             matriz[i][j].visitedOnMove = true;
                             players[index ?? turn].Pos = new Vector2(wayToPoint[w].x, wayToPoint[w].y);
-
+                            FindPlayers();
                             UpdateDisplay();
                             if (w > 0)
                                 yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
@@ -582,7 +567,7 @@ public class GameManeger : MonoBehaviour
                         {
                             matriz[i][j].visitedOnMove = false;
 
-                            UpdateWay();
+                            DrawWay();
                             if (w < wayToPoint.Count - 1)
                                 yield return new WaitForSeconds(0.1f); // Espera 0.1 segundos
 
@@ -631,27 +616,13 @@ public class GameManeger : MonoBehaviour
             }
 
         }
-        else
-        {
-            matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = false;
-            players[index ?? turn].Pos = target;
-            matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = true;
 
-            // InitReachShell();
-            // SetDist();
-
-            // ReachPointInMatriz();//ojo
-
-            UpdateDisplay();
-
-
-        }
         playingCorrutine = false;
 
         StopCoroutine(MovePlayerCorutine(target, index));
 
     }
-    void ClearMatriz()
+    void ClearMatrizNearPlayers()
     {
         for (int i = 0; i < n; i++)
         {

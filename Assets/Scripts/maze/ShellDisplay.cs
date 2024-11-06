@@ -34,6 +34,7 @@ public class ShellDisplay : MonoBehaviour
 
         img_shell = GetComponent<Image>();
         GameManeger.gameManeger.UpdateDisplay += AsignarCasillaCorrespondiente;
+        GameManeger.gameManeger.DrawWay += DrawWay;
 
     }
     void Update()
