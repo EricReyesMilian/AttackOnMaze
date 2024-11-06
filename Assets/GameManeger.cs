@@ -265,8 +265,9 @@ public class GameManeger : MonoBehaviour
     {
 
 
-        if (pos.x <= (n) / 2 && pos.y <= (n) / 2)
+        if (pos.y < (n) / 2 && pos.x <= (n) / 2)
         {
+
             for (int i = (n) / 2; i < n; i++)
             {
                 for (int j = (n) / 2; j < n; j++)
@@ -275,8 +276,21 @@ public class GameManeger : MonoBehaviour
 
                 }
             }
+
         }
-        else if (pos.x > (n) / 2 && pos.y > (n) / 2)
+        else if (pos.y >= (n) / 2 && pos.x > (n) / 2)
+        {
+            for (int i = 0; i < n / 2; i++)
+            {
+                for (int j = 0; j < n / 2; j++)
+                {
+                    ColorReachShell(new Vector2(i, j));
+
+                }
+            }
+
+        }
+        else if (pos.y < (n) / 2 && pos.x > (n) / 2)
         {
             for (int i = 0; i < n / 2; i++)
             {
@@ -286,9 +300,11 @@ public class GameManeger : MonoBehaviour
 
                 }
             }
+
         }
-        else if (pos.x <= (n) / 2 && pos.y > (n) / 2)
+        else
         {
+
             for (int i = (n) / 2; i < n; i++)
             {
                 for (int j = 0; j < n / 2; j++)
@@ -297,17 +313,8 @@ public class GameManeger : MonoBehaviour
 
                 }
             }
-        }
-        else
-        {
-            for (int i = 0; i < n / 2; i++)
-            {
-                for (int j = (n) / 2; j < n; j++)
-                {
-                    ColorReachShell(new Vector2(i, j));
 
-                }
-            }
+
         }
     }
     public void ReachPointInMatriz()
