@@ -59,6 +59,7 @@ public class GameManeger : MonoBehaviour
     public bool relocate;
     public int loserPlayer;
     public bool combat;
+    public bool canPassTurn;
     private void Awake()
     {
         if (gameManeger)
@@ -106,7 +107,6 @@ public class GameManeger : MonoBehaviour
         {
             AddShellsToMatriz();
             MatrizInit();
-            FindPlayersOnMaze();
             PositioningShells();
 
 
@@ -146,51 +146,32 @@ public class GameManeger : MonoBehaviour
         }
         #endregion
 
-        FindPlayersOnMaze();
         PositioningShells();
 
+
     }
 
-    private void FindPlayersOnMaze()
-    {
-        for (int p = 0; p < players.Count; p++)
-        {
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    if (ComparePlayerPos(i, j, p))
-                    {
-                        matriz[i][j].hasAplayer = true;
-                        matriz[i][j].player = players[p].play;
-                    }
-                    {
-                        matriz[i][j].hasAplayer = false;
 
-                    }
-
-                }
-            }
-
-        }
-    }
     public void PositioningShells()
     {
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                matriz[i][j].hasAplayer = false;
+                matriz[i][j].player = null;
+
+
+            }
+        }
+
+
         for (int p = 0; p < players.Count; p++)
         {
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    if (players[p].Pos == new Vector2(i, j))
-                    {
-                        matriz[i][j].hasAplayer = true;
-                        matriz[i][j].player = players[p].play;
+            matriz[(int)players[p].Pos.x][(int)players[p].Pos.y].hasAplayer = true;
+            matriz[(int)players[p].Pos.x][(int)players[p].Pos.y].player = players[p].play;
 
-                    }
-
-                }
-            }
 
 
         }
@@ -426,10 +407,7 @@ public class GameManeger : MonoBehaviour
         shellsAmount = 0;
 
     }
-    bool ComparePlayerPos(int i, int j, int p)
-    {
-        return i == players[p].positionOnBoard.x && j == players[p].positionOnBoard.y;
-    }
+
     public bool isVisited(bool[,] visited, Vector2 cord)
     {
         return visited[int.Parse(cord.x.ToString()), int.Parse(cord.y.ToString())];
@@ -538,8 +516,15 @@ public class GameManeger : MonoBehaviour
             {
                 if (ReachPoint(target))
                 {
-                    StartCoroutine(MovePlayerCorutine(target, index));
+
+                    players[index].Pos = target;
+                    ClearMatriz();
                     combat = false;
+                    PositioningShells();
+                    InitReachShell();
+                    SetDist();
+
+                    ReachPointInMatriz();
                 }
 
             }
@@ -648,12 +633,14 @@ public class GameManeger : MonoBehaviour
         }
         else
         {
-            players[index ?? turn].Pos = target;
             matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = false;
-            InitReachShell();
-            SetDist();
+            players[index ?? turn].Pos = target;
+            matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = true;
 
-            ReachPointInMatriz();//ojo
+            // InitReachShell();
+            // SetDist();
+
+            // ReachPointInMatriz();//ojo
 
             UpdateDisplay();
 
@@ -664,7 +651,18 @@ public class GameManeger : MonoBehaviour
         StopCoroutine(MovePlayerCorutine(target, index));
 
     }
+    void ClearMatriz()
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                matriz[i][j].NearPlayers.Clear();
 
+            }
+        }
+
+    }
     private void Combat(Vector2 target)
     {
         print("Combat!");
@@ -907,7 +905,7 @@ public class GameManeger : MonoBehaviour
         }
     }
     //asigna -1 a los valores de la matriz de distancia
-    void SetDist()
+    public void SetDist()
     {
         for (int i = 0; i < n; i++)
         {

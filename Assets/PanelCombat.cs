@@ -14,6 +14,8 @@ public class PanelCombat : MonoBehaviour
 
     public TextMeshProUGUI power1;
     public TextMeshProUGUI power2;
+    public TextMeshProUGUI percent2;
+    public TextMeshProUGUI percent1;
     public TextMeshProUGUI Next;
 
     public TextMeshProUGUI fight;
@@ -42,6 +44,12 @@ public class PanelCombat : MonoBehaviour
             {
                 power1.text = "power:" + GameManeger.gameManeger.power1Before.ToString();
                 power2.text = "power:" + GameManeger.gameManeger.power2Before.ToString();
+                int per1 = Mathf.CeilToInt((float)GameManeger.gameManeger.power2Before / (GameManeger.gameManeger.power1Before + GameManeger.gameManeger.power2Before) * 100);
+
+                int per2 = 100 - per1;
+                percent1.text = per1 + "%";
+                percent2.text = per2 + "%";
+
                 Next.text = "Fight!!!";
 
             }

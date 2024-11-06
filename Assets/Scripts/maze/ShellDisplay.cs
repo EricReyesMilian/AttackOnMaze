@@ -25,8 +25,10 @@ public class ShellDisplay : MonoBehaviour
     public Color player_color = Color.yellow;
     Color visited_color;
     public Vector2 coord;
+    public bool hasAplayer;
     public bool obstacule;
     public bool reach;
+
     void Start()
     {
 
@@ -38,8 +40,10 @@ public class ShellDisplay : MonoBehaviour
     {
         if (shell != null)
         {
+            hasAplayer = shell.hasAplayer;
             reach = shell.reach;
             obstacule = shell.obstacle;
+
             distToShell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
             num.text = distToShell + "";
             cordText.text = shell.coord + "";
@@ -118,8 +122,7 @@ public class ShellDisplay : MonoBehaviour
         else
         {
             GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.loserPlayer);
-            GameManeger.gameManeger.InitReachShell();
-            GameManeger.gameManeger.ReachPointInMatriz();
+
 
         }
     }
