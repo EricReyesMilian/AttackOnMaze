@@ -56,6 +56,9 @@ public class GameManeger : MonoBehaviour
     public event Stats UpdateStats;
 
     bool[,] walls;
+    public bool relocate;
+    public int loserPlayer;
+    public bool combat;
     private void Awake()
     {
         if (gameManeger)
@@ -128,15 +131,15 @@ public class GameManeger : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))//regenera el laberinto
         {
-            MatrizInit();
-            FindPlayersOnMaze();
-            PositioningShells();
-            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Dfs);
+            // MatrizInit();
+            // FindPlayersOnMaze();
+            // PositioningShells();
+            // MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Dfs);
 
 
-            UpdateDisplay();
+            // UpdateDisplay();
 
-            ReachPointInMatriz();
+            // ReachPointInMatriz();
 
             //ReachPointInMatriz();
 
@@ -258,96 +261,149 @@ public class GameManeger : MonoBehaviour
         }
         UpdateDisplay();
     }
-    public void ReachPointInMatriz()
+    public void ReachPointInSubMatriz(Vector2 pos)
     {
-        int speed = currentSpeed;
-        InitReachShell();
-        Vector2 cord = new Vector2(players[turn].Pos.x, players[turn].Pos.y);//inicial
-        Queue<Vector2> queue = new Queue<Vector2>();
 
-        bool[,] visited = new bool[n, n];
-        distancia[(int)cord.x][(int)cord.y] = 0;
 
-        queue.Enqueue(cord);
-        while (queue.Count > 0)
+        if (pos.x <= (n) / 2 && pos.y <= (n) / 2)
         {
-            Vector2 aux = queue.Dequeue();
-            ColorReachShell(aux);
-            if (distancia[(int)aux.x][(int)aux.y] < speed)
+            for (int i = (n) / 2; i < n; i++)
             {
-
-                if (aux.x > 0)
+                for (int j = (n) / 2; j < n; j++)
                 {
-
-
-                    if (!PlayerIn(aux + Vector2.left) && !ObstaculeIn(aux + Vector2.left)
-                    && !isVisited(visited, aux + Vector2.left)
-                    )
-                    {
-                        queue.Enqueue(aux + Vector2.left);
-
-                        VisitShell(visited, aux + Vector2.left);
-                        if (distancia[(int)aux.x][(int)aux.y] < speed)
-                            distancia[(int)(aux.x + Vector2.left.x)][(int)(aux.y + Vector2.left.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                    }
-
-                }
-                if (aux.y > 0)
-                {
-
-
-                    if (!PlayerIn(aux + Vector2.down) && !ObstaculeIn(aux + Vector2.down) && !isVisited(visited, aux + Vector2.down))
-                    {
-                        queue.Enqueue(aux + Vector2.down);
-
-
-                        VisitShell(visited, aux + Vector2.down);
-                        if (distancia[(int)aux.x][(int)aux.y] < speed)
-                            distancia[(int)(aux.x + Vector2.down.x)][(int)(aux.y + Vector2.down.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                    }
-
-
-                }
-                if (aux.y < n - 1)
-                {
-
-
-                    if (!PlayerIn(aux + Vector2.up) && !ObstaculeIn(aux + Vector2.up) && !isVisited(visited, aux + Vector2.up))
-                    {
-                        queue.Enqueue(aux + Vector2.up);
-
-
-                        VisitShell(visited, aux + Vector2.up);
-                        if (distancia[(int)aux.x][(int)aux.y] < speed)
-                            distancia[(int)(aux.x + Vector2.up.x)][(int)(aux.y + Vector2.up.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                    }
-
-                }
-
-                if (aux.x < n - 1)
-                {
-
-                    if (!PlayerIn(aux + Vector2.right) && !ObstaculeIn(aux + Vector2.right) && !isVisited(visited, aux + Vector2.right))
-                    {
-                        queue.Enqueue(aux + Vector2.right);
-
-
-                        VisitShell(visited, aux + Vector2.right);
-                        if (distancia[(int)aux.x][(int)aux.y] < speed)
-                            distancia[(int)(aux.x + Vector2.right.x)][(int)(aux.y + Vector2.right.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                    }
-
+                    ColorReachShell(new Vector2(i, j));
 
                 }
             }
+        }
+        else if (pos.x > (n) / 2 && pos.y > (n) / 2)
+        {
+            for (int i = 0; i < n / 2; i++)
+            {
+                for (int j = (n) / 2; j < n; j++)
+                {
+                    ColorReachShell(new Vector2(i, j));
+
+                }
+            }
+        }
+        else if (pos.x <= (n) / 2 && pos.y > (n) / 2)
+        {
+            for (int i = (n) / 2; i < n; i++)
+            {
+                for (int j = 0; j < n / 2; j++)
+                {
+                    ColorReachShell(new Vector2(i, j));
+
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < n / 2; i++)
+            {
+                for (int j = (n) / 2; j < n; j++)
+                {
+                    ColorReachShell(new Vector2(i, j));
+
+                }
+            }
+        }
+    }
+    public void ReachPointInMatriz()
+    {
+        if (!combat)
+        {
+
+            int speed = currentSpeed;
+            InitReachShell();
+            Vector2 cord = new Vector2(players[turn].Pos.x, players[turn].Pos.y);//inicial
+            Queue<Vector2> queue = new Queue<Vector2>();
+
+            bool[,] visited = new bool[n, n];
+            distancia[(int)cord.x][(int)cord.y] = 0;
+
+            queue.Enqueue(cord);
+            while (queue.Count > 0)
+            {
+                Vector2 aux = queue.Dequeue();
+                ColorReachShell(aux);
+                if (distancia[(int)aux.x][(int)aux.y] < speed)
+                {
+
+                    if (aux.x > 0)
+                    {
+
+
+                        if (!PlayerIn(aux + Vector2.left) && !ObstaculeIn(aux + Vector2.left)
+                        && !isVisited(visited, aux + Vector2.left)
+                        )
+                        {
+                            queue.Enqueue(aux + Vector2.left);
+
+                            VisitShell(visited, aux + Vector2.left);
+                            if (distancia[(int)aux.x][(int)aux.y] < speed)
+                                distancia[(int)(aux.x + Vector2.left.x)][(int)(aux.y + Vector2.left.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+                        }
+
+                    }
+                    if (aux.y > 0)
+                    {
+
+
+                        if (!PlayerIn(aux + Vector2.down) && !ObstaculeIn(aux + Vector2.down) && !isVisited(visited, aux + Vector2.down))
+                        {
+                            queue.Enqueue(aux + Vector2.down);
+
+
+                            VisitShell(visited, aux + Vector2.down);
+                            if (distancia[(int)aux.x][(int)aux.y] < speed)
+                                distancia[(int)(aux.x + Vector2.down.x)][(int)(aux.y + Vector2.down.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+                        }
+
+
+                    }
+                    if (aux.y < n - 1)
+                    {
+
+
+                        if (!PlayerIn(aux + Vector2.up) && !ObstaculeIn(aux + Vector2.up) && !isVisited(visited, aux + Vector2.up))
+                        {
+                            queue.Enqueue(aux + Vector2.up);
+
+
+                            VisitShell(visited, aux + Vector2.up);
+                            if (distancia[(int)aux.x][(int)aux.y] < speed)
+                                distancia[(int)(aux.x + Vector2.up.x)][(int)(aux.y + Vector2.up.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+                        }
+
+                    }
+
+                    if (aux.x < n - 1)
+                    {
+
+                        if (!PlayerIn(aux + Vector2.right) && !ObstaculeIn(aux + Vector2.right) && !isVisited(visited, aux + Vector2.right))
+                        {
+                            queue.Enqueue(aux + Vector2.right);
+
+
+                            VisitShell(visited, aux + Vector2.right);
+                            if (distancia[(int)aux.x][(int)aux.y] < speed)
+                                distancia[(int)(aux.x + Vector2.right.x)][(int)(aux.y + Vector2.right.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+                        }
+
+
+                    }
+                }
+
+            }
+            ColorBattleZone();
 
         }
-        ColorBattleZone();
-
     }
     private void MatrizInit()
     {
@@ -378,7 +434,7 @@ public class GameManeger : MonoBehaviour
     }
     public void NextTurn()
     {
-        if (!playingCorrutine)
+        if (!playingCorrutine && !combat)
         {
             turn += 1;
             if (turn > players.Count - 1)
@@ -459,43 +515,68 @@ public class GameManeger : MonoBehaviour
 
 
     }
-    public void MoveplayerTo(Vector2 target)
+    public void MoveplayerTo(Vector2 target, int index)
     {
+
         if (!playingCorrutine)
         {
-
-            if (ReachPoint(target))
+            if (index == turn && !combat)
             {
-                StartCoroutine(MovePlayerCorutine(target));
+                if (ReachPoint(target))
+                {
+                    StartCoroutine(MovePlayerCorutine(target, index));
+                }
+
+            }
+            else if (combat)
+            {
+                print("llamadi");
+                if (ReachPoint(target))
+                {
+                    print("reacheable");
+                    StartCoroutine(MovePlayerCorutine(target, index));
+                    combat = false;
+                }
+
             }
 
         }
+
+
+
     }
 
 
-    IEnumerator MovePlayerCorutine(Vector2 target)
+
+    IEnumerator MovePlayerCorutine(Vector2 target, int? index)
     {
         playingCorrutine = true;
-        currentSpeed -= distancia[(int)target.x][(int)target.y];
-        wayToPoint.Clear();
-        SavePath(target);
-        wayToPoint.Reverse();
-        matriz[(int)players[turn].Pos.x][(int)players[turn].Pos.y].hasAplayer = false;
 
-        for (int w = 0; w < wayToPoint.Count; w++)
+
+        matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = false;
+
+        if (index == turn && !combat)
         {
-            for (int i = 0; i < n; i++)
+            currentSpeed -= distancia[(int)target.x][(int)target.y];
+            wayToPoint.Clear();
+            SavePath(target);
+            wayToPoint.Reverse();
+            for (int w = 0; w < wayToPoint.Count; w++)
             {
-                for (int j = 0; j < n; j++)
+                for (int i = 0; i < n; i++)
                 {
-                    if (i == wayToPoint[w].x && j == wayToPoint[w].y)
+                    for (int j = 0; j < n; j++)
                     {
-                        matriz[i][j].visitedOnMove = true;
-                        players[turn].Pos = new Vector2(wayToPoint[w].x, wayToPoint[w].y);
+                        if (i == wayToPoint[w].x && j == wayToPoint[w].y)
+                        {
+                            matriz[i][j].visitedOnMove = true;
+                            players[index ?? turn].Pos = new Vector2(wayToPoint[w].x, wayToPoint[w].y);
 
-                        UpdateDisplay();
-                        if (w > 0)
-                            yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
+                            UpdateDisplay();
+                            if (w > 0)
+                                yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
+
+                        }
 
                     }
 
@@ -503,62 +584,82 @@ public class GameManeger : MonoBehaviour
 
             }
 
-        }
-
-        runningBackwards = true;
-        for (int w = 0; w < wayToPoint.Count; w++)
-        {
-            for (int i = 0; i < n; i++)
+            runningBackwards = true;
+            for (int w = 0; w < wayToPoint.Count; w++)
             {
-                for (int j = 0; j < n; j++)
+                for (int i = 0; i < n; i++)
                 {
-                    if (i == wayToPoint[w].x && j == wayToPoint[w].y)
+                    for (int j = 0; j < n; j++)
                     {
-                        matriz[i][j].visitedOnMove = false;
+                        if (i == wayToPoint[w].x && j == wayToPoint[w].y)
+                        {
+                            matriz[i][j].visitedOnMove = false;
 
-                        UpdateWay();
-                        if (w < wayToPoint.Count - 1)
-                            yield return new WaitForSeconds(0.1f); // Espera 0.1 segundos
+                            UpdateWay();
+                            if (w < wayToPoint.Count - 1)
+                                yield return new WaitForSeconds(0.1f); // Espera 0.1 segundos
 
+
+                        }
 
                     }
 
                 }
 
             }
-
-        }
-        runningBackwards = false;
+            runningBackwards = false;
 
 
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
+            for (int i = 0; i < n; i++)
             {
-                matriz[i][j].visitedOnMove = false;
-                UpdateDisplay();
+                for (int j = 0; j < n; j++)
+                {
+                    matriz[i][j].visitedOnMove = false;
+                    UpdateDisplay();
 
 
+
+                }
+
+            }
+
+            //restar current velocity
+            wayToPoint.Clear();
+
+            playingCorrutine = false;
+            if (matriz[(int)target.x][(int)target.y].nearPlayer)
+            {
+                InitReachShell();
+
+                Combat(target);
+
+            }
+            else
+            {
+                InitReachShell();
+                SetDist();
+
+                ReachPointInMatriz();
 
             }
 
         }
+        else
+        {
+            players[index ?? turn].Pos = target;
+            matriz[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = true;
+            InitReachShell();
+            SetDist();
 
-        //restar current velocity
-        wayToPoint.Clear();
+            ReachPointInMatriz();//ojo
 
+            UpdateDisplay();
+
+
+        }
         playingCorrutine = false;
-        if (matriz[(int)target.x][(int)target.y].nearPlayer)
-        {
-            Combat(target);
 
-        }
-
-        InitReachShell();
-        SetDist();
-
-        ReachPointInMatriz();
-        StopCoroutine(MovePlayerCorutine(target));
+        StopCoroutine(MovePlayerCorutine(target, index));
 
     }
 
@@ -614,7 +715,16 @@ public class GameManeger : MonoBehaviour
                 }
                 else
                 {
-                    matriz[(int)target.x][(int)target.y].NearPlayers[i].power += power1Before / 4;
+                    if (power1Before < 4)
+                    {
+                        matriz[(int)target.x][(int)target.y].NearPlayers[i].power += 1;
+
+                    }
+                    else
+                    {
+                        matriz[(int)target.x][(int)target.y].NearPlayers[i].power += power1Before / 4;
+
+                    }
 
                 }
                 player1Win = false;
@@ -680,8 +790,33 @@ public class GameManeger : MonoBehaviour
             }
         }
 
+        if (player1Win)
+        {
+            //seleccionar casilla
+            for (int p = 0; p < players.Count; p++)
+            {
+                if (matriz[(int)target.x][(int)target.y].NearPlayers[i] == players[p])
+                {
+                    loserPlayer = p;
+                    ReachPointInSubMatriz(players[p].Pos);
+                    UpdateDisplay();
 
+                    break;
+                }
+            }
+        }
+        else
+        {
+            loserPlayer = turn;
+            ReachPointInSubMatriz(players[turn].Pos);
+            UpdateDisplay();
+
+            //seleccionar casilla   
+        }
+
+        combat = true;
     }
+
 
     //metodo recursivo que luego de mover la ficha devuelve el camino mas corto
     void SavePath(Vector2 target)

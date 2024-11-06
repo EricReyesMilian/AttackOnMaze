@@ -26,6 +26,7 @@ public class ShellDisplay : MonoBehaviour
     Color visited_color;
     public Vector2 coord;
     public bool obstacule;
+    public bool reach;
     void Start()
     {
 
@@ -37,12 +38,18 @@ public class ShellDisplay : MonoBehaviour
     {
         if (shell != null)
         {
+            reach = shell.reach;
             obstacule = shell.obstacle;
             distToShell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
             num.text = distToShell + "";
             cordText.text = shell.coord + "";
             visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
-            if (shell.reach && !shell.visitedOnMove && !hover && !shell.nearPlayer)
+            if (GameManeger.gameManeger.combat && !shell.hasAplayer && !shell.obstacle)
+            {
+                img_shell.color = reach_color;
+            }
+            else
+           if (shell.reach && !shell.visitedOnMove && !hover && !shell.nearPlayer)
             {
                 if (!GameManeger.gameManeger.runningBackwards)
                     img_shell.color = reach_color;
@@ -80,6 +87,7 @@ public class ShellDisplay : MonoBehaviour
                 img_shell.color = default_color;
             }
             DrawWay();
+
         }
     }
     public void DrawWay()
@@ -102,7 +110,20 @@ public class ShellDisplay : MonoBehaviour
     }
     public void Click()
     {
-        GameManeger.gameManeger.MoveplayerTo(shell.coord);
+        if (!GameManeger.gameManeger.combat)
+        {
+            GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.turn);
+
+        }
+        else
+        {
+            print("patada de canguro");
+            GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.loserPlayer);
+            GameManeger.gameManeger.InitReachShell();
+            GameManeger.gameManeger.ReachPointInMatriz();
+            // GameManeger.gameManeger.combat = false;//cambiar
+
+        }
     }
     public void Hover()
     {
