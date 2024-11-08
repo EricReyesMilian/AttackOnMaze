@@ -237,7 +237,7 @@ public class GameManeger : MonoBehaviour
             {
                 for (int j = (n) / 2; j < n; j++)
                 {
-                    ColorReachShell(new Vector2(i, j));
+                    distancia[i][j] = 0;
 
                 }
             }
@@ -249,7 +249,8 @@ public class GameManeger : MonoBehaviour
             {
                 for (int j = 0; j < n / 2; j++)
                 {
-                    ColorReachShell(new Vector2(i, j));
+                    distancia[i][j] = 0;
+
 
                 }
             }
@@ -261,7 +262,8 @@ public class GameManeger : MonoBehaviour
             {
                 for (int j = (n) / 2; j < n; j++)
                 {
-                    ColorReachShell(new Vector2(i, j));
+                    distancia[i][j] = 0;
+
 
                 }
             }
@@ -274,13 +276,16 @@ public class GameManeger : MonoBehaviour
             {
                 for (int j = 0; j < n / 2; j++)
                 {
-                    ColorReachShell(new Vector2(i, j));
+                    distancia[i][j] = 0;
+
 
                 }
             }
 
 
         }
+        ColorReachShell();
+
     }
     public void ReachPointInMatriz()
     {
@@ -299,7 +304,7 @@ public class GameManeger : MonoBehaviour
             while (queue.Count > 0)
             {
                 Vector2 aux = queue.Dequeue();
-                ColorReachShell(aux);
+
                 if (distancia[(int)aux.x][(int)aux.y] < speed)
                 {
 
@@ -373,6 +378,7 @@ public class GameManeger : MonoBehaviour
                 }
 
             }
+            ColorReachShell();
             ColorBattleZone();
 
         }
@@ -391,7 +397,6 @@ public class GameManeger : MonoBehaviour
         shellsAmount = 0;
 
     }
-
     public bool isVisited(bool[,] visited, Vector2 cord)
     {
         return visited[int.Parse(cord.x.ToString()), int.Parse(cord.y.ToString())];
@@ -401,6 +406,7 @@ public class GameManeger : MonoBehaviour
         visited[int.Parse(cord.x.ToString()), int.Parse(cord.y.ToString())] = true;
 
     }
+
     public void NextTurn()
     {
         if (!playingCorrutine && !combat)
@@ -425,10 +431,6 @@ public class GameManeger : MonoBehaviour
     {
         return matriz[(int)cord.x][(int)cord.y].hasAplayer;
     }
-    void CreateObstaculeIn(Vector2 cord)
-    {
-        matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].obstacle = true;
-    }
     public void BreakObstaculeIn(bool[,] walls)
     {
         for (int i = 0; i < walls.Length; i++)
@@ -446,21 +448,18 @@ public class GameManeger : MonoBehaviour
             }
         }
     }
-    public void ColorReachShell(Vector2 cord)
+    public void ColorReachShell()
     {
-        try
-        {
-            if (!PlayerIn(cord))
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
             {
-                matriz[(int)cord.x][(int)cord.y].reach = true;
+                if (distancia[i][j] != -1)
+                {
+                    matriz[i][j].reach = true;
 
+                }
             }
 
-        }
-        catch
-        {
-            print(cord);
-        }
 
     }
     public void InitReachShell()
