@@ -229,7 +229,7 @@ public class GameManeger : MonoBehaviour
     public void ReachPointInSubMatriz(Vector2 pos)
     {
 
-
+        SetDist();
         if (pos.y < (n) / 2 && pos.x <= (n) / 2)
         {
 
@@ -294,92 +294,94 @@ public class GameManeger : MonoBehaviour
 
             int speed = currentSpeed;
             InitReachShell();
-            Vector2 cord = new Vector2(players[turn].Pos.x, players[turn].Pos.y);//inicial
-            Queue<Vector2> queue = new Queue<Vector2>();
-
-            bool[,] visited = new bool[n, n];
-            distancia[(int)cord.x][(int)cord.y] = 0;
-
-            queue.Enqueue(cord);
-            while (queue.Count > 0)
-            {
-                Vector2 aux = queue.Dequeue();
-
-                if (distancia[(int)aux.x][(int)aux.y] < speed)
-                {
-
-                    if (aux.x > 0)
-                    {
-
-
-                        if (!PlayerIn(aux + Vector2.left) && !ObstaculeIn(aux + Vector2.left)
-                        && !isVisited(visited, aux + Vector2.left)
-                        )
-                        {
-                            queue.Enqueue(aux + Vector2.left);
-
-                            VisitShell(visited, aux + Vector2.left);
-                            if (distancia[(int)aux.x][(int)aux.y] < speed)
-                                distancia[(int)(aux.x + Vector2.left.x)][(int)(aux.y + Vector2.left.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                        }
-
-                    }
-                    if (aux.y > 0)
-                    {
-
-
-                        if (!PlayerIn(aux + Vector2.down) && !ObstaculeIn(aux + Vector2.down) && !isVisited(visited, aux + Vector2.down))
-                        {
-                            queue.Enqueue(aux + Vector2.down);
-
-
-                            VisitShell(visited, aux + Vector2.down);
-                            if (distancia[(int)aux.x][(int)aux.y] < speed)
-                                distancia[(int)(aux.x + Vector2.down.x)][(int)(aux.y + Vector2.down.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                        }
-
-
-                    }
-                    if (aux.y < n - 1)
-                    {
-
-
-                        if (!PlayerIn(aux + Vector2.up) && !ObstaculeIn(aux + Vector2.up) && !isVisited(visited, aux + Vector2.up))
-                        {
-                            queue.Enqueue(aux + Vector2.up);
-
-
-                            VisitShell(visited, aux + Vector2.up);
-                            if (distancia[(int)aux.x][(int)aux.y] < speed)
-                                distancia[(int)(aux.x + Vector2.up.x)][(int)(aux.y + Vector2.up.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                        }
-
-                    }
-
-                    if (aux.x < n - 1)
-                    {
-
-                        if (!PlayerIn(aux + Vector2.right) && !ObstaculeIn(aux + Vector2.right) && !isVisited(visited, aux + Vector2.right))
-                        {
-                            queue.Enqueue(aux + Vector2.right);
-
-
-                            VisitShell(visited, aux + Vector2.right);
-                            if (distancia[(int)aux.x][(int)aux.y] < speed)
-                                distancia[(int)(aux.x + Vector2.right.x)][(int)(aux.y + Vector2.right.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
-
-                        }
-
-
-                    }
-                }
-
-            }
+            distancia = BoardManeger.Lee(matriz, (int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
             ColorReachShell();
             ColorBattleZone();
+
+            // Vector2 cord = new Vector2(players[turn].Pos.x, players[turn].Pos.y);//inicial
+            // Queue<Vector2> queue = new Queue<Vector2>();
+
+            // bool[,] visited = new bool[n, n];
+            // distancia[(int)cord.x][(int)cord.y] = 0;
+
+            // queue.Enqueue(cord);
+            // while (queue.Count > 0)
+            // {
+            //     Vector2 aux = queue.Dequeue();
+
+            //     if (distancia[(int)aux.x][(int)aux.y] < speed)
+            //     {
+
+            //         if (aux.x > 0)
+            //         {
+
+
+            //             if (!PlayerIn(aux + Vector2.left) && !ObstaculeIn(aux + Vector2.left)
+            //             && !isVisited(visited, aux + Vector2.left)
+            //             )
+            //             {
+            //                 queue.Enqueue(aux + Vector2.left);
+
+            //                 VisitShell(visited, aux + Vector2.left);
+            //                 if (distancia[(int)aux.x][(int)aux.y] < speed)
+            //                     distancia[(int)(aux.x + Vector2.left.x)][(int)(aux.y + Vector2.left.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+            //             }
+
+            //         }
+            //         if (aux.y > 0)
+            //         {
+
+
+            //             if (!PlayerIn(aux + Vector2.down) && !ObstaculeIn(aux + Vector2.down) && !isVisited(visited, aux + Vector2.down))
+            //             {
+            //                 queue.Enqueue(aux + Vector2.down);
+
+
+            //                 VisitShell(visited, aux + Vector2.down);
+            //                 if (distancia[(int)aux.x][(int)aux.y] < speed)
+            //                     distancia[(int)(aux.x + Vector2.down.x)][(int)(aux.y + Vector2.down.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+            //             }
+
+
+            //         }
+            //         if (aux.y < n - 1)
+            //         {
+
+
+            //             if (!PlayerIn(aux + Vector2.up) && !ObstaculeIn(aux + Vector2.up) && !isVisited(visited, aux + Vector2.up))
+            //             {
+            //                 queue.Enqueue(aux + Vector2.up);
+
+
+            //                 VisitShell(visited, aux + Vector2.up);
+            //                 if (distancia[(int)aux.x][(int)aux.y] < speed)
+            //                     distancia[(int)(aux.x + Vector2.up.x)][(int)(aux.y + Vector2.up.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+            //             }
+
+            //         }
+
+            //         if (aux.x < n - 1)
+            //         {
+
+            //             if (!PlayerIn(aux + Vector2.right) && !ObstaculeIn(aux + Vector2.right) && !isVisited(visited, aux + Vector2.right))
+            //             {
+            //                 queue.Enqueue(aux + Vector2.right);
+
+
+            //                 VisitShell(visited, aux + Vector2.right);
+            //                 if (distancia[(int)aux.x][(int)aux.y] < speed)
+            //                     distancia[(int)(aux.x + Vector2.right.x)][(int)(aux.y + Vector2.right.y)] = distancia[(int)(aux.x)][(int)(aux.y)] + 1;
+
+            //             }
+
+
+            //         }
+            //     }
+
+            // }
 
         }
     }
@@ -431,23 +433,11 @@ public class GameManeger : MonoBehaviour
     {
         return matriz[(int)cord.x][(int)cord.y].hasAplayer;
     }
-    public void BreakObstaculeIn(bool[,] walls)
+    public bool PlayerInShell(int i, int j)
     {
-        for (int i = 0; i < walls.Length; i++)
-        {
-            for (int j = 0; j < walls.Length; j++)
-            {
-                if (!walls[i, j])
-                {
-                    matriz[i][j].obstacle = false;
-                    shellsAmount++;
-
-                }
-
-
-            }
-        }
+        return matriz[i][j].hasAplayer;
     }
+
     public void ColorReachShell()
     {
         for (int i = 0; i < n; i++)

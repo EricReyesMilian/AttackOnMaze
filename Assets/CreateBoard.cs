@@ -87,9 +87,6 @@ public class CreateBoard : MonoBehaviour
 
             a++;
 
-            //    gm.BreakObstaculeIn(aux);
-
-
             obstaclesAmount--;
 
             if (aux.x > 0)

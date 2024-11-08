@@ -104,7 +104,9 @@ MonoBehaviour:
   hover: 0
   player_color: {r: 1, g: 1, b: 1, a: 1}
   coord: {x: 0, y: 0}
+  hasAplayer: 0
   obstacule: 0
+  reach: 0
 --- !u!114 &5088132583706361436
 MonoBehaviour:
   m_ObjectHideFlags: 0
