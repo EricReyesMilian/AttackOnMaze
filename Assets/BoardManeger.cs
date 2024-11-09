@@ -5,7 +5,7 @@ public class BoardManeger
     {
         int size = tablero[0].Count;
         List<List<int>> distancias = new List<List<int>>();
-        IniciarDistancias(distancias, size);
+        IniciarDistancias(ref distancias, tablero[0].Count);
         //Marcar casilla inicial
         distancias[filaInical][columnaInicial] = 0;
         //           N   S  E  W
@@ -44,12 +44,78 @@ public class BoardManeger
         } while (huboCambio);
         return distancias;
     }
-    private static void IniciarDistancias(List<List<int>> distancias, int size)
+
+    public static List<List<int>> ReachPointInSubMatriz(List<List<Shell>> tablero, int playerPosF, int playerPosC)
     {
-        for (int f = 0; f < size; f++)
+        List<List<int>> distancias = new List<List<int>>();
+        int n = tablero[0].Count;
+        IniciarDistancias(ref distancias, tablero[0].Count);
+        if (playerPosC < (n) / 2 && playerPosF <= (n) / 2)
+        {
+
+            for (int i = (n) / 2; i < n; i++)
+            {
+                for (int j = (n) / 2; j < n; j++)
+                {
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                        distancias[i][j] = 0;
+
+                }
+            }
+
+        }
+        else if (playerPosC >= (n) / 2 && playerPosF > (n) / 2)
+        {
+            for (int i = 0; i < n / 2; i++)
+            {
+                for (int j = 0; j < n / 2; j++)
+                {
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                        distancias[i][j] = 0;
+
+
+                }
+            }
+
+        }
+        else if (playerPosC < (n) / 2 && playerPosF > (n) / 2)
+        {
+            for (int i = 0; i < n / 2; i++)
+            {
+                for (int j = (n) / 2; j < n; j++)
+                {
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                        distancias[i][j] = 0;
+
+
+                }
+            }
+
+        }
+        else
+        {
+            for (int i = (n) / 2; i < n; i++)
+            {
+                for (int j = 0; j < n / 2; j++)
+                {
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                        distancias[i][j] = 0;
+
+
+                }
+            }
+
+        }
+        return distancias;
+
+    }
+
+    public static void IniciarDistancias(ref List<List<int>> distancias, int n)
+    {
+        for (int f = 0; f < n; f++)
         {
             distancias.Add(new List<int>());
-            for (int c = 0; c < size; c++)
+            for (int c = 0; c < n; c++)
             {
                 distancias[f].Add(-1);
             }
@@ -58,6 +124,20 @@ public class BoardManeger
     private static bool PosicionValida(int n, int f, int c)
     {
         return f >= 0 && f < n && c >= 0 && c < n;
+    }
+    public static void ColorReachShell(List<List<Shell>> matriz, List<List<int>> distancias)
+    {
+        for (int i = 0; i < distancias[0].Count; i++)
+            for (int j = 0; j < distancias[0].Count; j++)
+            {
+                if (distancias[i][j] != -1)
+                {
+                    matriz[i][j].reach = true;
+
+                }
+            }
+
+
     }
 
 }
