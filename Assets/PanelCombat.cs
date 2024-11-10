@@ -19,7 +19,7 @@ public class PanelCombat : MonoBehaviour
     public TextMeshProUGUI Next;
 
     public TextMeshProUGUI fight;
-    Animator anim;
+    public Animator anim;
     bool fin;
     public displayPlayerTurnInfo displayPlayerTurnInfo;
     // Start is called before the first frame update

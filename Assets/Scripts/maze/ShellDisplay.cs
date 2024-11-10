@@ -28,6 +28,7 @@ public class ShellDisplay : MonoBehaviour
     public bool hasAplayer;
     public bool obstacule;
     public bool reach;
+    public List<PlayerManeger> NearPlayers = new List<PlayerManeger>();
 
     void Start()
     {
@@ -44,7 +45,7 @@ public class ShellDisplay : MonoBehaviour
             hasAplayer = shell.hasAplayer;
             reach = shell.reach;
             obstacule = shell.obstacle;
-
+            NearPlayers = shell.NearPlayers;
             distToShell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
             num.text = distToShell + "";
             cordText.text = shell.coord + "";

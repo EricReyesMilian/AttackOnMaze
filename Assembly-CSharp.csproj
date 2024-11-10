@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\characters\player.cs" />
     <Compile Include="Assets\PanelCombat.cs" />
     <Compile Include="Assets\GameManeger.cs" />
+    <Compile Include="Assets\displaySelectablesPlayers.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Assets\displayPlayerTurnInfo.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\playerStatUI.cs" />
+    <Compile Include="Assets\SelectionPlayer.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
   </ItemGroup>
   <ItemGroup>

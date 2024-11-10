@@ -49,6 +49,9 @@ public class GameManeger : MonoBehaviour
     public delegate void Combate();
     public event Combate StartCombate;
 
+    public delegate void SelectPlayerCombat();
+    public event SelectPlayerCombat SelectplayerCombat;
+
     public delegate void Stats(int i);
     public event Stats UpdateStats;
 
@@ -61,6 +64,8 @@ public class GameManeger : MonoBehaviour
     public Combat combatScene;
     public bool lastWinner1;
     public bool isInCombat;
+    public Vector2 combatZoneCoord;
+    public List<player> nearPlayers;
     private void Awake()
     {
         if (gameManeger)
@@ -175,6 +180,9 @@ public class GameManeger : MonoBehaviour
 
     public void ColorBattleZone()
     {
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                matriz[i][j].NearPlayers.Clear();
         for (int p = 0; p < players.Count; p++)
         {
             if (p != turn)
@@ -407,7 +415,7 @@ public class GameManeger : MonoBehaviour
             {
                 InitReachShell();
 
-                Combat(target);
+                SelectPlayer(target);
 
             }
             else
@@ -440,34 +448,40 @@ public class GameManeger : MonoBehaviour
     }
 
 
-    private void SelectPlayer()
+    private void SelectPlayer(Vector2 target)
     {
-
-    }
-    private void Combat(Vector2 target)
-    {
-
-        //asignar player1
-
-        //asignar player2
-        int i = 0;
-        while (true)
+        nearPlayers.Clear();
+        combatZoneCoord = target;
+        for (int k = 0; k < matriz[(int)target.x][(int)target.y].NearPlayers.Count; k++)
         {
-            if (matriz[(int)target.x][(int)target.y].NearPlayers[i] != players[turn])
-                break;
+            nearPlayers.Add(matriz[(int)target.x][(int)target.y].NearPlayers[k].play);
 
-            i++;
         }
+        if (nearPlayers.Count > 1)
+        {
+            SelectplayerCombat();
 
 
-        combatScene = new Combat(players[turn], matriz[(int)target.x][(int)target.y].NearPlayers[i]);
+        }
+        else
+        {
+            Combat(combatZoneCoord, 0);
+        }
+    }
+    public void Combat(Vector2 target, int indexNearPlayer)
+    {
+
+
+
+
+        combatScene = new Combat(players[turn], matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer]);
         StartCombate();
 
 
         //combat maneger
         lastWinner1 = combatScene.Player1IsWinner();
         players[turn].power += combatScene.Reward(lastWinner1, 1);
-        matriz[(int)target.x][(int)target.y].NearPlayers[i].power += combatScene.Reward(lastWinner1, 2);
+        matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer].power += combatScene.Reward(lastWinner1, 2);
 
         //resultado de la victoria
         if (lastWinner1)
@@ -475,7 +489,7 @@ public class GameManeger : MonoBehaviour
             //seleccionar casilla
             for (int p = 0; p < players.Count; p++)
             {
-                if (matriz[(int)target.x][(int)target.y].NearPlayers[i] == players[p])
+                if (matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer] == players[p])
                 {
                     loserPlayer = p;
                     distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[p].Pos.x, (int)players[p].Pos.y);
