@@ -49,7 +49,7 @@ public class ShellDisplay : MonoBehaviour
             num.text = distToShell + "";
             cordText.text = shell.coord + "";
             visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
-            if (GameManeger.gameManeger.combat && !shell.hasAplayer && !shell.obstacle)
+            if (GameManeger.gameManeger.isInCombat && !shell.hasAplayer && !shell.obstacle)
             {
                 img_shell.color = reach_color;
             }
@@ -115,7 +115,7 @@ public class ShellDisplay : MonoBehaviour
     }
     public void Click()
     {
-        if (!GameManeger.gameManeger.combat)
+        if (!GameManeger.gameManeger.isInCombat)
         {
             GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.turn);
 

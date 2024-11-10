@@ -42,9 +42,9 @@ public class PanelCombat : MonoBehaviour
             img2.color = Color.white;
             if (!fin)
             {
-                power1.text = "power:" + GameManeger.gameManeger.power1Before.ToString();
-                power2.text = "power:" + GameManeger.gameManeger.power2Before.ToString();
-                int per1 = Mathf.CeilToInt((float)GameManeger.gameManeger.power2Before / (GameManeger.gameManeger.power1Before + GameManeger.gameManeger.power2Before) * 100);
+                power2.text = "power:" + GameManeger.gameManeger.combatScene.GetPower2().ToString();
+                power1.text = "power:" + GameManeger.gameManeger.combatScene.GetPower1().ToString();
+                int per1 = Mathf.CeilToInt((float)GameManeger.gameManeger.combatScene.GetPower2() / (GameManeger.gameManeger.combatScene.GetPower1() + GameManeger.gameManeger.combatScene.GetPower2()) * 100);
 
                 int per2 = 100 - per1;
                 percent1.text = per1 + "%";
@@ -84,7 +84,7 @@ public class PanelCombat : MonoBehaviour
         anim.SetTrigger("Fight");
 
         fin = true;
-        anim.SetBool("player1", GameManeger.gameManeger.player1Win);//bool igual al ganador
+        anim.SetBool("player1", GameManeger.gameManeger.lastWinner1);//bool igual al ganador//error
     }
     public void ClosePanel()
     {
@@ -96,6 +96,8 @@ public class PanelCombat : MonoBehaviour
     public void OpenPanel()
     {
         anim.SetTrigger("combat");
+        player1 = GameManeger.gameManeger.combatScene.player1;
+        player2 = GameManeger.gameManeger.combatScene.player2;
 
     }
 }

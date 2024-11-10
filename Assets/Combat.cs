@@ -5,12 +5,17 @@ using System.Collections.Generic;
 
 public class Combat
 {
-    PlayerManeger player1;
-    PlayerManeger player2;
+    public PlayerManeger player1;
+    public PlayerManeger player2;
+
+    public int power1Before;
+    public int power2Before;
     public Combat(PlayerManeger player1, PlayerManeger player2)
     {
         this.player1 = player1;
         this.player2 = player2;
+        power1Before = player1.power;
+        power2Before = player2.power;
     }
 
     public bool Player1IsWinner()
@@ -19,7 +24,14 @@ public class Combat
         return (float)(player1.power) / (player1.power + player2.power) >= r;
 
     }
-
+    public int GetPower1()
+    {
+        return power1Before;
+    }
+    public int GetPower2()
+    {
+        return power2Before;
+    }
     public int Reward(bool player1Win, int index)
     {
         if (index == 1)
