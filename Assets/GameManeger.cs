@@ -66,6 +66,9 @@ public class GameManeger : MonoBehaviour
     public bool isInCombat;
     public Vector2 combatZoneCoord;
     public List<player> nearPlayers;
+
+    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9) };
+    public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (7, 7), (7, 9), (8, 6), (9, 6), (10, 6), (10, 7), (8, 10), (9, 10), (10, 10), (10, 8), (10, 9) };
     private void Awake()
     {
         if (gameManeger)
@@ -97,6 +100,9 @@ public class GameManeger : MonoBehaviour
         players[0].Pos = new Vector2(8, 7);
         players[1].Pos = new Vector2(9, 8);
         players[2].Pos = new Vector2(9, 9);
+        players[3].Pos = new Vector2(9, 7);
+
+        ///    players[3].Pos = new Vector2(0, 9);
 
         currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
 
@@ -119,7 +125,11 @@ public class GameManeger : MonoBehaviour
             BoardManeger.IniciarDistancias(ref distancia, n);
 
             //maze 
-            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim);
+            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
+            //  MazeGenerator maze2 = new MazeGenerator(n, 0, 0, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
+
+            // MazeGenerator2 maze = new MazeGenerator2(n, matriz, predefinedEmptyCells, predefinedObstacleCells);
+
             //maze 
 
 
@@ -268,7 +278,6 @@ public class GameManeger : MonoBehaviour
             {
                 matriz[i][j].reach = false;
                 matriz[i][j].nearPlayer = false;
-                matriz[i][j].NearPlayers.Clear();
             }
         }
 
