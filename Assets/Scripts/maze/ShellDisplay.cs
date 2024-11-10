@@ -123,7 +123,9 @@ public class ShellDisplay : MonoBehaviour
         }
         else
         {
-            GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.loserPlayer);
+            GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.NextTurnIndex(GameManeger.gameManeger.turn));
+
+
 
 
         }

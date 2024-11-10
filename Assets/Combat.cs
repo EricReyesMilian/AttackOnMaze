@@ -40,11 +40,11 @@ public class Combat
             {
                 if (player1.power >= player2.power)
                 {
-                    return (player2.power / 2) % 2 == 0 ? player2.power / 2 : (player2.power / 2) + 1;//recompensa si es mas fuerte
+                    return player2.power == 1 || player2.power / 2 > 1 && (player2.power / 2) % 2 == 0 ? player2.power / 2 : (player2.power / 2) + 1;//recompensa si es mas fuerte
                 }
                 else
                 {
-                    return (player2.power / 4) % 4 == 0 ? player2.power / 4 : (player2.power / 4) + 1;//recompensa si es mas debil
+                    return player2.power == 1 || player2.power / 4 > 1 && (player2.power / 4) % 4 == 0 ? player2.power / 4 : (player2.power / 4) + 1;//recompensa si es mas debil
 
                 }
             }
@@ -52,11 +52,11 @@ public class Combat
             {
                 if (player1.power >= player2.power)
                 {
-                    return -((player1.power / 4) % 2 == 0 ? player1.power / 4 : (player1.power / 4) + 1); ;//penalizacion si es mas fuerte
+                    return -(player1.power == 1 || player1.power / 4 > 1 && (player1.power / 4) % 2 == 0 ? player1.power / 4 : (player1.power / 4) + 1); ;//penalizacion si es mas fuerte
                 }
                 else
                 {
-                    return -((player1.power / 2) % 2 == 0 ? player1.power / 2 : (player1.power / 2) + 1);//penalizacion si es mas debil
+                    return -(player1.power == 1 || player1.power / 2 > 1 && (player1.power / 2) % 2 == 0 ? player1.power / 2 : (player1.power / 2) + 1);//penalizacion si es mas debil
                 }
             }
 
@@ -67,22 +67,22 @@ public class Combat
             {
                 if (player2.power >= player1.power)
                 {
-                    return -((player2.power / 4) % 2 == 0 ? player2.power / 4 : (player2.power / 4) + 1);//penalizacion si es mas fuerte
+                    return -(player2.power == 1 || player2.power / 4 > 1 && (player2.power / 4) % 2 == 0 ? player2.power / 4 : (player2.power / 4) + 1);//penalizacion si es mas fuerte
                 }
                 else
                 {
-                    return -((player2.power / 2) % 2 == 0 ? player2.power / 2 : (player2.power / 2) + 1);//penalizacion si es mas debil
+                    return -(player2.power == 1 || player2.power / 2 > 1 && (player2.power / 2) % 2 == 0 ? player2.power / 2 : (player2.power / 2) + 1);//penalizacion si es mas debil
                 }
             }
             else
             {
                 if (player2.power >= player1.power)
                 {
-                    return (player1.power / 2) % 2 == 0 ? player1.power / 2 : (player1.power / 2) + 1;//recompensa si es mas fuerte
+                    return player1.power == 1 || player1.power / 2 > 1 && (player1.power / 2) % 2 == 0 ? player1.power / 2 : (player1.power / 2) + 1;//recompensa si es mas fuerte
                 }
                 else
                 {
-                    return (player1.power / 4) % 4 == 0 ? player1.power / 4 : (player1.power / 4) + 1;//recompensa si es mas debil
+                    return player1.power == 1 || player1.power / 4 > 1 && (player1.power / 4) % 4 == 0 ? player1.power / 4 : (player1.power / 4) + 1;//recompensa si es mas debil
 
                 }
 

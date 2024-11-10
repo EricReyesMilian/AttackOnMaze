@@ -257,10 +257,8 @@ public class GameManeger : MonoBehaviour
     {
         if (!playingCorrutine && !isInCombat)
         {
-            turn += 1;
-            if (turn > players.Count - 1)
-                turn = 0;
 
+            turn = NextTurnIndex(turn);
             SetDist();
             InitReachShell();
             currentSpeed = players[turn].speed;
@@ -269,6 +267,17 @@ public class GameManeger : MonoBehaviour
         }
 
     }
+    public int NextTurnIndex(int turn)
+    {
+        if (turn + 1 > players.Count - 1)
+            return 0;
+        else
+            return turn + 1;
+
+    }
+    //
+
+
     //desmarca todas las casillas alcanzables y con jugadores cercanos
     public void InitReachShell()
     {
@@ -475,12 +484,16 @@ public class GameManeger : MonoBehaviour
                 {
                     loserPlayer = p;
                     distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[p].Pos.x, (int)players[p].Pos.y);
+                    ListHelper.MoveElement(players, players[p], NextTurnIndex(turn));
+
                     BoardManeger.ColorReachShell(matriz, distancia);
                     UpdateDisplay();
 
                     break;
                 }
             }
+
+
         }
         else
         {
