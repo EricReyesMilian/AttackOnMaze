@@ -113,7 +113,6 @@ public class GameManeger : MonoBehaviour
         if (shellLoaded)
         {
             AddShellsToMatriz();
-            MatrizInit();
 
 
             FindPlayers();
@@ -177,12 +176,10 @@ public class GameManeger : MonoBehaviour
         }
 
     }
-
+    //marca las casillas con jugadores cercanos y los enlista
     public void ColorBattleZone()
     {
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                matriz[i][j].NearPlayers.Clear();
+        ClearMatrizNearPlayers();
         for (int p = 0; p < players.Count; p++)
         {
             if (p != turn)
@@ -232,7 +229,7 @@ public class GameManeger : MonoBehaviour
         }
         UpdateDisplay();
     }
-
+    //marca todas las casillas alcanzables
     public void ReachPointInMatriz()
     {
         if (!isInCombat)
@@ -245,20 +242,7 @@ public class GameManeger : MonoBehaviour
 
         }
     }
-    private void MatrizInit()
-    {
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                matriz[i][j].obstacle = true;
-                matriz[i][j].NearPlayers.Clear();
-                UpdateDisplay();
-            }
-        }
-
-    }
-
+    //verifica si es posible y pasa el turno
     public void NextTurn()
     {
         if (!playingCorrutine && !isInCombat)
@@ -275,8 +259,7 @@ public class GameManeger : MonoBehaviour
         }
 
     }
-
-
+    //desmarca todas las casillas alcanzables y con jugadores cercanos
     public void InitReachShell()
     {
         for (int i = 0; i < n; i++)
@@ -285,19 +268,12 @@ public class GameManeger : MonoBehaviour
             {
                 matriz[i][j].reach = false;
                 matriz[i][j].nearPlayer = false;
-
-
+                matriz[i][j].NearPlayers.Clear();
             }
         }
 
     }
-    public void UnColorReachShell(Vector2 cord)
-    {
-        matriz[int.Parse(cord.x.ToString())][int.Parse(cord.y.ToString())].reach = false;
-
-
-
-    }
+    //mueve a jugador
     public void MoveplayerTo(Vector2 target, int index)
     {
         if (!playingCorrutine)
@@ -331,7 +307,7 @@ public class GameManeger : MonoBehaviour
         }
 
     }
-
+    //corrutina para el movimiento del jugador
     IEnumerator MovePlayerCorutine(Vector2 target, int? index)
     {
         playingCorrutine = true;
@@ -434,6 +410,7 @@ public class GameManeger : MonoBehaviour
         StopCoroutine(MovePlayerCorutine(target, index));
 
     }
+    //inicializa la lista de jugadores cercanos
     void ClearMatrizNearPlayers()
     {
         for (int i = 0; i < n; i++)
@@ -446,8 +423,7 @@ public class GameManeger : MonoBehaviour
         }
 
     }
-
-
+    //selecciona un jugador entre los mas cercanos para iniciar el combate
     private void SelectPlayer(Vector2 target)
     {
         nearPlayers.Clear();
@@ -468,12 +444,9 @@ public class GameManeger : MonoBehaviour
             Combat(combatZoneCoord, 0);
         }
     }
+    //combate
     public void Combat(Vector2 target, int indexNearPlayer)
     {
-
-
-
-
         combatScene = new Combat(players[turn], matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer]);
         StartCombate();
 
@@ -512,8 +485,6 @@ public class GameManeger : MonoBehaviour
 
         isInCombat = true;
     }
-
-
     //metodo recursivo que luego de mover la ficha devuelve el camino mas corto
     void SavePath(Vector2 target)
     {
