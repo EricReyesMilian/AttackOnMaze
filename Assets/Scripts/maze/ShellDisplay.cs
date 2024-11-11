@@ -7,7 +7,7 @@ public class CellDisplay : MonoBehaviour
 {
     Image img_cell;
 
-    private Cell cell;
+    public Cell cell;
     public Sprite default_sprite;
 
     public Color obstacule_color = Color.gray;
@@ -178,17 +178,9 @@ public class CellDisplay : MonoBehaviour
     }
     void AsignarCasillaCorrespondiente()
     {
-        for (int i = 0; i < GameManeger.gameManeger.n; i++)
-        {
-            for (int j = 0; j < GameManeger.gameManeger.n; j++)
-            {
-                if (GameManeger.gameManeger.matriz[i][j].coord == coord)
-                {
-                    cell = GameManeger.gameManeger.matriz[i][j];
-                    break;
-                }
-            }
-        }
+
+        cell = GameManeger.gameManeger.matriz[(int)coord.x][(int)coord.y];
+
 
     }
 }

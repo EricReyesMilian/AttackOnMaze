@@ -99,6 +99,7 @@
     <Compile Include="Assets\MazeGenerator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\MyVector2.cs" />
     <Compile Include="Assets\Scripts\maze\ShellDisplay.cs" />
     <Compile Include="Assets\displayPlayerTurnInfo.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />

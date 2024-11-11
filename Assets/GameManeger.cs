@@ -52,6 +52,10 @@ public class GameManeger : MonoBehaviour
     public delegate void SelectPlayerCombat();
     public event SelectPlayerCombat SelectplayerCombat;
 
+    public delegate void ChangeTurnOrder();
+    public event ChangeTurnOrder ChangeTurnOrd;
+
+
     public delegate void Stats(int i);
     public event Stats UpdateStats;
 
@@ -79,10 +83,13 @@ public class GameManeger : MonoBehaviour
         {
             gameManeger = this;
         }
+        AddCellsToMatriz();
+
     }
     // Start is called before the first frame update
     void Start()
     {
+
         walls = new bool[n, n];
         //este metodo debe ser sustituido por los jugadores seleccionados
         //recordar luego de eso cambiar el orden de ejecucion de los script
@@ -118,7 +125,6 @@ public class GameManeger : MonoBehaviour
 
         if (cellLoaded)
         {
-            AddCellsToMatriz();
 
 
             FindPlayers();
@@ -259,14 +265,17 @@ public class GameManeger : MonoBehaviour
         {
 
             turn = NextTurnIndex(turn);
+            ChangeTurnOrd();
             SetDist();
             InitReachCell();
             currentSpeed = players[turn].speed;
             ReachPointInMatriz();
+
             UpdateStats(turn);
         }
 
     }
+    //suma 1 al turno
     public int NextTurnIndex(int turn)
     {
         if (turn + 1 > players.Count - 1)
@@ -275,9 +284,6 @@ public class GameManeger : MonoBehaviour
             return turn + 1;
 
     }
-    //
-
-
     //desmarca todas las casillas alcanzables y con jugadores cercanos
     public void InitReachCell()
     {
@@ -485,6 +491,7 @@ public class GameManeger : MonoBehaviour
                     loserPlayer = p;
                     distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[p].Pos.x, (int)players[p].Pos.y);
                     ListHelper.MoveElement(players, players[p], NextTurnIndex(turn));
+                    ChangeTurnOrd();
 
                     BoardManeger.ColorReachCell(matriz, distancia);
                     UpdateDisplay();

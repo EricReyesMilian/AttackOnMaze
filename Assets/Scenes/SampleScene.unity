@@ -2431,8 +2431,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   n: 17
-  shellLoaded: 0
-  shellsContainer: {fileID: 1394349740}
+  cellLoaded: 0
+  cellsContainer: {fileID: 1394349740}
   createBoard: {fileID: 1394349742}
   turn: 0
   players: []
@@ -11996,7 +11996,7 @@ GameObject:
   - component: {fileID: 971739689}
   - component: {fileID: 971739688}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: vs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17390,8 +17390,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -93.10028, y: -59.6}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -76.55, y: -59.6}
+  m_SizeDelta: {x: 133.1, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1306226171
 MonoBehaviour:
@@ -17410,13 +17410,13 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 1
+  m_ChildAlignment: 2
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 80, y: 30}
   m_Spacing: {x: 5, y: 5}
   m_Constraint: 1
-  m_ConstraintCount: 2
+  m_ConstraintCount: 1
 --- !u!114 &1306226172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19072,7 +19072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c3d4d71af2bf24cb7f6cdeebf09164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shellPref: {fileID: 330532874729289670, guid: be1a2ceffcf833a4c998f15bcd9f767f, type: 3}
+  cellPref: {fileID: 330532874729289670, guid: be1a2ceffcf833a4c998f15bcd9f767f, type: 3}
   height: 425
   padding: 0.923
   obstaclesAmount: 20
@@ -26450,7 +26450,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -105.9}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 153.81, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1952690413
 MonoBehaviour:
@@ -26499,15 +26499,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
+  m_fontSize: 46.65
   m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 1
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -26515,7 +26515,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

@@ -20,6 +20,7 @@ public class PanelCombat : MonoBehaviour
 
     public TextMeshProUGUI fight;
     public Animator anim;
+    public GameObject Panel;
     bool fin;
     public displayPlayerTurnInfo displayPlayerTurnInfo;
     // Start is called before the first frame update
@@ -90,12 +91,14 @@ public class PanelCombat : MonoBehaviour
     {
         fin = false;
         displayPlayerTurnInfo.UpdateStats(GameManeger.gameManeger.turn);
+        Panel.SetActive(false);
         //  gameObject.SetActive(false);
 
     }
     public void OpenPanel()
     {
         anim.SetTrigger("combat");
+        Panel.SetActive(true);
         player1 = GameManeger.gameManeger.combatScene.player1;
         player2 = GameManeger.gameManeger.combatScene.player2;
 
