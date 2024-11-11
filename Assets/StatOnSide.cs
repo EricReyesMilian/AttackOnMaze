@@ -14,4 +14,8 @@ public class StatOnSide : MonoBehaviour
         }
 
     }
+    void Update()
+    {
+
+    }
 }

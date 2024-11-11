@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shell
+public class Cell
 {
     public bool obstacle = true;
     public bool hasAplayer;

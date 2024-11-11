@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CreateBoard : MonoBehaviour
 {
-    public GameObject shellPref;
+    public GameObject cellPref;
     GridLayoutGroup grid;
     int n;
     public float height = 600;
@@ -26,9 +26,9 @@ public class CreateBoard : MonoBehaviour
     {
         n = GameManeger.gameManeger.n;
         grid = GetComponent<GridLayoutGroup>();
-        DestroyShells();
+        DestroyCells();
         GridLayoutConfig(n);
-        InstantiateShells(n);
+        InstantiateCells(n);
         gm = GameManeger.gameManeger;
     }
 
@@ -51,22 +51,22 @@ public class CreateBoard : MonoBehaviour
         grid.spacing = new Vector2((height / n) * (1 - padding), (height / n) * (1 - padding));
 
     }
-    void InstantiateShells(int n)
+    void InstantiateCells(int n)
     {
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
             {
-                Instantiate(shellPref, Vector3.zero, Quaternion.identity, gameObject.transform);
-                shellPref.GetComponent<ShellDisplay>().coord = new Vector2(i, j);
+                Instantiate(cellPref, Vector3.zero, Quaternion.identity, gameObject.transform);
+                cellPref.GetComponent<CellDisplay>().coord = new Vector2(i, j);
             }
         }
         ready = true;
 
-        GameManeger.gameManeger.shellLoaded = true;
+        GameManeger.gameManeger.cellLoaded = true;
     }
 
-    void DestroyShells()
+    void DestroyCells()
     {
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {

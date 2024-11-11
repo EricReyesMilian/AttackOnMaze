@@ -9,17 +9,17 @@ public class GameManeger : MonoBehaviour
 
     public int n;
     [HideInInspector]
-    public bool shellLoaded;
-    public GameObject shellsContainer;
+    public bool cellLoaded;
+    public GameObject cellsContainer;
 
     public CreateBoard createBoard;
 
 
-    public List<List<Shell>> matriz = new List<List<Shell>>();
+    public List<List<Cell>> matriz = new List<List<Cell>>();
 
 
     public List<List<int>> distancia = new List<List<int>>();
-    public Shell genericShell;
+    public Cell genericCell;
     //turno
     public int turn = 0;
 
@@ -107,18 +107,18 @@ public class GameManeger : MonoBehaviour
         currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
 
 
-        //shelloaded
+        //celloaded
 
-        //shelloaded
+        //celloaded
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (shellLoaded)
+        if (cellLoaded)
         {
-            AddShellsToMatriz();
+            AddCellsToMatriz();
 
 
             FindPlayers();
@@ -136,7 +136,7 @@ public class GameManeger : MonoBehaviour
             ReachPointInMatriz();
             UpdateStats(turn);
             UpdateDisplay();
-            shellLoaded = false;
+            cellLoaded = false;
         }
         #region DebugInputs
         if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
@@ -148,7 +148,7 @@ public class GameManeger : MonoBehaviour
         {
             // MatrizInit();
             // FindPlayersOnMaze();
-            // PositioningShells();
+            // PositioningCells();
             // MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Dfs);
 
 
@@ -245,9 +245,9 @@ public class GameManeger : MonoBehaviour
         if (!isInCombat)
         {
             int speed = currentSpeed;
-            InitReachShell();
+            InitReachCell();
             distancia = BoardManeger.Lee(matriz, (int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
-            BoardManeger.ColorReachShell(matriz, distancia);
+            BoardManeger.ColorReachCell(matriz, distancia);
             ColorBattleZone();
 
         }
@@ -260,7 +260,7 @@ public class GameManeger : MonoBehaviour
 
             turn = NextTurnIndex(turn);
             SetDist();
-            InitReachShell();
+            InitReachCell();
             currentSpeed = players[turn].speed;
             ReachPointInMatriz();
             UpdateStats(turn);
@@ -279,7 +279,7 @@ public class GameManeger : MonoBehaviour
 
 
     //desmarca todas las casillas alcanzables y con jugadores cercanos
-    public void InitReachShell()
+    public void InitReachCell()
     {
         for (int i = 0; i < n; i++)
         {
@@ -314,7 +314,7 @@ public class GameManeger : MonoBehaviour
                     ClearMatrizNearPlayers();
                     isInCombat = false;
                     FindPlayers();
-                    InitReachShell();
+                    InitReachCell();
                     SetDist();
 
                     ReachPointInMatriz();
@@ -407,14 +407,14 @@ public class GameManeger : MonoBehaviour
             playingCorrutine = false;
             if (matriz[(int)target.x][(int)target.y].nearPlayer)
             {
-                InitReachShell();
+                InitReachCell();
 
                 SelectPlayer(target);
 
             }
             else
             {
-                InitReachShell();
+                InitReachCell();
                 SetDist();
 
                 ReachPointInMatriz();
@@ -486,7 +486,7 @@ public class GameManeger : MonoBehaviour
                     distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[p].Pos.x, (int)players[p].Pos.y);
                     ListHelper.MoveElement(players, players[p], NextTurnIndex(turn));
 
-                    BoardManeger.ColorReachShell(matriz, distancia);
+                    BoardManeger.ColorReachCell(matriz, distancia);
                     UpdateDisplay();
 
                     break;
@@ -499,7 +499,7 @@ public class GameManeger : MonoBehaviour
         {
             loserPlayer = turn;
             distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[turn].Pos.x, (int)players[turn].Pos.y);
-            BoardManeger.ColorReachShell(matriz, distancia);
+            BoardManeger.ColorReachCell(matriz, distancia);
             UpdateDisplay();
 
             //seleccionar casilla   
@@ -563,16 +563,16 @@ public class GameManeger : MonoBehaviour
         return matriz[(int)target.x][(int)target.y].reach;
 
     }
-    //agrega las clases shells a la matriz
-    void AddShellsToMatriz()
+    //agrega las clases cells a la matriz
+    void AddCellsToMatriz()
     {
         for (int i = 0; i < n; i++)
         {
-            matriz.Add(new List<Shell>());
+            matriz.Add(new List<Cell>());
 
             for (int j = 0; j < n; j++)
             {
-                matriz[i].Add(new Shell());
+                matriz[i].Add(new Cell());
                 matriz[i][j].coord = new Vector2(i, j);
 
             }

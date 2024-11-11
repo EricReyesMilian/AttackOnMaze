@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 public class BoardManeger
 {
-    public static List<List<int>> Lee(List<List<Shell>> tablero, int filaInical, int columnaInicial, int speed)
+    public static List<List<int>> Lee(List<List<Cell>> tablero, int filaInical, int columnaInicial, int speed)
     {
         int size = tablero[0].Count;
         List<List<int>> distancias = new List<List<int>>();
@@ -45,7 +45,7 @@ public class BoardManeger
         return distancias;
     }
 
-    public static List<List<int>> ReachPointInSubMatriz(List<List<Shell>> tablero, int playerPosF, int playerPosC)
+    public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, int playerPosF, int playerPosC)
     {
         List<List<int>> distancias = new List<List<int>>();
         int n = tablero[0].Count;
@@ -125,7 +125,7 @@ public class BoardManeger
     {
         return f >= 0 && f < n && c >= 0 && c < n;
     }
-    public static void ColorReachShell(List<List<Shell>> matriz, List<List<int>> distancias)
+    public static void ColorReachCell(List<List<Cell>> matriz, List<List<int>> distancias)
     {
         for (int i = 0; i < distancias[0].Count; i++)
             for (int j = 0; j < distancias[0].Count; j++)

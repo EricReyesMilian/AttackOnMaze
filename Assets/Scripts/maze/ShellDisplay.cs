@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class ShellDisplay : MonoBehaviour
+public class CellDisplay : MonoBehaviour
 {
-    Image img_shell;
+    Image img_cell;
 
-    private Shell shell;
+    private Cell cell;
     public Sprite default_sprite;
 
     public Color obstacule_color = Color.gray;
@@ -18,7 +18,7 @@ public class ShellDisplay : MonoBehaviour
     public Color reachHover_color;
     public Color combat_color;
 
-    public int distToShell = -5;
+    public int distToCell = -5;
     public TextMeshProUGUI num;
     public TextMeshProUGUI cordText;
     public bool hover;
@@ -33,64 +33,64 @@ public class ShellDisplay : MonoBehaviour
     void Start()
     {
 
-        img_shell = GetComponent<Image>();
+        img_cell = GetComponent<Image>();
         GameManeger.gameManeger.UpdateDisplay += AsignarCasillaCorrespondiente;
         GameManeger.gameManeger.DrawWay += DrawWay;
 
     }
     void Update()
     {
-        if (shell != null)
+        if (cell != null)
         {
-            hasAplayer = shell.hasAplayer;
-            reach = shell.reach;
-            obstacule = shell.obstacle;
-            NearPlayers = shell.NearPlayers;
-            distToShell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
-            num.text = distToShell + "";
-            cordText.text = shell.coord + "";
+            hasAplayer = cell.hasAplayer;
+            reach = cell.reach;
+            obstacule = cell.obstacle;
+            NearPlayers = cell.NearPlayers;
+            distToCell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
+            num.text = distToCell + "";
+            cordText.text = cell.coord + "";
             visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
-            if (GameManeger.gameManeger.isInCombat && !shell.hasAplayer && !shell.obstacle)
+            if (GameManeger.gameManeger.isInCombat && !cell.hasAplayer && !cell.obstacle)
             {
-                img_shell.color = reach_color;
+                img_cell.color = reach_color;
             }
             else
-           if (shell.reach && !shell.visitedOnMove && !hover && !shell.nearPlayer)
+           if (cell.reach && !cell.visitedOnMove && !hover && !cell.nearPlayer)
             {
                 if (!GameManeger.gameManeger.runningBackwards)
-                    img_shell.color = reach_color;
+                    img_cell.color = reach_color;
                 else
-                    img_shell.color = default_color;
+                    img_cell.color = default_color;
 
 
             }
-            else if (shell.reach && !shell.visitedOnMove && !hover && shell.nearPlayer)
+            else if (cell.reach && !cell.visitedOnMove && !hover && cell.nearPlayer)
             {
                 if (!GameManeger.gameManeger.runningBackwards)
-                    img_shell.color = combat_color;
+                    img_cell.color = combat_color;
                 else
-                    img_shell.color = default_color;
+                    img_cell.color = default_color;
 
 
 
             }
-            if (shell.obstacle)
+            if (cell.obstacle)
             {
-                img_shell.color = obstacule_color;
+                img_cell.color = obstacule_color;
             }
-            if (shell.hasAplayer)
+            if (cell.hasAplayer)
             {
-                img_shell.sprite = shell.player.sprite;
-                img_shell.color = Color.white;
+                img_cell.sprite = cell.player.sprite;
+                img_cell.color = Color.white;
 
             }
             else
             {
-                img_shell.sprite = default_sprite;
+                img_cell.sprite = default_sprite;
             }
-            if (!(shell.hasAplayer || shell.obstacle || shell.reach || hover))
+            if (!(cell.hasAplayer || cell.obstacle || cell.reach || hover))
             {
-                img_shell.color = default_color;
+                img_cell.color = default_color;
             }
             DrawWay();
 
@@ -98,18 +98,18 @@ public class ShellDisplay : MonoBehaviour
     }
     public void DrawWay()
     {
-        if (shell.visitedOnMove)
+        if (cell.visitedOnMove)
         {
-            if (!shell.hasAplayer)
+            if (!cell.hasAplayer)
             {
-                img_shell.sprite = default_sprite;
+                img_cell.sprite = default_sprite;
 
-                img_shell.color = visited_color;
+                img_cell.color = visited_color;
             }
             else
             {
-                img_shell.sprite = shell.player.sprite;
-                img_shell.color = Color.white;
+                img_cell.sprite = cell.player.sprite;
+                img_cell.color = Color.white;
 
             }
         }
@@ -118,12 +118,21 @@ public class ShellDisplay : MonoBehaviour
     {
         if (!GameManeger.gameManeger.isInCombat)
         {
-            GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.turn);
+            GameManeger.gameManeger.MoveplayerTo(cell.coord, GameManeger.gameManeger.turn);
 
         }
         else
         {
-            GameManeger.gameManeger.MoveplayerTo(shell.coord, GameManeger.gameManeger.NextTurnIndex(GameManeger.gameManeger.turn));
+            if (GameManeger.gameManeger.lastWinner1)
+            {
+                GameManeger.gameManeger.MoveplayerTo(cell.coord, GameManeger.gameManeger.NextTurnIndex(GameManeger.gameManeger.turn));
+
+            }
+            else
+            {
+                GameManeger.gameManeger.MoveplayerTo(cell.coord, GameManeger.gameManeger.turn);
+
+            }
 
 
 
@@ -133,21 +142,21 @@ public class ShellDisplay : MonoBehaviour
     public void Hover()
     {
         //print("hover");
-        if (!shell.reach)
+        if (!cell.reach)
         {
-            img_shell.color = hover_color;
+            img_cell.color = hover_color;
 
         }
         else
         {
-            img_shell.color = reachHover_color;
+            img_cell.color = reachHover_color;
         }
         hover = true;
-        if (shell.hasAplayer)
+        if (cell.hasAplayer)
         {
             for (int p = 0; p < GameManeger.gameManeger.players.Count; p++)
             {
-                if (shell.player == GameManeger.gameManeger.players[p].play)
+                if (cell.player == GameManeger.gameManeger.players[p].play)
                 {
                     displayPlayerTurnInfo.statdisplay.UpdateStats(p);
 
@@ -175,7 +184,7 @@ public class ShellDisplay : MonoBehaviour
             {
                 if (GameManeger.gameManeger.matriz[i][j].coord == coord)
                 {
-                    shell = GameManeger.gameManeger.matriz[i][j];
+                    cell = GameManeger.gameManeger.matriz[i][j];
                     break;
                 }
             }

@@ -9,10 +9,10 @@ public enum Algorithm
 // public class MazeGenerator2
 // {
 //     private int size;
-//     private List<List<Shell>> maze;
+//     private List<List<Cell>> maze;
 //     private Random rand = new Random();
 
-//     public MazeGenerator2(int size, List<List<Shell>> maze, List<(int x, int y)> predefinedEmptyCells, List<(int x, int y)> predefinedObstacleCells)
+//     public MazeGenerator2(int size, List<List<Cell>> maze, List<(int x, int y)> predefinedEmptyCells, List<(int x, int y)> predefinedObstacleCells)
 //     {
 //         this.size = size;
 //         this.maze = maze;
@@ -193,10 +193,10 @@ public class MazeGenerator
     private int size;
     private int startX;
     private int startY;
-    private List<List<Shell>> maze;
+    private List<List<Cell>> maze;
     private Random rand = new Random();
 
-    public MazeGenerator(int size, int startX, int startY, List<List<Shell>> maze, Algorithm alg, List<(int x, int y)> predefinedEmptyCells, List<(int x, int y)> predefinedObstacleCells)
+    public MazeGenerator(int size, int startX, int startY, List<List<Cell>> maze, Algorithm alg, List<(int x, int y)> predefinedEmptyCells, List<(int x, int y)> predefinedObstacleCells)
     {
         this.size = size;
         this.startX = startX;
