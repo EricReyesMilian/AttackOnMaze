@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameManeger : MonoBehaviour
 {
@@ -71,7 +73,7 @@ public class GameManeger : MonoBehaviour
     public Vector2 combatZoneCoord;
     public List<player> nearPlayers;
 
-    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9) };
+    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (7, 7), (7, 9), (8, 6), (9, 6), (10, 6), (10, 7), (8, 10), (9, 10), (10, 10), (10, 8), (10, 9) };
     private void Awake()
     {
@@ -104,10 +106,10 @@ public class GameManeger : MonoBehaviour
         }
 
         //sets
-        players[0].Pos = new Vector2(8, 7);
-        players[1].Pos = new Vector2(9, 8);
-        players[2].Pos = new Vector2(9, 9);
-        players[3].Pos = new Vector2(9, 7);
+        players[0].Pos = new Vector2(1, 1);
+        players[1].Pos = new Vector2(15, 1);
+        players[2].Pos = new Vector2(1, 15);
+        players[3].Pos = new Vector2(15, 15);
 
         ///    players[3].Pos = new Vector2(0, 9);
 
@@ -152,6 +154,7 @@ public class GameManeger : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))//regenera el laberinto
         {
+            SceneManager.LoadScene(0);
             // MatrizInit();
             // FindPlayersOnMaze();
             // PositioningCells();
