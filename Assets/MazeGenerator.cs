@@ -258,18 +258,61 @@ public class MazeGenerator
                 }
             }
         }
-        // foreach (var ecell in predefinedEmptyCells)
-        // {
-        //     var aux = ecell;
-        //     predefinedEmptyCells.Remove(ecell);
 
-        //     //conectar con el laberinto
-        // }
+        Conec(predefinedEmptyCells, predefinedObstacleCells);
+        foreach (var cell in predefinedEmptyCells)
+        {
+            maze[cell.x][cell.y].obstacle = false;
+        }
+
+    }
+    void Conec(List<(int x, int y)> predefinedEmptyCells, List<(int x, int y)> predefinedObstacleCells)
+    {
+        int size = maze[0].Count;
+        //Marcar casilla inicial
+        //           N   S  E  W
+        int[] df = { -1, 1, 0, 0 };
+        int[] dc = { 0, 0, 1, -1 };
+
+
+        //Para cada posible celda del maze
+        for (int i = 0; i < predefinedEmptyCells.Count; i++)
+        {
+            for (int f = 0; f < size; f++)
+            {
+                for (int c = 0; c < size; c++)
+                {
+
+                    //inspeccionar celdas vecinas
+                    if ((f, c) == predefinedEmptyCells[i])
+                    {
+                        for (int d = 0; d < df.Length; d++)
+                        {
+                            int vf = f + df[d];
+                            int vc = c + dc[d];
+                            //determinar si es un vecino valido
+                            if (PosicionValida(size, vf, vc)
+                            && !predefinedObstacleCells.Contains((vf, vc)) && !predefinedEmptyCells.Contains((vf, vc)))
+                            {
+                                if (maze[vf][vc].obstacle)
+                                {
+                                    predefinedEmptyCells.Add((vf, vc));
+
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
 
 
     }
-
-
+    private static bool PosicionValida(int n, int f, int c)
+    {
+        return f >= 0 && f < n && c >= 0 && c < n;
+    }
 
     private void AddWalls(int x, int y, List<(int, int)> walls, List<(int, int)> predefinedEmptyCells, List<(int, int)> predefinedObstacleCells)
     {

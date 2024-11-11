@@ -131,7 +131,7 @@ public class GameManeger : MonoBehaviour
             BoardManeger.IniciarDistancias(ref distancia, n);
 
             //maze 
-            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
+            MazeGenerator maze = new MazeGenerator(n, 0, 0, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
             //  MazeGenerator maze2 = new MazeGenerator(n, 0, 0, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
 
             // MazeGenerator2 maze = new MazeGenerator2(n, matriz, predefinedEmptyCells, predefinedObstacleCells);
