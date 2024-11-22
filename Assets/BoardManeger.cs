@@ -1,6 +1,13 @@
+using System;
 using System.Collections.Generic;
 public class BoardManeger
 {
+    GameManeger gm = GameManeger.gameManeger;
+    List<List<Cell>> matriz;
+    public BoardManeger(List<List<Cell>> matriz)
+    {
+        this.matriz = matriz;
+    }
     public static List<List<int>> Lee(List<List<Cell>> tablero, int filaInical, int columnaInicial, int speed)
     {
         int size = tablero[0].Count;
@@ -44,6 +51,7 @@ public class BoardManeger
         } while (huboCambio);
         return distancias;
     }
+
 
     public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, int playerPosF, int playerPosC)
     {
@@ -136,6 +144,120 @@ public class BoardManeger
 
                 }
             }
+
+
+    }
+
+
+    public void AddTraps()
+    {
+        //           N   S  E  W
+        //si tengo trampas anadidas en el juego
+        bool[,] trapFrontier = new bool[gm.n, gm.n];
+        if (gm.trapList.Count > 0)
+        {
+            //recorre todo el tablero
+            for (int i = 0; i < gm.n; i++)
+            {
+                for (int j = 0; j < gm.n; j++)
+                {
+                    //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
+                    if (!gm.predefinedEmptyCells.Contains((i, j))
+                    && !gm.matriz[i][j].trap && !matriz[i][j].obstacle && !trapFrontier[i, j])
+                    {
+                        int r = new Random().Next(0, 5);
+                        int trapIndex = new Random().Next(0, gm.trapList.Count);
+                        if (r == 1)
+                        {
+                            List<(int x, int y)> listadehijos = new List<(int x, int y)>();
+                            bool canPutTrap = true;
+                            for (int iT = i; iT < (i + gm.trapList[trapIndex].range); iT++)
+                            {
+                                for (int jT = j; jT < (j + gm.trapList[trapIndex].range); jT++)
+                                {
+                                    if (!(PosicionValida(gm.n, iT, jT) && !gm.matriz[iT][jT].trap)
+                                    )
+                                    {
+                                        canPutTrap = false;
+                                        break;
+                                    }
+
+                                }
+                            }
+                            if (canPutTrap)
+                            {
+                                for (int iT = i; iT < (i + gm.trapList[trapIndex].range); iT++)
+                                {
+                                    for (int jT = j; jT < (j + gm.trapList[trapIndex].range); jT++)
+                                    {
+                                        if ((PosicionValida(gm.n, iT, jT) && !gm.predefinedEmptyCells.Contains((iT, jT)) && !gm.matriz[iT][jT].trap && !matriz[iT][jT].obstacle)
+                                        )
+                                        {
+                                            matriz[iT][jT].trap = true;
+                                            matriz[iT][jT].trapType = gm.trapList[trapIndex];
+
+                                            listadehijos.Add((iT, jT));
+
+                                        }
+
+                                    }
+                                }
+                            }
+                            for (int l = 0; l < listadehijos.Count; l++)
+                            {
+                                //           N   S  E  W
+                                int[] df = { -1, 1, 0, 0 };
+                                int[] dc = { 0, 0, 1, -1 };
+
+                                for (int d = 0; d < df.Length; d++)
+                                {
+                                    int x = listadehijos[l].x + df[d];
+                                    int y = listadehijos[l].y + dc[d];
+                                    //determinar si es un vecino valido
+                                    if (PosicionValida(gm.n, x, y) && trapFrontier[x, y] == false)
+                                    {
+                                        trapFrontier[x, y] = true;
+                                    }
+                                }
+
+                                matriz[listadehijos[l].x][listadehijos[l].y].childsTrap.Add(listadehijos[l]);
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    public static void AddTrapOn(trap trapType, int i, int j, List<List<Cell>> matriz)
+    {
+
+
+        List<(int x, int y)> listadehijos = new List<(int x, int y)>();
+
+        for (int iT = i; iT < (i + trapType.range); iT++)
+        {
+            for (int jT = j; jT < (j + trapType.range); jT++)
+            {
+                if ((PosicionValida(matriz[0].Count, iT, jT) && !matriz[iT][jT].obstacle)
+                )
+                {
+                    matriz[iT][jT].trap = true;
+                    matriz[iT][jT].trapType = trapType;
+
+                    listadehijos.Add((iT, jT));
+
+                }
+
+            }
+        }
+
+        for (int l = 0; l < listadehijos.Count; l++)
+        {
+            matriz[listadehijos[l].x][listadehijos[l].y].childsTrap.Add(listadehijos[l]);
+        }
 
 
     }

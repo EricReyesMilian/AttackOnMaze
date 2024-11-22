@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 public class CellDisplay : MonoBehaviour
 {
+    GameManeger gm;
     Image img_cell;
 
     public Cell cell;
@@ -32,10 +33,11 @@ public class CellDisplay : MonoBehaviour
 
     void Start()
     {
+        gm = GameManeger.gameManeger;
 
         img_cell = GetComponent<Image>();
-        GameManeger.gameManeger.UpdateDisplay += AsignarCasillaCorrespondiente;
-        GameManeger.gameManeger.DrawWay += DrawWay;
+        gm.UpdateDisplay += AsignarCasillaCorrespondiente;
+        gm.DrawWay += DrawWay;
 
     }
     void Update()
@@ -46,18 +48,24 @@ public class CellDisplay : MonoBehaviour
             reach = cell.reach;
             obstacule = cell.obstacle;
             NearPlayers = cell.NearPlayers;
-            distToCell = GameManeger.gameManeger.distancia[(int)coord.x][(int)coord.y];
+            distToCell = gm.distancia[(int)coord.x][(int)coord.y];
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
-            visited_color = GameManeger.gameManeger.players[GameManeger.gameManeger.turn].color;
-            if (GameManeger.gameManeger.isInCombat && !cell.hasAplayer && !cell.obstacle)
+            visited_color = gm.players[gm.turn].color;
+            if (cell.trap && cell.enableTrap)
+            {
+                img_cell.color = Color.red;
+
+            }
+            else
+            if (gm.isInCombat && !cell.hasAplayer && !cell.obstacle)
             {
                 img_cell.color = reach_color;
             }
             else
-           if (cell.reach && !cell.visitedOnMove && !hover && !cell.nearPlayer)
+            if (cell.reach && !cell.visitedOnMove && !hover && !cell.nearPlayer)
             {
-                if (!GameManeger.gameManeger.runningBackwards)
+                if (!gm.runningBackwards)
                     img_cell.color = reach_color;
                 else
                     img_cell.color = default_color;
@@ -66,7 +74,7 @@ public class CellDisplay : MonoBehaviour
             }
             else if (cell.reach && !cell.visitedOnMove && !hover && cell.nearPlayer)
             {
-                if (!GameManeger.gameManeger.runningBackwards)
+                if (!gm.runningBackwards)
                     img_cell.color = combat_color;
                 else
                     img_cell.color = default_color;
@@ -88,12 +96,15 @@ public class CellDisplay : MonoBehaviour
             {
                 img_cell.sprite = default_sprite;
             }
-            if (!(cell.hasAplayer || cell.obstacle || cell.reach || hover))
+            if (!(cell.hasAplayer || cell.obstacle || cell.reach || hover || cell.trap))
             {
                 img_cell.color = default_color;
             }
             DrawWay();
-
+            if (cell.trapActivated)
+            {
+                //  print("activated" + cell.trapType);
+            }
         }
     }
     public void DrawWay()
@@ -116,21 +127,22 @@ public class CellDisplay : MonoBehaviour
     }
     public void Click()
     {
-        if (!GameManeger.gameManeger.isInCombat)
+        // BoardManeger.AddTrapOn(gm.trapList[1],(int)coord.x,(int)coord.y,gm.matriz);
+        if (!gm.isInCombat)
         {
-            GameManeger.gameManeger.MoveplayerTo(cell.coord, GameManeger.gameManeger.turn);
+            gm.MoveplayerTo(cell.coord, gm.turn);
 
         }
         else
         {
-            if (GameManeger.gameManeger.lastWinner1)
+            if (gm.lastWinner1)
             {
-                GameManeger.gameManeger.MoveplayerTo(cell.coord, GameManeger.gameManeger.NextTurnIndex(GameManeger.gameManeger.turn));
+                gm.MoveplayerTo(cell.coord, gm.NextTurnIndex(gm.turn));
 
             }
             else
             {
-                GameManeger.gameManeger.MoveplayerTo(cell.coord, GameManeger.gameManeger.turn);
+                gm.MoveplayerTo(cell.coord, gm.turn);
 
             }
 
@@ -154,9 +166,9 @@ public class CellDisplay : MonoBehaviour
         hover = true;
         if (cell.hasAplayer)
         {
-            for (int p = 0; p < GameManeger.gameManeger.players.Count; p++)
+            for (int p = 0; p < gm.players.Count; p++)
             {
-                if (cell.player == GameManeger.gameManeger.players[p].play)
+                if (cell.player == gm.players[p].play)
                 {
                     displayPlayerTurnInfo.statdisplay.UpdateStats(p);
 
@@ -166,8 +178,12 @@ public class CellDisplay : MonoBehaviour
         }
         else
         {
-            displayPlayerTurnInfo.statdisplay.UpdateStats(GameManeger.gameManeger.turn);
+            displayPlayerTurnInfo.statdisplay.UpdateStats(gm.turn);
 
+        }
+        if (cell.trap)
+        {
+            print(cell.trapType);
         }
 
     }
@@ -179,7 +195,7 @@ public class CellDisplay : MonoBehaviour
     void AsignarCasillaCorrespondiente()
     {
 
-        cell = GameManeger.gameManeger.matriz[(int)coord.x][(int)coord.y];
+        cell = gm.matriz[(int)coord.x][(int)coord.y];
 
 
     }

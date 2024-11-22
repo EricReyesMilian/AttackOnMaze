@@ -13,7 +13,12 @@ public class Cell
     public bool nearPlayer;
     public List<PlayerManeger> NearPlayers = new List<PlayerManeger>();
 
+    public bool trap;
+    public bool trapActivated;
+    public trap trapType;
+    public List<(int x, int y)> childsTrap = new List<(int x, int y)>();
 
-
+    public bool enableTrap = true;
+    //trampas
 
 }

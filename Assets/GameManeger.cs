@@ -17,8 +17,9 @@ public class GameManeger : MonoBehaviour
     public CreateBoard createBoard;
 
 
-    public List<List<Cell>> matriz = new List<List<Cell>>();
 
+    public List<List<Cell>> matriz = new List<List<Cell>>();
+    public List<trap> trapList;
 
     public List<List<int>> distancia = new List<List<int>>();
     public Cell genericCell;
@@ -56,6 +57,11 @@ public class GameManeger : MonoBehaviour
 
     public delegate void ChangeTurnOrder();
     public event ChangeTurnOrder ChangeTurnOrd;
+
+    public delegate void TrapActivated();
+    public event TrapActivated Trap_Activated;
+
+
 
 
     public delegate void Stats(int i);
@@ -133,11 +139,9 @@ public class GameManeger : MonoBehaviour
             BoardManeger.IniciarDistancias(ref distancia, n);
 
             //maze 
-            MazeGenerator maze = new MazeGenerator(n, 0, 0, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
-            //  MazeGenerator maze2 = new MazeGenerator(n, 0, 0, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
-
-            // MazeGenerator2 maze = new MazeGenerator2(n, matriz, predefinedEmptyCells, predefinedObstacleCells);
-
+            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
+            BoardManeger boardManeger = new BoardManeger(matriz);
+            boardManeger.AddTraps();
             //maze 
 
 
@@ -155,17 +159,6 @@ public class GameManeger : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))//regenera el laberinto
         {
             SceneManager.LoadScene(0);
-            // MatrizInit();
-            // FindPlayersOnMaze();
-            // PositioningCells();
-            // MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Dfs);
-
-
-            // UpdateDisplay();
-
-            // ReachPointInMatriz();
-
-            //ReachPointInMatriz();
 
         }
         #endregion
@@ -310,7 +303,13 @@ public class GameManeger : MonoBehaviour
                 if (ReachPoint(target))
                 {
                     StartCoroutine(MovePlayerCorutine(target, index));
+                    if (isTrap(target))
+                    {
+                        ActivateTrap(matriz[(int)target.x][(int)target.y].trapType, target, players[index]);
+                    }
                 }
+                UpdateStats(turn);
+
 
             }
             else if (isInCombat)
@@ -328,11 +327,30 @@ public class GameManeger : MonoBehaviour
 
                     ReachPointInMatriz();
                 }
+                UpdateStats(turn);
+
 
             }
 
         }
 
+    }
+    bool isTrap(Vector2 target)
+    {
+        return matriz[(int)target.x][(int)target.y].trap && matriz[(int)target.x][(int)target.y].enableTrap;
+    }
+    public void ActivateTrap(trap trap, Vector2 target, PlayerManeger player)
+    {
+        matriz[(int)target.x][(int)target.y].trapActivated = true;
+        TrapTriggerEffect trapManeger = new TrapTriggerEffect(trap, player);
+        if (trap.activationTrap)
+        {
+            foreach (var trapChild in matriz[(int)target.x][(int)target.y].childsTrap)
+            {
+                matriz[trapChild.x][trapChild.y].enableTrap = false;
+            }
+        }
+        //Trap_Activated();
     }
     //corrutina para el movimiento del jugador
     IEnumerator MovePlayerCorutine(Vector2 target, int? index)

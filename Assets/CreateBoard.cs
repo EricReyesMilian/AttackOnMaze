@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CreateBoard : MonoBehaviour
 {
+
     public GameObject cellPref;
     GridLayoutGroup grid;
     int n;
@@ -24,12 +25,12 @@ public class CreateBoard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gm = GameManeger.gameManeger;
         n = GameManeger.gameManeger.n;
         grid = GetComponent<GridLayoutGroup>();
         DestroyCells();
         GridLayoutConfig(n);
         InstantiateCells(n);
-        gm = GameManeger.gameManeger;
     }
 
     void Update()
@@ -63,7 +64,7 @@ public class CreateBoard : MonoBehaviour
         }
         ready = true;
 
-        GameManeger.gameManeger.cellLoaded = true;
+        gm.cellLoaded = true;
     }
 
     void DestroyCells()

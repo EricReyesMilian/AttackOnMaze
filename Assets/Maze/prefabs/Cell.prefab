@@ -95,10 +95,10 @@ MonoBehaviour:
   obstacule_color: {r: 0.447, g: 0.447, b: 0.447, a: 1}
   default_color: {r: 0.45882353, g: 0.5882353, b: 0.30588236, a: 0.12941177}
   hover_color: {r: 0.45882353, g: 0.5882353, b: 0.30588236, a: 1}
-  reach_color: {r: 0.5882353, g: 0.58417815, b: 0.30588236, a: 0.29803923}
+  reach_color: {r: 0.5882353, g: 0.58417815, b: 0.30588236, a: 0.4509804}
   reachHover_color: {r: 0.5882353, g: 0.58431375, b: 0.30588236, a: 1}
   combat_color: {r: 0.5882353, g: 0.34159058, b: 0.30588236, a: 0.29803923}
-  distToShell: -5
+  distToCell: -5
   num: {fileID: 8452915830887998165}
   cordText: {fileID: 3262075542333640081}
   hover: 0
@@ -107,6 +107,7 @@ MonoBehaviour:
   hasAplayer: 0
   obstacule: 0
   reach: 0
+  NearPlayers: []
 --- !u!114 &5088132583706361436
 MonoBehaviour:
   m_ObjectHideFlags: 0

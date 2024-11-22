@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class displaySelectablesPlayers : MonoBehaviour
 {
+    GameManeger gm;
     public GameObject selectablePlayer;
     public PanelCombat pc;
 
     void Start()
     {
-        GameManeger.gameManeger.SelectplayerCombat += CreateSelectables;
+        gm = GameManeger.gameManeger;
+        gm.SelectplayerCombat += CreateSelectables;
 
 
     }
@@ -20,10 +22,10 @@ public class displaySelectablesPlayers : MonoBehaviour
         {
             Destroy(transform.GetChild(i).gameObject);
         }
-        for (int i = 0; i < GameManeger.gameManeger.nearPlayers.Count; i++)
+        for (int i = 0; i < gm.nearPlayers.Count; i++)
         {
             Instantiate(selectablePlayer, Vector3.zero, Quaternion.identity, gameObject.transform);
-            selectablePlayer.GetComponent<SelectionPlayer>().namePlayer.text = GameManeger.gameManeger.nearPlayers[i].Name;
+            selectablePlayer.GetComponent<SelectionPlayer>().namePlayer.text = gm.nearPlayers[i].Name;
             selectablePlayer.GetComponent<SelectionPlayer>().index = i;
         }
         pc.anim.SetTrigger("select");

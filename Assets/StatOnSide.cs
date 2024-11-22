@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class StatOnSide : MonoBehaviour
 {
+    GameManeger gm;
+
     public GameObject playerStatPrefb;
     public GameObject playerManegerPrefbWrapper;
 
     void Start()
     {
-        GameManeger.gameManeger.ChangeTurnOrd += ChangeOrder;
-        for (int i = 0; i < GameManeger.gameManeger.player_Scriptable.Count; i++)
+        gm = GameManeger.gameManeger;
+        gm.ChangeTurnOrd += ChangeOrder;
+        for (int i = 0; i < gm.player_Scriptable.Count; i++)
         {
             Instantiate(playerStatPrefb, Vector3.zero, Quaternion.identity, playerManegerPrefbWrapper.transform);
         }
@@ -18,11 +21,11 @@ public class StatOnSide : MonoBehaviour
     void ChangeOrder()
     {
 
-        for (int i = 0; i < GameManeger.gameManeger.players.Count; i++)
+        for (int i = 0; i < gm.players.Count; i++)
         {
-            for (int j = 0; j < GameManeger.gameManeger.players.Count; j++)
+            for (int j = 0; j < gm.players.Count; j++)
             {
-                if (transform.GetChild(i).GetComponent<PlayerManeger>().play.Name == GameManeger.gameManeger.players[j].play.Name)
+                if (transform.GetChild(i).GetComponent<PlayerManeger>().play.Name == gm.players[j].play.Name)
                 {
                     transform.GetChild(i).SetSiblingIndex(j);
 
@@ -31,7 +34,7 @@ public class StatOnSide : MonoBehaviour
 
         }
         int newIndex = 0;
-        for (int i = GameManeger.gameManeger.turn; i < GameManeger.gameManeger.players.Count; i++)
+        for (int i = gm.turn; i < gm.players.Count; i++)
         {
 
 
@@ -43,7 +46,7 @@ public class StatOnSide : MonoBehaviour
 
         }
         int a = newIndex;
-        for (int i = a; i < GameManeger.gameManeger.turn; i++)
+        for (int i = a; i < gm.turn; i++)
         {
 
 

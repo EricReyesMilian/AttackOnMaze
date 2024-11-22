@@ -6,6 +6,7 @@ using TMPro;
 
 public class displayPlayerTurnInfo : MonoBehaviour
 {
+    GameManeger gm;
     public static displayPlayerTurnInfo statdisplay;
     public Image portrait;
     public TextMeshProUGUI name_c;
@@ -29,7 +30,8 @@ public class displayPlayerTurnInfo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameManeger.gameManeger.UpdateStats += UpdateStats;
+        gm = GameManeger.gameManeger;
+        gm.UpdateStats += UpdateStats;
     }
 
     // Update is called once per frame
@@ -41,15 +43,15 @@ public class displayPlayerTurnInfo : MonoBehaviour
     public void UpdateStats(int i)
     {
 
-        portrait.sprite = GameManeger.gameManeger.players[i].img;
-        name_c.text = "" + GameManeger.gameManeger.players[i].nameC;
-        power.text = "power: " + GameManeger.gameManeger.players[i].power;
-        skill_Cooldown.text = "cooldown: " + GameManeger.gameManeger.players[i].cooldown;
+        portrait.sprite = gm.players[i].img;
+        name_c.text = "" + gm.players[i].nameC;
+        power.text = "power: " + gm.players[i].power;
+        skill_Cooldown.text = "cooldown: " + gm.players[i].cooldown;
 
-        if (i == GameManeger.gameManeger.turn)
-            speed.text = "speed: " + GameManeger.gameManeger.players[i].speed + "(" + GameManeger.gameManeger.currentSpeed + ")";
+        if (i == gm.turn)
+            speed.text = "speed: " + gm.players[i].speed + "(" + gm.currentSpeed + ")";
         else
-            speed.text = "speed: " + GameManeger.gameManeger.players[i].speed + "(" + GameManeger.gameManeger.players[i].speed + ")";
+            speed.text = "speed: " + gm.players[i].speed + "(" + gm.players[i].speed + ")";
 
 
     }

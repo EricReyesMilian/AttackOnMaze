@@ -6,6 +6,7 @@ using TMPro;
 
 public class PanelCombat : MonoBehaviour
 {
+    GameManeger gm;
     public PlayerManeger player1;
     public PlayerManeger player2;
 
@@ -26,9 +27,10 @@ public class PanelCombat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gm = GameManeger.gameManeger;
         anim = GetComponent<Animator>();
         // gameObject.SetActive(false);
-        GameManeger.gameManeger.StartCombate += OpenPanel;
+        gm.StartCombate += OpenPanel;
 
     }
 
@@ -43,9 +45,9 @@ public class PanelCombat : MonoBehaviour
             img2.color = Color.white;
             if (!fin)
             {
-                power2.text = "power:" + GameManeger.gameManeger.combatScene.GetPower2().ToString();
-                power1.text = "power:" + GameManeger.gameManeger.combatScene.GetPower1().ToString();
-                int per1 = Mathf.CeilToInt((float)GameManeger.gameManeger.combatScene.GetPower2() / (GameManeger.gameManeger.combatScene.GetPower1() + GameManeger.gameManeger.combatScene.GetPower2()) * 100);
+                power2.text = "power:" + gm.combatScene.GetPower2().ToString();
+                power1.text = "power:" + gm.combatScene.GetPower1().ToString();
+                int per1 = Mathf.CeilToInt((float)gm.combatScene.GetPower2() / (gm.combatScene.GetPower1() + gm.combatScene.GetPower2()) * 100);
 
                 int per2 = 100 - per1;
                 percent1.text = per1 + "%";
@@ -85,12 +87,12 @@ public class PanelCombat : MonoBehaviour
         anim.SetTrigger("Fight");
 
         fin = true;
-        anim.SetBool("player1", GameManeger.gameManeger.lastWinner1);//bool igual al ganador//error
+        anim.SetBool("player1", gm.lastWinner1);//bool igual al ganador//error
     }
     public void ClosePanel()
     {
         fin = false;
-        displayPlayerTurnInfo.UpdateStats(GameManeger.gameManeger.turn);
+        displayPlayerTurnInfo.UpdateStats(gm.turn);
         Panel.SetActive(false);
         //  gameObject.SetActive(false);
 
@@ -99,8 +101,8 @@ public class PanelCombat : MonoBehaviour
     {
         anim.SetTrigger("combat");
         Panel.SetActive(true);
-        player1 = GameManeger.gameManeger.combatScene.player1;
-        player2 = GameManeger.gameManeger.combatScene.player2;
+        player1 = gm.combatScene.player1;
+        player2 = gm.combatScene.player2;
 
     }
 }
