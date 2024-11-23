@@ -170,6 +170,7 @@ public class BoardManeger
                         if (r == 1)
                         {
                             List<(int x, int y)> listadehijos = new List<(int x, int y)>();
+                            List<Cell> TrapCells = new List<Cell>();
                             bool canPutTrap = true;
                             for (int iT = i; iT < (i + gm.trapList[trapIndex].range); iT++)
                             {
@@ -193,6 +194,7 @@ public class BoardManeger
                                         if ((PosicionValida(gm.n, iT, jT) && !gm.predefinedEmptyCells.Contains((iT, jT)) && !gm.matriz[iT][jT].trap && !matriz[iT][jT].obstacle)
                                         )
                                         {
+                                            TrapCells.Add(matriz[iT][jT]);
                                             matriz[iT][jT].trap = true;
                                             matriz[iT][jT].trapType = gm.trapList[trapIndex];
 
@@ -203,12 +205,13 @@ public class BoardManeger
                                     }
                                 }
                             }
+
                             for (int l = 0; l < listadehijos.Count; l++)
                             {
                                 //           N   S  E  W
                                 int[] df = { -1, 1, 0, 0 };
                                 int[] dc = { 0, 0, 1, -1 };
-
+                                TrapCells[l].childsTrap = listadehijos;
                                 for (int d = 0; d < df.Length; d++)
                                 {
                                     int x = listadehijos[l].x + df[d];
@@ -220,7 +223,6 @@ public class BoardManeger
                                     }
                                 }
 
-                                matriz[listadehijos[l].x][listadehijos[l].y].childsTrap.Add(listadehijos[l]);
                             }
 
 
@@ -230,6 +232,37 @@ public class BoardManeger
             }
 
         }
+    }
+    public void AddPowerUps()
+    {
+        if (gm.powerList.Count > 0)
+        {
+            //recorre todo el tablero
+            for (int i = 0; i < gm.n; i++)
+            {
+                for (int j = 0; j < gm.n; j++)
+                {
+                    //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
+                    if (!gm.predefinedEmptyCells.Contains((i, j))
+                    && !gm.matriz[i][j].powerUp && !matriz[i][j].obstacle && !gm.matriz[i][j].trap)
+                    {
+                        int r = new Random().Next(0, 5);
+                        int powerIndex = new Random().Next(0, gm.powerList.Count);
+                        if (r == 1)
+                        {
+
+                            matriz[i][j].powerUp = true;
+                            matriz[i][j].powerUpType = gm.powerList[powerIndex];
+
+
+
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
     public static void AddTrapOn(trap trapType, int i, int j, List<List<Cell>> matriz)
     {

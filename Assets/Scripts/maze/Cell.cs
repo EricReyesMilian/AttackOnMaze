@@ -19,6 +19,12 @@ public class Cell
     public List<(int x, int y)> childsTrap = new List<(int x, int y)>();
 
     public bool enableTrap = true;
+
+
+    public bool powerUp;
+    public PowerUp powerUpType;
+
+    public bool VictoryCell;
     //trampas
 
 }

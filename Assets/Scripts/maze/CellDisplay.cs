@@ -22,6 +22,7 @@ public class CellDisplay : MonoBehaviour
     public int distToCell = -5;
     public TextMeshProUGUI num;
     public TextMeshProUGUI cordText;
+
     public bool hover;
     public Color player_color = Color.yellow;
     Color visited_color;
@@ -52,6 +53,12 @@ public class CellDisplay : MonoBehaviour
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
             visited_color = gm.players[gm.turn].color;
+            if (cell.powerUp)
+            {
+                img_cell.color = Color.blue;
+
+            }
+            else
             if (cell.trap && cell.enableTrap)
             {
                 img_cell.color = Color.red;

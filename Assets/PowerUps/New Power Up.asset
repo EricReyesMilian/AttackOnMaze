@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94fe6456bc6ae0d4d9079f498b2e87b1, type: 3}
-  m_Name: spikes
+  m_Script: {fileID: 11500000, guid: d43b0f4cc1444424d8a5eac7f1032d99, type: 3}
+  m_Name: New Power Up
   m_EditorClassIdentifier: 
-  nameTrap: Spikes
   sprite: {fileID: 0}
-  type: 1
-  description: Y
-  range: 1
-  activationTrap: 0
+  namepowerUp: Sword
+  description: +2 power

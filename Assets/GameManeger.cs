@@ -4,7 +4,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
+public enum Event
+{
+    Trap,
+    PowerUp,
+    Victory
+}
 public class GameManeger : MonoBehaviour
 {
     public static GameManeger gameManeger;
@@ -20,6 +25,7 @@ public class GameManeger : MonoBehaviour
 
     public List<List<Cell>> matriz = new List<List<Cell>>();
     public List<trap> trapList;
+    public List<PowerUp> powerList;
 
     public List<List<int>> distancia = new List<List<int>>();
     public Cell genericCell;
@@ -58,8 +64,8 @@ public class GameManeger : MonoBehaviour
     public delegate void ChangeTurnOrder();
     public event ChangeTurnOrder ChangeTurnOrd;
 
-    public delegate void TrapActivated();
-    public event TrapActivated Trap_Activated;
+
+
 
 
 
@@ -78,6 +84,9 @@ public class GameManeger : MonoBehaviour
     public bool isInCombat;
     public Vector2 combatZoneCoord;
     public List<player> nearPlayers;
+
+    public PanelTrap panelTrap;
+    public PanelPowerUp panelPowerUp;
 
     public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (7, 7), (7, 9), (8, 6), (9, 6), (10, 6), (10, 7), (8, 10), (9, 10), (10, 10), (10, 8), (10, 9) };
@@ -121,10 +130,6 @@ public class GameManeger : MonoBehaviour
 
         currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
 
-
-        //celloaded
-
-        //celloaded
     }
 
     // Update is called once per frame
@@ -305,8 +310,11 @@ public class GameManeger : MonoBehaviour
                     StartCoroutine(MovePlayerCorutine(target, index));
                     if (isTrap(target))
                     {
-                        ActivateTrap(matriz[(int)target.x][(int)target.y].trapType, target, players[index]);
+                        StartCoroutine(Activate(target, index));
+
+
                     }
+
                 }
                 UpdateStats(turn);
 
@@ -343,15 +351,19 @@ public class GameManeger : MonoBehaviour
     {
         matriz[(int)target.x][(int)target.y].trapActivated = true;
         TrapTriggerEffect trapManeger = new TrapTriggerEffect(trap, player);
+        panelTrap.trap = trap;
+        panelTrap.OpenPanel();
         if (trap.activationTrap)
         {
             foreach (var trapChild in matriz[(int)target.x][(int)target.y].childsTrap)
             {
+                print("pop");
                 matriz[trapChild.x][trapChild.y].enableTrap = false;
             }
         }
-        //Trap_Activated();
+        StopAllCoroutines();
     }
+
     //corrutina para el movimiento del jugador
     IEnumerator MovePlayerCorutine(Vector2 target, int? index)
     {
@@ -455,6 +467,27 @@ public class GameManeger : MonoBehaviour
         StopCoroutine(MovePlayerCorutine(target, index));
 
     }
+
+    IEnumerator Activate(Vector2 target, int index)
+    {
+        yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
+        print("1");
+        if (!playingCorrutine)
+        {
+            print("2");
+
+            ActivateTrap(matriz[(int)target.x][(int)target.y].trapType, target, players[index]);
+            StopAllCoroutines();
+
+        }
+        else
+        {
+            StartCoroutine(Activate(target, index));
+
+        }
+
+    }
+
     //inicializa la lista de jugadores cercanos
     void ClearMatrizNearPlayers()
     {
