@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d43b0f4cc1444424d8a5eac7f1032d99, type: 3}
-  m_Name: New Power Up
+  m_Name: sword
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
   namepowerUp: Sword
-  description: +2 power
+  description: +1 power
+  ePower: 1

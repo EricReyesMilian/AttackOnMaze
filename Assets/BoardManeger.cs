@@ -246,7 +246,7 @@ public class BoardManeger
                     if (!gm.predefinedEmptyCells.Contains((i, j))
                     && !gm.matriz[i][j].powerUp && !matriz[i][j].obstacle && !gm.matriz[i][j].trap)
                     {
-                        int r = new Random().Next(0, 5);
+                        int r = new Random().Next(0, 10);
                         int powerIndex = new Random().Next(0, gm.powerList.Count);
                         if (r == 1)
                         {

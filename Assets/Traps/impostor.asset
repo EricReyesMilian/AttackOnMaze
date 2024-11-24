@@ -15,6 +15,6 @@ MonoBehaviour:
   nameTrap: Impostor
   sprite: {fileID: 0}
   type: 2
-  description: 
+  description: -50% power. The impostor will win his next combat
   range: 2
   activationTrap: 1

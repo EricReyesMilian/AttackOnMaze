@@ -15,6 +15,7 @@ public class GameManeger : MonoBehaviour
     public static GameManeger gameManeger;
 
     public int n;
+    public int round = 1;
     [HideInInspector]
     public bool cellLoaded;
     public GameObject cellsContainer;
@@ -42,7 +43,6 @@ public class GameManeger : MonoBehaviour
     public bool runningBackwards;
 
 
-    public int currentSpeed;
 
     public List<Vector2> wayToPoint;
     public GameObject playerContainer;
@@ -128,7 +128,6 @@ public class GameManeger : MonoBehaviour
 
         ///    players[3].Pos = new Vector2(0, 9);
 
-        currentSpeed = players[turn].speed;//asigna la velocidad de el personaje del turno actual
 
     }
 
@@ -147,6 +146,7 @@ public class GameManeger : MonoBehaviour
             MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
             BoardManeger boardManeger = new BoardManeger(matriz);
             boardManeger.AddTraps();
+            boardManeger.AddPowerUps();
             //maze 
 
 
@@ -251,7 +251,7 @@ public class GameManeger : MonoBehaviour
     {
         if (!isInCombat)
         {
-            int speed = currentSpeed;
+            int speed = players[turn].currentSpeed;
             InitReachCell();
             distancia = BoardManeger.Lee(matriz, (int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
             BoardManeger.ColorReachCell(matriz, distancia);
@@ -269,10 +269,15 @@ public class GameManeger : MonoBehaviour
             ChangeTurnOrd();
             SetDist();
             InitReachCell();
-            currentSpeed = players[turn].speed;
+            players[turn].ResetSpeed();
+
             ReachPointInMatriz();
 
             UpdateStats(turn);
+            if (turn == 0)
+            {
+                round++;
+            }
         }
 
     }
@@ -308,14 +313,15 @@ public class GameManeger : MonoBehaviour
                 if (ReachPoint(target))
                 {
                     StartCoroutine(MovePlayerCorutine(target, index));
-                    if (isTrap(target))
-                    {
-                        StartCoroutine(Activate(target, index));
+
+                    StartCoroutine(ActivateInteraction(target, index));
 
 
-                    }
+
 
                 }
+                ReachPointInMatriz();
+
                 UpdateStats(turn);
 
 
@@ -347,6 +353,10 @@ public class GameManeger : MonoBehaviour
     {
         return matriz[(int)target.x][(int)target.y].trap && matriz[(int)target.x][(int)target.y].enableTrap;
     }
+    bool isPowerUp(Vector2 target)
+    {
+        return matriz[(int)target.x][(int)target.y].powerUp;
+    }
     public void ActivateTrap(trap trap, Vector2 target, PlayerManeger player)
     {
         matriz[(int)target.x][(int)target.y].trapActivated = true;
@@ -361,7 +371,18 @@ public class GameManeger : MonoBehaviour
                 matriz[trapChild.x][trapChild.y].enableTrap = false;
             }
         }
-        StopAllCoroutines();
+        ReachPointInMatriz();
+
+    }
+    public void ActivatePower(PowerUp powerUp, Vector2 target, PlayerManeger player)
+    {
+        matriz[(int)target.x][(int)target.y].powerUp = false;
+        PowerTrigger PowerManeger = new PowerTrigger(powerUp, player);
+        panelPowerUp.powerUp = powerUp;
+        panelPowerUp.OpenPanel();
+        ReachPointInMatriz();
+
+
     }
 
     //corrutina para el movimiento del jugador
@@ -374,7 +395,7 @@ public class GameManeger : MonoBehaviour
 
         if (index == turn && !isInCombat)
         {
-            currentSpeed -= distancia[(int)target.x][(int)target.y];
+            players[index ?? turn].DownCurrentSpeed(distancia[(int)target.x][(int)target.y]);
             wayToPoint.Clear();
             SavePath(target);
             wayToPoint.Reverse();
@@ -468,21 +489,26 @@ public class GameManeger : MonoBehaviour
 
     }
 
-    IEnumerator Activate(Vector2 target, int index)
+    IEnumerator ActivateInteraction(Vector2 target, int index)
     {
         yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
-        print("1");
         if (!playingCorrutine)
         {
-            print("2");
+            if (isPowerUp(target))
+            {
+                ActivatePower(matriz[(int)target.x][(int)target.y].powerUpType, target, players[index]);
+            }
+            if (isTrap(target))
+            {
+                ActivateTrap(matriz[(int)target.x][(int)target.y].trapType, target, players[index]);
 
-            ActivateTrap(matriz[(int)target.x][(int)target.y].trapType, target, players[index]);
+            }
             StopAllCoroutines();
 
         }
         else
         {
-            StartCoroutine(Activate(target, index));
+            StartCoroutine(ActivateInteraction(target, index));
 
         }
 
@@ -531,9 +557,8 @@ public class GameManeger : MonoBehaviour
 
         //combat maneger
         lastWinner1 = combatScene.Player1IsWinner();
-        players[turn].power += combatScene.Reward(lastWinner1, 1);
-        matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer].power += combatScene.Reward(lastWinner1, 2);
-
+        players[turn].PowerUp(combatScene.Reward(lastWinner1, 1));
+        matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer].PowerUp(combatScene.Reward(lastWinner1, 2));
         //resultado de la victoria
         if (lastWinner1)
         {

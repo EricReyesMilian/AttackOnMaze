@@ -27,10 +27,10 @@ public class TrapTriggerEffect
     }
     void Spikes()
     {
-        player.power -= 1;
+        player.PowerUp(-1);
     }
     void Impostor()
     {
-        player.power -= player.power / 2;
+        player.PowerDivide(2);
     }
 }

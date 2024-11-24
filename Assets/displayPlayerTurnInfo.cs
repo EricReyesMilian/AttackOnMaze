@@ -49,7 +49,7 @@ public class displayPlayerTurnInfo : MonoBehaviour
         skill_Cooldown.text = "cooldown: " + gm.players[i].cooldown;
 
         if (i == gm.turn)
-            speed.text = "speed: " + gm.players[i].speed + "(" + gm.currentSpeed + ")";
+            speed.text = "speed: " + gm.players[i].speed + "(" + gm.players[i].currentSpeed + ")";
         else
             speed.text = "speed: " + gm.players[i].speed + "(" + gm.players[i].speed + ")";
 

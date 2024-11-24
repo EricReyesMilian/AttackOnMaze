@@ -2549,7 +2549,9 @@ MonoBehaviour:
   trapList:
   - {fileID: 11400000, guid: 183f049d244f71441851c4ffe454e0fc, type: 2}
   - {fileID: 11400000, guid: 6a2bd29a294a6874ebebf290a7c8db3f, type: 2}
-  powerList: []
+  powerList:
+  - {fileID: 11400000, guid: 401bd212406469f489ccfb2325be653c, type: 2}
+  - {fileID: 11400000, guid: abd0249294659124783ad4dc8ae3d83f, type: 2}
   turn: 0
   players: []
   player_Scriptable:
@@ -2570,6 +2572,7 @@ MonoBehaviour:
   combatZoneCoord: {x: 0, y: 0}
   nearPlayers: []
   panelTrap: {fileID: 2015092113}
+  panelPowerUp: {fileID: 2034050968}
 --- !u!1001 &169646519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28475,15 +28478,15 @@ PrefabInstance:
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2034050952}
+      objectReference: {fileID: 2034050968}
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2034050952}
+      objectReference: {fileID: 2034050968}
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2034050952}
+      objectReference: {fileID: 2034050968}
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Hover
@@ -28638,10 +28641,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8530595859492285628, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5097232412575536902, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
+    - {fileID: 4337626170384253555, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
+    - {fileID: 7582075665104541671, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -28650,27 +28655,13 @@ PrefabInstance:
       addedObject: {fileID: 2034050962}
     - targetCorrespondingSourceObject: {fileID: 549846489857931479, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2034050961}
-    - targetCorrespondingSourceObject: {fileID: 549846489857931479, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2034050960}
+      addedObject: {fileID: 2034050968}
   m_SourcePrefab: {fileID: 100100000, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
 --- !u!224 &2034050951 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4373257017979899679, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
   m_PrefabInstance: {fileID: 2034050950}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2034050952 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7582075665104541671, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
-  m_PrefabInstance: {fileID: 2034050950}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034050958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a830c3bea00dcf4eb5212cadd3027d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2034050953 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1570236732562684332, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
@@ -28730,43 +28721,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8530595859492285628, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
   m_PrefabInstance: {fileID: 2034050950}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2034050960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034050958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28446a067ca0264489719095a5dd9afc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  img1: {fileID: 0}
-  nameEvent: {fileID: 0}
-  Description: {fileID: 0}
-  anim: {fileID: 0}
-  Panel: {fileID: 0}
-  butt: {fileID: 0}
-  trap: {fileID: 0}
---- !u!114 &2034050961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034050958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a830c3bea00dcf4eb5212cadd3027d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  img1: {fileID: 0}
-  nameEvent: {fileID: 0}
-  Description: {fileID: 0}
-  anim: {fileID: 0}
-  Panel: {fileID: 0}
-  butt: {fileID: 0}
 --- !u!95 &2034050962
 Animator:
   serializedVersion: 5
@@ -28788,6 +28742,30 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!95 &2034050964 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5401262493726363931, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
+  m_PrefabInstance: {fileID: 2034050950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2034050968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034050958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b301b7ba18164344390d831ecc4e2f70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  img1: {fileID: 2034050956}
+  nameEvent: {fileID: 2034050955}
+  Description: {fileID: 2034050954}
+  anim: {fileID: 2034050964}
+  Panel: {fileID: 2034050953}
+  butt: {fileID: 2034050957}
+  powerUp: {fileID: 0}
 --- !u!1001 &2036650368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29973,15 +29951,15 @@ PrefabInstance:
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2015092113}
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2015092113}
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[2].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2015092113}
     - target: {fileID: 1881667416354732708, guid: 16db5926b248cfa41acb5630a61c28dc, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Hover

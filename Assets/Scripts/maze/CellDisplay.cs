@@ -58,12 +58,13 @@ public class CellDisplay : MonoBehaviour
                 img_cell.color = Color.blue;
 
             }
-            else
-            if (cell.trap && cell.enableTrap)
-            {
-                img_cell.color = Color.red;
+            // else
+            // if (cell.trap && cell.enableTrap)
+            // {
+            //     //uncomment to debbug traps
+            //     // img_cell.color = Color.red;
 
-            }
+            // }
             else
             if (gm.isInCombat && !cell.hasAplayer && !cell.obstacle)
             {
@@ -103,7 +104,7 @@ public class CellDisplay : MonoBehaviour
             {
                 img_cell.sprite = default_sprite;
             }
-            if (!(cell.hasAplayer || cell.obstacle || cell.reach || hover || cell.trap))
+            if (!(cell.hasAplayer || cell.obstacle || cell.reach || hover /*|| cell.trap*/ || cell.powerUp))
             {
                 img_cell.color = default_color;
             }
