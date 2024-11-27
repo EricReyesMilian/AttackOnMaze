@@ -76,7 +76,6 @@ public class GameManeger : MonoBehaviour
 
     bool[,] walls;
     public bool relocate;
-    public int loserPlayer;
     public bool canPassTurn;
 
     //combat
@@ -787,38 +786,39 @@ public class GameManeger : MonoBehaviour
     //combate
     public void Combat(Vector2 target, int indexNearPlayer)
     {
-        combatScene = new Combat(players[turn], matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer]);
+        PlayerManeger player1 = players[turn];
+        PlayerManeger player2 = matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer];
+
+        combatScene = new Combat(player1, player2);
         StartCombate();
 
 
         //combat maneger
         lastWinner1 = combatScene.Player1IsWinner();
 
-        players[turn].PowerUp(combatScene.Reward(lastWinner1, 1));
-        matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer].PowerUp(combatScene.Reward(lastWinner1, 2));
-        //resultado de la victoria
-        if (lastWinner1)
+        player1.PowerUp(combatScene.Reward(lastWinner1, 1));
+        player2.PowerUp(combatScene.Reward(lastWinner1, 2));
+
+
+        if (lastWinner1)//si gana el jugador poseedor del turno (player1)
         {
             //seleccionar casilla
 
-            for (int p = 0; p < players.Count; p++)
-            {
-                if (matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer] == players[p])
-                {
-                    loserPlayer = p;
-                    distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[p].Pos.x, (int)players[p].Pos.y);
-                    ListHelper.MoveElement(players, players[p], NextTurnIndex(turn));
-                    ChangeTurnOrd();
-                    BoardManeger.ColorReachCell(matriz, distancia);
-                    UpdateDisplay();
 
-                    break;
-                }
+            distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)player2.Pos.x, (int)player2.Pos.y);
+            if (!player1.play.isTitan)
+            {
+                ListHelper.MoveElement(players, player2, 1);
+                ChangeTurnOrd();
+
             }
+            BoardManeger.ColorReachCell(matriz, distancia);
+            UpdateDisplay();
+
 
             looserTitan = true;
 
-            if (players[turn].play.isTitan)
+            if (player1.play.isTitan)//si gano un titan
             {
                 looserTitan = false;
                 List<Cell> posiblesMoves = new List<Cell>();
@@ -833,8 +833,10 @@ public class GameManeger : MonoBehaviour
                     }
                 }
                 isInCombat = true;
-                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, NextTurnIndex(turn));
-                //NextTurn();
+                ListHelper.MoveElement(players, player2, NextTurnIndex(players.IndexOf(player1)));
+                ChangeTurnOrd();
+                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player2));
+
             }
             else
             {
@@ -845,14 +847,15 @@ public class GameManeger : MonoBehaviour
 
 
         }
-        else
+        else//si pierde el jugador poseedor del turno (player1)
         {
-            loserPlayer = turn;
-            distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[turn].Pos.x, (int)players[turn].Pos.y);
+            distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)player1.Pos.x, (int)player1.Pos.y);
             BoardManeger.ColorReachCell(matriz, distancia);
+            UpdateDisplay();
+
             looserTitan = false;
 
-            if (matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer].play.isTitan)
+            if (player2.play.isTitan)//si gano un titan
             {
                 looserTitan = true;
 
@@ -868,7 +871,7 @@ public class GameManeger : MonoBehaviour
                     }
                 }
                 isInCombat = true;
-                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, turn);
+                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player1));
                 //NextTurn();
             }
             else
