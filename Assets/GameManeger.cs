@@ -29,6 +29,7 @@ public class GameManeger : MonoBehaviour
     public List<PowerUp> powerList;
 
     public List<List<int>> distancia = new List<List<int>>();
+    public List<List<int>> distanciaToCenter = new List<List<int>>();
     public Cell genericCell;
     //turno
     public int turn = 0;
@@ -81,12 +82,15 @@ public class GameManeger : MonoBehaviour
     //combat
     public Combat combatScene;
     public bool lastWinner1;
+    public bool looserTitan;
     public bool isInCombat;
     public Vector2 combatZoneCoord;
     public List<player> nearPlayers;
 
     public PanelTrap panelTrap;
     public PanelPowerUp panelPowerUp;
+
+
 
     public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (7, 7), (7, 9), (8, 6), (9, 6), (10, 6), (10, 7), (8, 10), (9, 10), (10, 10), (10, 8), (10, 9) };
@@ -141,7 +145,7 @@ public class GameManeger : MonoBehaviour
 
             FindPlayers();
             BoardManeger.IniciarDistancias(ref distancia, n);
-
+            BoardManeger.IniciarDistancias(ref distanciaToCenter, n);
             //maze 
             MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
             BoardManeger boardManeger = new BoardManeger(matriz);
@@ -149,6 +153,7 @@ public class GameManeger : MonoBehaviour
             boardManeger.AddPowerUps();
             //maze 
 
+            distanciaToCenter = BoardManeger.Lee(matriz, n / 2, n / 2, n * n);
 
             ReachPointInMatriz();
             UpdateStats(turn);
@@ -273,12 +278,181 @@ public class GameManeger : MonoBehaviour
 
             ReachPointInMatriz();
 
-            UpdateStats(turn);
             if (turn == 0)
             {
                 round++;
             }
+            //move titan
+            if (players[turn].play.isTitan)
+            {
+                MoveTitan();
+
+            }
+            UpdateStats(turn);
+
         }
+
+    }
+    private void MoveTitan()
+    {
+        List<(int x, int y)> targets = new List<(int x, int y)>();
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (matriz[i][j].reach)
+                {
+                    targets.Add(((int)matriz[i][j].coord.x, (int)matriz[i][j].coord.y));
+                }
+            }
+        }
+        int destination = TargetIACell(players[turn], targets);
+        MoveplayerTo(new Vector2(targets[destination].x, targets[destination].y), turn);
+
+
+    }
+    int TargetIACell(PlayerManeger titan, List<(int x, int y)> targets)
+    {
+        switch (titan.play.TitanIQ)
+        {
+            case 0:
+                return IQTonto(titan, targets);
+            case 1:
+                return IQ1(titan, targets);
+            case 2:
+                return IQ2(titan, targets);
+            case 3:
+                return IQ3(titan, targets);
+            case 4:
+                return IQ4(titan, targets);
+            default:
+                return Random.Range(0, targets.Count);
+
+
+        }
+    }
+    int IQTonto(PlayerManeger titan, List<(int x, int y)> targets)
+    {
+        return Random.Range(0, targets.Count);
+
+    }
+    int IQ1(PlayerManeger titan, List<(int x, int y)> targets)
+    {
+        int max = -5;
+        int i = 1;
+        bool huboCambio = false;
+        foreach (var coord in targets)
+        {
+
+            if (distancia[coord.x][coord.y] >= max)
+            {
+                if (!titan.lastMove.Contains(coord))
+                {
+                    i = targets.IndexOf(coord);
+                    max = distancia[coord.x][coord.y];
+                    huboCambio = true;
+                }
+            }
+
+        }
+        if (!huboCambio)
+        {
+            titan.lastMove.Clear();
+        }
+        return i;
+
+    }
+    int IQ2(PlayerManeger titan, List<(int x, int y)> targets)
+    {
+        int max = -5;
+        int i = 1;
+        bool huboCambio = false;
+        foreach (var coord in targets)
+        {
+            if (matriz[coord.x][coord.y].nearPlayer)
+            {
+                return targets.IndexOf(coord);
+            }
+            if (distancia[coord.x][coord.y] >= max)
+            {
+                if (!titan.lastMove.Contains(coord))
+                {
+                    i = targets.IndexOf(coord);
+                    max = distancia[coord.x][coord.y];
+                    huboCambio = true;
+                }
+            }
+
+        }
+        if (!huboCambio)
+        {
+            titan.lastMove.Clear();
+        }
+        return i;
+
+    }
+    int IQ3(PlayerManeger titan, List<(int x, int y)> targets)
+    {
+        int max = -5;
+        int i = 1;
+        bool huboCambio = false;
+        foreach (var coord in targets)
+        {
+            if (matriz[coord.x][coord.y].nearPlayer && titan.power >= matriz[coord.x][coord.y].player.power)
+            {
+                return targets.IndexOf(coord);
+            }
+            if (distancia[coord.x][coord.y] >= max)
+            {
+                if (!titan.lastMove.Contains(coord))
+                {
+                    i = targets.IndexOf(coord);
+                    max = distancia[coord.x][coord.y];
+                    huboCambio = true;
+                }
+            }
+
+        }
+        if (!huboCambio)
+        {
+            titan.lastMove.Clear();
+        }
+        return i;
+
+    }
+    int IQ4(PlayerManeger titan, List<(int x, int y)> targets)
+    {
+        int max = int.MinValue;
+        int i = 1;
+        bool huboCambio = false;
+        foreach (var coord in targets)
+        {
+            if (matriz[coord.x][coord.y].nearPlayer)
+            {
+                if (titan.power >= matriz[coord.x][coord.y].NearPlayers[0].power)
+                {
+                    huboCambio = true;
+                    //SelectPlayer(new Vector2((int)coord.x, (int)coord.y), true);
+                    return targets.IndexOf(coord);
+
+                }
+            }
+            if (distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y] >= max)
+            {
+                if (!titan.lastMove.Contains(coord))
+                {
+                    i = targets.IndexOf(coord);
+                    max = distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y];
+                    huboCambio = true;
+                }
+            }
+
+        }
+        if (!huboCambio)
+        {
+            titan.lastMove.Clear();
+        }
+        return i;
 
     }
     //suma 1 al turno
@@ -312,6 +486,7 @@ public class GameManeger : MonoBehaviour
             {
                 if (ReachPoint(target))
                 {
+                    players[turn].lastMove.Add(((int)players[turn].Pos.x, (int)players[turn].Pos.y));
                     StartCoroutine(MovePlayerCorutine(target, index));
 
                     StartCoroutine(ActivateInteraction(target, index));
@@ -320,9 +495,17 @@ public class GameManeger : MonoBehaviour
 
 
                 }
-                ReachPointInMatriz();
-
                 UpdateStats(turn);
+
+                if (players[turn].play.isTitan)
+                {
+                    // NextTurn();
+                }
+                else
+                {
+                    ReachPointInMatriz();
+
+                }
 
 
             }
@@ -336,10 +519,25 @@ public class GameManeger : MonoBehaviour
                     ClearMatrizNearPlayers();
                     isInCombat = false;
                     FindPlayers();
-                    InitReachCell();
-                    SetDist();
 
-                    ReachPointInMatriz();
+                    if (players[turn].play.isTitan)
+                    {
+                        InitReachCell();
+                        SetDist();
+
+                        ReachPointInMatriz();
+
+                        NextTurn();
+                    }
+                    else
+                    {
+                        InitReachCell();
+                        SetDist();
+
+                        ReachPointInMatriz();
+                    }
+
+
                 }
                 UpdateStats(turn);
 
@@ -347,6 +545,7 @@ public class GameManeger : MonoBehaviour
             }
 
         }
+
 
     }
     bool isTrap(Vector2 target)
@@ -465,26 +664,31 @@ public class GameManeger : MonoBehaviour
             wayToPoint.Clear();
 
             playingCorrutine = false;
-            if (matriz[(int)target.x][(int)target.y].nearPlayer)
-            {
-                InitReachCell();
+            // if (matriz[(int)target.x][(int)target.y].nearPlayer)
+            // {
+            //     InitReachCell();
 
-                SelectPlayer(target);
+            //     SelectPlayer(target);
 
-            }
-            else
-            {
-                InitReachCell();
-                SetDist();
+            // }
+            // else
+            // {
+            InitReachCell();
+            SetDist();
 
-                ReachPointInMatriz();
+            ReachPointInMatriz();
 
-            }
+            // }
 
         }
 
-        playingCorrutine = false;
 
+        playingCorrutine = false;
+        if (players[turn].play.isTitan && !matriz[(int)target.x][(int)target.y].nearPlayer)
+        {
+            print("endTitanTurn");
+            NextTurn();
+        }
         StopCoroutine(MovePlayerCorutine(target, index));
 
     }
@@ -494,15 +698,30 @@ public class GameManeger : MonoBehaviour
         yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
         if (!playingCorrutine)
         {
-            if (isPowerUp(target))
+            if (isPowerUp(target) && !players[index].play.isTitan)
             {
                 ActivatePower(matriz[(int)target.x][(int)target.y].powerUpType, target, players[index]);
             }
-            if (isTrap(target))
+            if (isTrap(target) && !players[index].play.isTitan)
             {
                 ActivateTrap(matriz[(int)target.x][(int)target.y].trapType, target, players[index]);
 
             }
+            if (matriz[(int)target.x][(int)target.y].nearPlayer)
+            {
+                InitReachCell();
+                SelectPlayer(target, players[index].play.isTitan);
+
+            }
+            else if (!players[index].play.isTitan)
+            {
+                InitReachCell();
+                SetDist();
+
+                ReachPointInMatriz();
+
+            }
+
             StopAllCoroutines();
 
         }
@@ -528,7 +747,7 @@ public class GameManeger : MonoBehaviour
 
     }
     //selecciona un jugador entre los mas cercanos para iniciar el combate
-    private void SelectPlayer(Vector2 target)
+    private void SelectPlayer(Vector2 target, bool titan)
     {
         nearPlayers.Clear();
         combatZoneCoord = target;
@@ -537,6 +756,23 @@ public class GameManeger : MonoBehaviour
             nearPlayers.Add(matriz[(int)target.x][(int)target.y].NearPlayers[k].play);
 
         }
+        if (titan)
+        {
+            int powerMax = int.MaxValue;
+            int indexFightForTitan = 0;
+            for (int k = 0; k < nearPlayers.Count; k++)
+            {
+                if (nearPlayers[k].power <= powerMax)
+                {
+                    powerMax = nearPlayers[k].power;
+                    indexFightForTitan = k;
+                }
+
+            }
+            Combat(combatZoneCoord, indexFightForTitan);
+
+        }
+        else
         if (nearPlayers.Count > 1)
         {
             SelectplayerCombat();
@@ -557,12 +793,14 @@ public class GameManeger : MonoBehaviour
 
         //combat maneger
         lastWinner1 = combatScene.Player1IsWinner();
+
         players[turn].PowerUp(combatScene.Reward(lastWinner1, 1));
         matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer].PowerUp(combatScene.Reward(lastWinner1, 2));
         //resultado de la victoria
         if (lastWinner1)
         {
             //seleccionar casilla
+
             for (int p = 0; p < players.Count; p++)
             {
                 if (matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer] == players[p])
@@ -571,13 +809,39 @@ public class GameManeger : MonoBehaviour
                     distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[p].Pos.x, (int)players[p].Pos.y);
                     ListHelper.MoveElement(players, players[p], NextTurnIndex(turn));
                     ChangeTurnOrd();
-
                     BoardManeger.ColorReachCell(matriz, distancia);
                     UpdateDisplay();
 
                     break;
                 }
             }
+
+            looserTitan = true;
+
+            if (players[turn].play.isTitan)
+            {
+                looserTitan = false;
+                List<Cell> posiblesMoves = new List<Cell>();
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (matriz[i][j].reach)
+                        {
+                            posiblesMoves.Add(matriz[i][j]);
+                        }
+                    }
+                }
+                isInCombat = true;
+                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, NextTurnIndex(turn));
+                //NextTurn();
+            }
+            else
+            {
+                isInCombat = true;
+
+            }
+
 
 
         }
@@ -586,12 +850,39 @@ public class GameManeger : MonoBehaviour
             loserPlayer = turn;
             distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)players[turn].Pos.x, (int)players[turn].Pos.y);
             BoardManeger.ColorReachCell(matriz, distancia);
+            looserTitan = false;
+
+            if (matriz[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer].play.isTitan)
+            {
+                looserTitan = true;
+
+                List<Cell> posiblesMoves = new List<Cell>();
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (matriz[i][j].reach)
+                        {
+                            posiblesMoves.Add(matriz[i][j]);
+                        }
+                    }
+                }
+                isInCombat = true;
+                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, turn);
+                //NextTurn();
+            }
+            else
+            {
+                isInCombat = true;
+
+            }
+
             UpdateDisplay();
 
             //seleccionar casilla   
         }
 
-        isInCombat = true;
+
     }
     //metodo recursivo que luego de mover la ficha devuelve el camino mas corto
     void SavePath(Vector2 target)

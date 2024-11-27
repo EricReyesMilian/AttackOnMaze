@@ -49,7 +49,7 @@ public class CellDisplay : MonoBehaviour
             reach = cell.reach;
             obstacule = cell.obstacle;
             NearPlayers = cell.NearPlayers;
-            distToCell = gm.distancia[(int)coord.x][(int)coord.y];
+            distToCell = gm.distancia[(int)coord.x][(int)coord.y] + gm.distanciaToCenter[(int)coord.x][(int)coord.y];
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
             visited_color = gm.players[gm.turn].color;
@@ -117,20 +117,24 @@ public class CellDisplay : MonoBehaviour
     }
     public void DrawWay()
     {
-        if (cell.visitedOnMove)
+        if (img_cell)
         {
-            if (!cell.hasAplayer)
+            if (cell.visitedOnMove)
             {
-                img_cell.sprite = default_sprite;
+                if (!cell.hasAplayer)
+                {
+                    img_cell.sprite = default_sprite;
 
-                img_cell.color = visited_color;
-            }
-            else
-            {
-                img_cell.sprite = cell.player.sprite;
-                img_cell.color = Color.white;
+                    img_cell.color = visited_color;
+                }
+                else
+                {
+                    img_cell.sprite = cell.player.sprite;
+                    img_cell.color = Color.white;
 
+                }
             }
+
         }
     }
     public void Click()
@@ -158,6 +162,7 @@ public class CellDisplay : MonoBehaviour
 
 
         }
+
     }
     public void Hover()
     {

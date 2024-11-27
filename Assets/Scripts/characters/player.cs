@@ -12,4 +12,5 @@ public class player : ScriptableObject
     public Sprite sprite;
 
     public bool isTitan;
+    public int TitanIQ;
 }

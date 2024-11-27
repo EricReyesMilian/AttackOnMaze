@@ -94,6 +94,7 @@ public class PanelCombat : MonoBehaviour
         fin = false;
         displayPlayerTurnInfo.UpdateStats(gm.turn);
         Panel.SetActive(false);
+
         //  gameObject.SetActive(false);
 
     }

@@ -21,6 +21,7 @@ public class PlayerManeger : MonoBehaviour
     List<(int x, int y)> powerUpTimer = new List<(int x, int y)>();
     List<(int x, int y)> speedUpTimer = new List<(int x, int y)>();
 
+    public List<(int x, int y)> lastMove = new List<(int x, int y)>();
     // Update is called once per frame
     void Update()
     {
