@@ -31,6 +31,7 @@ public class CellDisplay : MonoBehaviour
     public bool obstacule;
     public bool reach;
     public List<PlayerManeger> NearPlayers = new List<PlayerManeger>();
+    public TextMeshProUGUI endurence;
 
     void Start()
     {
@@ -53,11 +54,24 @@ public class CellDisplay : MonoBehaviour
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
             visited_color = gm.players[gm.turn].color;
+              if(cell.destroyableObs)
+            {
+                endurence.text = ""+cell.endurence;
+            }else
+            {
+                endurence.text = "";
+            }
             if (cell.powerUp)
             {
                 img_cell.color = Color.blue;
 
             }
+            if (cell.special)
+            {
+                img_cell.color = gm.players[gm.turn].play.color;
+
+            }
+          
             // else
             // if (cell.trap && cell.enableTrap)
             // {
@@ -66,7 +80,7 @@ public class CellDisplay : MonoBehaviour
 
             // }
             else
-            if (gm.isInCombat && !cell.hasAplayer && !cell.obstacle)
+            if (gm.isInCombat && !cell.hasAplayer && !cell.obstacle && !cell.powerUp)
             {
                 img_cell.color = reach_color;
             }
@@ -88,6 +102,11 @@ public class CellDisplay : MonoBehaviour
                     img_cell.color = default_color;
 
 
+
+            }
+             if (cell.powerUp)
+            {
+                img_cell.color = Color.blue;
 
             }
             if (cell.obstacle)

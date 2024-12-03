@@ -2543,6 +2543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   n: 17
+  round: 1
   cellLoaded: 0
   cellsContainer: {fileID: 1394349740}
   createBoard: {fileID: 1394349742}
@@ -2561,13 +2562,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 453bfe09a4d09e345af4cb001f199b68, type: 2}
   playingCorrutine: 0
   runningBackwards: 0
-  currentSpeed: 0
   wayToPoint: []
   playerContainer: {fileID: 1306226169}
   relocate: 0
-  loserPlayer: 0
   canPassTurn: 0
   lastWinner1: 0
+  looserTitan: 0
   isInCombat: 0
   combatZoneCoord: {x: 0, y: 0}
   nearPlayers: []
@@ -7784,7 +7784,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 161193692}
         m_TargetAssemblyTypeName: GameManeger, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: LeviSkill
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

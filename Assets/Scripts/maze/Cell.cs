@@ -13,6 +13,8 @@ public class Cell
     public bool nearPlayer;
     public List<PlayerManeger> NearPlayers = new List<PlayerManeger>();
 
+    //skill
+    public bool special;
     public bool trap;
     public bool trapActivated;
     public trap trapType;
@@ -25,6 +27,22 @@ public class Cell
     public PowerUp powerUpType;
 
     public bool VictoryCell;
+
+
+    public bool destroyableObs;
+    public int endurence = 30;
+
+
+    public void TakeDamage(int damage)
+    {
+        endurence -= damage;
+
+        if(endurence <= 0)
+        {
+            obstacle = false;
+            destroyableObs = false;
+        }
+    }
     //trampas
 
 }

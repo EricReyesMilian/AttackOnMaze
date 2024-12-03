@@ -148,7 +148,7 @@ public class BoardManeger
 
     }
 
-
+    //poner los siguientes dos metodos en static
     public void AddTraps()
     {
         //           N   S  E  W

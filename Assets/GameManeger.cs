@@ -20,23 +20,20 @@ public class GameManeger : MonoBehaviour
     public bool cellLoaded;
     public GameObject cellsContainer;
 
-    public CreateBoard createBoard;
-
-
-
     public List<List<Cell>> matriz = new List<List<Cell>>();
     public List<trap> trapList;
     public List<PowerUp> powerList;
 
     public List<List<int>> distancia = new List<List<int>>();
     public List<List<int>> distanciaToCenter = new List<List<int>>();
-    public Cell genericCell;
+    // public Cell genericCell;
     //turno
     public int turn = 0;
 
     //Lista de jugadores
     [HideInInspector]
     public List<PlayerManeger> players = new List<PlayerManeger>();
+    // sustituir por la cantidad de jugadores implementados
     public List<player> player_Scriptable = new List<player>();
 
 
@@ -91,8 +88,8 @@ public class GameManeger : MonoBehaviour
 
 
 
-    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9) };
-    public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (7, 7), (7, 9), (8, 6), (9, 6), (10, 6), (10, 7), (8, 10), (9, 10), (10, 10), (10, 8), (10, 9) };
+    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9),(7,7),(7,9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10)};
+    public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6,9),(6,7),(7,10),(7,6), (9, 6), (10, 7), (9, 10), (10, 9) };
     private void Awake()
     {
         if (gameManeger)
@@ -131,7 +128,7 @@ public class GameManeger : MonoBehaviour
 
         ///    players[3].Pos = new Vector2(0, 9);
 
-
+        
     }
 
     // Update is called once per frame
@@ -156,10 +153,27 @@ public class GameManeger : MonoBehaviour
 
             ReachPointInMatriz();
             UpdateStats(turn);
+            matriz[6][8].obstacle =true;
+            matriz[6][8].destroyableObs = true;
+
+            matriz[8][6].obstacle =true;
+            matriz[8][6].destroyableObs = true;
+
+            matriz[10][8].obstacle =true;
+            matriz[10][8].destroyableObs = true;
+
+            matriz[8][10].obstacle =true;
+            matriz[8][10].destroyableObs = true;
+
+
             UpdateDisplay();
             cellLoaded = false;
         }
         #region DebugInputs
+         if (Input.GetKeyDown(KeyCode.D))//romper pared
+        {
+            matriz[6][8].TakeDamage(5);
+        }
         if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
         {
 
@@ -180,6 +194,9 @@ public class GameManeger : MonoBehaviour
     //asigna el jugador a la casilla correspondiente
     public void FindPlayers()
     {
+        //quitar este metodo pal carajo
+        // optimization:
+        // ----- actualizar el tablero antes y despues de mover un ugador optimizando la cantidd=ad de operaciones
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
@@ -251,6 +268,7 @@ public class GameManeger : MonoBehaviour
         UpdateDisplay();
     }
     //marca todas las casillas alcanzables
+
     public void ReachPointInMatriz()
     {
         if (!isInCombat)
@@ -428,7 +446,8 @@ public class GameManeger : MonoBehaviour
         {
             if (matriz[coord.x][coord.y].nearPlayer)
             {
-                if (titan.power >= matriz[coord.x][coord.y].NearPlayers[0].power)
+                if (titan.power >= matriz[coord.x][coord.y].NearPlayers[0].power
+                && !matriz[coord.x][coord.y].NearPlayers[0].play.isTitan)
                 {
                     huboCambio = true;
                     //SelectPlayer(new Vector2((int)coord.x, (int)coord.y), true);
@@ -472,6 +491,7 @@ public class GameManeger : MonoBehaviour
             {
                 matriz[i][j].reach = false;
                 matriz[i][j].nearPlayer = false;
+                matriz[i][j].special = false;
             }
         }
 
@@ -826,7 +846,7 @@ public class GameManeger : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (matriz[i][j].reach)
+                        if (matriz[i][j].reach && !predefinedEmptyCells.Contains((i,j)))
                         {
                             posiblesMoves.Add(matriz[i][j]);
                         }
@@ -864,7 +884,7 @@ public class GameManeger : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (matriz[i][j].reach)
+                        if (matriz[i][j].reach && !predefinedEmptyCells.Contains((i,j)))
                         {
                             posiblesMoves.Add(matriz[i][j]);
                         }
@@ -971,5 +991,73 @@ public class GameManeger : MonoBehaviour
             }
         }
     }
+    public void LeviSkill()
+    {
+        PlayerManeger Levi = players[turn];
 
+        if ((int)Levi.Pos.x + 2 <= n && !matriz[(int)Levi.Pos.x + 1][(int)Levi.Pos.y].obstacle)
+        {
+            for (int i = (int)Levi.Pos.x + 2; i < n; i++)
+            {
+                if (matriz[i][(int)Levi.Pos.y].obstacle)
+                {
+                    distancia[i - 1][(int)Levi.Pos.y] = 0;
+                    matriz[i - 1][(int)Levi.Pos.y].special = true;
+                    break;
+                }
+               
+            }
+
+        }
+        if ((int)Levi.Pos.x - 2 >= 0 && !matriz[(int)Levi.Pos.x - 1][(int)Levi.Pos.y].obstacle)
+        {
+            for (int i = (int)Levi.Pos.x - 2; i >= 0; i--)
+            {
+                if (matriz[i][(int)Levi.Pos.y].obstacle)
+                {
+                    distancia[i + 1][(int)Levi.Pos.y] = 0;
+                    matriz[i + 1][(int)Levi.Pos.y].special = true;
+                    break;
+                }
+                
+            }
+
+
+        }
+        
+        if ((int)Levi.Pos.y + 2 <= n && !matriz[(int)Levi.Pos.x][(int)Levi.Pos.y + 1].obstacle)
+        {
+            for (int i = (int)Levi.Pos.y + 2; i < n; i++)
+            {
+                if (matriz[(int)Levi.Pos.x][i].obstacle)
+                {
+                    distancia[(int)Levi.Pos.x][i - 1] = 0;
+                    matriz[(int)Levi.Pos.x][i - 1].special = true;
+                    break;
+                }
+                
+            }
+
+        }   
+        if ((int)Levi.Pos.y - 2 >= 0 && !matriz[(int)Levi.Pos.x][(int)Levi.Pos.y - 1].obstacle)
+        {
+            for (int i = (int)Levi.Pos.y - 2; i >= 0; i--)
+            {
+                if (matriz[(int)Levi.Pos.x][i].obstacle)
+                {
+                    distancia[(int)Levi.Pos.x][i + 1] = 0;
+                    matriz[(int)Levi.Pos.x][i + 1].special = true;
+                    break;
+                }
+              
+            }
+
+        }
+
+
+        BoardManeger.ColorReachCell(matriz, distancia);
+
+        UpdateDisplay();
+
+    }
 }
