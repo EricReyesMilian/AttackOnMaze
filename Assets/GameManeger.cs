@@ -89,7 +89,10 @@ public class GameManeger : MonoBehaviour
     public PanelTrap panelTrap;
     public PanelPowerUp panelPowerUp;
 
-
+    public bool SkillEnable = false;
+    public bool ErenSkill;
+    public bool ArminSkill;
+    public bool LeviSkill;
 
     public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
@@ -162,6 +165,7 @@ public class GameManeger : MonoBehaviour
         matriz[8][10].obstacle = true;
         matriz[8][10].destroyableObs = true;
 
+        turn = -1;
         NextTurn();
 
     }
@@ -169,7 +173,6 @@ public class GameManeger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // UpdateDisplay();
 
 
         #region DebugInputs
@@ -188,8 +191,6 @@ public class GameManeger : MonoBehaviour
 
         }
         #endregion
-
-
 
 
     }
@@ -289,6 +290,23 @@ public class GameManeger : MonoBehaviour
     {
         if (!playingCorrutine && !isInCombat)
         {
+            if (turn >= 0)
+            {
+                players[turn].DownCooldown();
+                if (players[turn].play.name == "Eren" && ErenSkill)
+                {
+                    players[turn].CtransformTime++;
+                    if (players[turn].CtransformTime > players[turn].TransformTime)
+                    {
+                        ErenSkill = false;
+                        PlayerSkills.ErenSkillOff(players[turn]);
+                        players[turn].CtransformTime = 0;
+                        players[turn].ResetCooldown();
+                    }
+                }
+            }
+
+
 
             turn = NextTurnIndex(turn);
             ChangeTurnOrd();
@@ -302,6 +320,16 @@ public class GameManeger : MonoBehaviour
             {
                 round++;
             }
+            if (players[turn].currentCooldown == 0 && !players[turn].play.isTitan)
+            {
+                print("enableskill");
+                SkillEnable = true;
+            }
+            else
+            {
+                SkillEnable = false;
+
+            }
             //move titan
             if (players[turn].play.isTitan)
             {
@@ -312,6 +340,44 @@ public class GameManeger : MonoBehaviour
 
         }
 
+    }
+
+    public void Skill()
+    {
+        if (SkillEnable)
+        {
+            SetFalseSkills();
+            SkillEnable = false;
+            player sCplayer = players[turn].play;
+            players[turn].ResetCooldown();
+            switch (sCplayer.Name)
+            {
+                case "Eren":
+                    ErenSkill = true;
+                    PlayerSkills.ErenSkillEf(players[turn]);
+                    ReachPointInMatriz();
+                    UpdateStats(turn);
+                    UpdateDisplay();
+
+                    break;
+                case "Armin":
+                    ArminSkill = true;
+                    break;
+                case "Levi":
+                    LeviSkill = true;
+                    PlayerSkills.LeviSkillEf(players[turn], matriz, distancia);
+
+                    UpdateDisplay();
+                    break;
+            }
+
+        }
+    }
+    private void SetFalseSkills()
+    {
+        ErenSkill = false;
+        ArminSkill = false;
+        LeviSkill = false;
     }
     private void MoveTitan()
     {
@@ -508,11 +574,38 @@ public class GameManeger : MonoBehaviour
             {
                 if (ReachPoint(target))
                 {
+                    bool aux = LeviSkill;
+                    if (LeviSkill)
+                    {
+                        if ((int)players[turn].Pos.x == (int)target.x)
+                        {
+                            foreach (var play in players)
+                            {
+                                if (play.Pos.x == players[turn].Pos.x
+                                    && play.Pos.y < target.y && play.Pos.y != players[turn].Pos.y)
+                                {
+                                    play.PowerUp(-players[turn].power / 4);
+                                }
+                            }
+                        }
+                        if ((int)players[turn].Pos.y == (int)target.y)
+                        {
+                            foreach (var play in players)
+                            {
+                                if (play.Pos.y == players[turn].Pos.y
+                                    && play.Pos.x < target.y && play.Pos.x != players[turn].Pos.x)
+                                {
+                                    play.PowerUp(-players[turn].power / 4);
+                                }
+                            }
+                        }
+                        LeviSkill = false;
+                    }
+
                     players[turn].lastMove.Add(((int)players[turn].Pos.x, (int)players[turn].Pos.y));
                     StartCoroutine(MovePlayerCorutine(target, index));
 
-                    StartCoroutine(ActivateInteraction(target, index));
-
+                    StartCoroutine(ActivateInteraction(target, index, aux));
 
 
 
@@ -630,6 +723,7 @@ public class GameManeger : MonoBehaviour
                         {
                             matriz[i][j].visitedOnMove = true;
                             players[index ?? turn].Pos = new Vector2(wayToPoint[w].x, wayToPoint[w].y);
+
                             FindPlayers();
                             UpdateDisplay();
                             if (w > 0)
@@ -715,7 +809,7 @@ public class GameManeger : MonoBehaviour
 
     }
 
-    IEnumerator ActivateInteraction(Vector2 target, int index)
+    IEnumerator ActivateInteraction(Vector2 target, int index, bool levi)
     {
         yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
         if (!playingCorrutine)
@@ -729,7 +823,7 @@ public class GameManeger : MonoBehaviour
                 ActivateTrap(matriz[(int)target.x][(int)target.y].trapType, target, players[index]);
 
             }
-            if (matriz[(int)target.x][(int)target.y].nearPlayer)
+            if (matriz[(int)target.x][(int)target.y].nearPlayer && !levi)
             {
                 InitReachCell();
                 SelectPlayer(target, players[index].play.isTitan);
@@ -749,7 +843,7 @@ public class GameManeger : MonoBehaviour
         }
         else
         {
-            StartCoroutine(ActivateInteraction(target, index));
+            StartCoroutine(ActivateInteraction(target, index, levi));
 
         }
 
@@ -914,7 +1008,7 @@ public class GameManeger : MonoBehaviour
     void SavePath(Vector2 target)
     {
         wayToPoint.Add(target);
-        if (target != players[turn].Pos)
+        if (target != players[turn].Pos && distancia[(int)target.x][(int)target.y] != 0)
         {
             bool taken = false;
             if (target.y + 1 < n && !taken)
@@ -993,74 +1087,5 @@ public class GameManeger : MonoBehaviour
 
             }
         }
-    }
-    public void LeviSkill()
-    {
-        PlayerManeger Levi = players[turn];
-
-        if ((int)Levi.Pos.x + 2 <= n && !matriz[(int)Levi.Pos.x + 1][(int)Levi.Pos.y].obstacle)
-        {
-            for (int i = (int)Levi.Pos.x + 2; i < n; i++)
-            {
-                if (matriz[i][(int)Levi.Pos.y].obstacle)
-                {
-                    distancia[i - 1][(int)Levi.Pos.y] = 0;
-                    matriz[i - 1][(int)Levi.Pos.y].special = true;
-                    break;
-                }
-
-            }
-
-        }
-        if ((int)Levi.Pos.x - 2 >= 0 && !matriz[(int)Levi.Pos.x - 1][(int)Levi.Pos.y].obstacle)
-        {
-            for (int i = (int)Levi.Pos.x - 2; i >= 0; i--)
-            {
-                if (matriz[i][(int)Levi.Pos.y].obstacle)
-                {
-                    distancia[i + 1][(int)Levi.Pos.y] = 0;
-                    matriz[i + 1][(int)Levi.Pos.y].special = true;
-                    break;
-                }
-
-            }
-
-
-        }
-
-        if ((int)Levi.Pos.y + 2 <= n && !matriz[(int)Levi.Pos.x][(int)Levi.Pos.y + 1].obstacle)
-        {
-            for (int i = (int)Levi.Pos.y + 2; i < n; i++)
-            {
-                if (matriz[(int)Levi.Pos.x][i].obstacle)
-                {
-                    distancia[(int)Levi.Pos.x][i - 1] = 0;
-                    matriz[(int)Levi.Pos.x][i - 1].special = true;
-                    break;
-                }
-
-            }
-
-        }
-        if ((int)Levi.Pos.y - 2 >= 0 && !matriz[(int)Levi.Pos.x][(int)Levi.Pos.y - 1].obstacle)
-        {
-            for (int i = (int)Levi.Pos.y - 2; i >= 0; i--)
-            {
-                if (matriz[(int)Levi.Pos.x][i].obstacle)
-                {
-                    distancia[(int)Levi.Pos.x][i + 1] = 0;
-                    matriz[(int)Levi.Pos.x][i + 1].special = true;
-                    break;
-                }
-
-            }
-
-        }
-
-
-        BoardManeger.ColorReachCell(matriz, distancia);
-
-        UpdateDisplay();
-
     }
 }

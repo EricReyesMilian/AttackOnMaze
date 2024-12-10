@@ -143,6 +143,11 @@ public class BoardManeger
                     matriz[i][j].reach = true;
 
                 }
+                else
+                {
+                    matriz[i][j].reach = false;
+
+                }
             }
 
 

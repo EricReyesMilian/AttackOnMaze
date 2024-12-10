@@ -2573,6 +2573,10 @@ MonoBehaviour:
   nearPlayers: []
   panelTrap: {fileID: 2015092113}
   panelPowerUp: {fileID: 2034050968}
+  SkillEnable: 1
+  ErenSkill: 0
+  ArminSkill: 0
+  LeviSkill: 0
 --- !u!1001 &169646519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7711,6 +7715,7 @@ GameObject:
   - component: {fileID: 550781118}
   - component: {fileID: 550781117}
   - component: {fileID: 550781116}
+  - component: {fileID: 550781119}
   m_Layer: 0
   m_Name: Skill Button
   m_TagString: Untagged
@@ -7784,7 +7789,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 161193692}
         m_TargetAssemblyTypeName: GameManeger, Assembly-CSharp
-        m_MethodName: LeviSkill
+        m_MethodName: Skill
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7832,6 +7837,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550781114}
   m_CullTransparentMesh: 1
+--- !u!114 &550781119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550781114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993fce6841f7e6b418a93b8ff4e5a454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: {r: 0.62352943, g: 0.28627452, b: 0.25490198, a: 1}
+  disable: {r: 0.3019608, g: 0.3019608, b: 0.3019608, a: 1}
 --- !u!224 &555853551 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9188109731277742154, guid: be1a2ceffcf833a4c998f15bcd9f767f, type: 3}

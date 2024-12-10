@@ -46,7 +46,7 @@ public class displayPlayerTurnInfo : MonoBehaviour
         portrait.sprite = gm.players[i].img;
         name_c.text = "" + gm.players[i].nameC;
         power.text = "power: " + gm.players[i].power;
-        skill_Cooldown.text = "cooldown: " + gm.players[i].cooldown;
+        skill_Cooldown.text = "cooldown: " + gm.players[i].currentCooldown;
 
         if (i == gm.turn)
             speed.text = "speed: " + gm.players[i].speed + "(" + gm.players[i].currentSpeed + ")";

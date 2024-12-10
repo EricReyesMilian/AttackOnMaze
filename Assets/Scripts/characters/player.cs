@@ -10,6 +10,9 @@ public class player : ScriptableObject
     public int power;
     public Color color;
     public Sprite sprite;
+    public Sprite sprite2;
+
+    public int TransformTime;
 
     public bool isTitan;
     public int TitanIQ;

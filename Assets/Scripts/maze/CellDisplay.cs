@@ -54,7 +54,7 @@ public class CellDisplay : MonoBehaviour
             reach = cell.reach;
             obstacule = cell.obstacle;
             NearPlayers = cell.NearPlayers;
-            distToCell = gm.distancia[(int)coord.x][(int)coord.y] + gm.distanciaToCenter[(int)coord.x][(int)coord.y];
+            distToCell = gm.distancia[(int)coord.x][(int)coord.y]; //+ gm.distanciaToCenter[(int)coord.x][(int)coord.y];
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
             visited_color = gm.players[gm.turn].color;
@@ -120,7 +120,16 @@ public class CellDisplay : MonoBehaviour
             }
             if (cell.hasAplayer)
             {
-                img_cell.sprite = cell.player.sprite;
+                if (cell.player.Name == "Eren" && gm.ErenSkill)
+                {
+                    img_cell.sprite = cell.player.sprite2;
+
+                }
+                else
+                {
+                    img_cell.sprite = cell.player.sprite;
+
+                }
                 img_cell.color = Color.white;
 
             }
@@ -153,7 +162,16 @@ public class CellDisplay : MonoBehaviour
                 }
                 else
                 {
-                    img_cell.sprite = cell.player.sprite;
+                    if (cell.player.Name == "Eren" && gm.ErenSkill)
+                    {
+                        img_cell.sprite = cell.player.sprite2;
+
+                    }
+                    else
+                    {
+                        img_cell.sprite = cell.player.sprite;
+
+                    }
                     img_cell.color = Color.white;
 
                 }
@@ -233,6 +251,7 @@ public class CellDisplay : MonoBehaviour
     {
 
         cell = gm.matriz[(int)coord.x][(int)coord.y];
+
 
 
     }
