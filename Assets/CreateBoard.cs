@@ -8,51 +8,43 @@ public class CreateBoard : MonoBehaviour
 
     public GameObject cellPref;
     GridLayoutGroup grid;
-    int n;
     public float height = 600;
     [Range(0, 0.99f)]
     public float padding;
 
-    //maze
-    public int obstaclesAmount;
-    GameManeger gm;
 
-    int dir;
-    [Range(0, 5)]
-    public int complexity;
-
-    bool ready;
-    // Start is called before the first frame update
-    void Start()
+    public void InitBoard(int n)
     {
-        gm = GameManeger.gameManeger;
-        n = GameManeger.gameManeger.n;
-        grid = GetComponent<GridLayoutGroup>();
         DestroyCells();
         GridLayoutConfig(n);
         InstantiateCells(n);
-    }
 
+    }
     void Update()
     {
-        if (ready)
+        if (gameObject.transform.childCount > 0)
         {
-            if (gameObject.transform.childCount > 0)
+            if (gameObject.transform.GetChild(0).GetComponent<CellDisplay>().coord == new Vector2(GameManeger.gameManeger.n - 1, GameManeger.gameManeger.n - 1))
             {
                 Transform firstChild = gameObject.transform.GetChild(0);
                 firstChild.SetSiblingIndex(gameObject.transform.childCount - 1);
+
             }
-            ready = false;
         }
+
+
     }
-    void GridLayoutConfig(int n)
+
+    public void GridLayoutConfig(int n)
     {
+        grid = GetComponent<GridLayoutGroup>();
+
         grid.constraintCount = n;
         grid.cellSize = new Vector2((height / n) * padding, (height / n) * padding);
         grid.spacing = new Vector2((height / n) * (1 - padding), (height / n) * (1 - padding));
 
     }
-    void InstantiateCells(int n)
+    public void InstantiateCells(int n)
     {
         for (int i = 0; i < n; i++)
         {
@@ -62,12 +54,10 @@ public class CreateBoard : MonoBehaviour
                 cellPref.GetComponent<CellDisplay>().coord = new Vector2(i, j);
             }
         }
-        ready = true;
 
-        gm.cellLoaded = true;
     }
 
-    void DestroyCells()
+    public void DestroyCells()
     {
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {

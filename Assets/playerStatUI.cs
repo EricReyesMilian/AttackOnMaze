@@ -17,9 +17,11 @@ public class playerStatUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(player)
+        {
+            namePlayer.text = player.play.Name;
 
-
-        namePlayer.text = player.play.Name;
+        }
 
     }
 }

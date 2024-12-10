@@ -2546,7 +2546,6 @@ MonoBehaviour:
   round: 1
   cellLoaded: 0
   cellsContainer: {fileID: 1394349740}
-  createBoard: {fileID: 1394349742}
   trapList:
   - {fileID: 11400000, guid: 183f049d244f71441851c4ffe454e0fc, type: 2}
   - {fileID: 11400000, guid: 6a2bd29a294a6874ebebf290a7c8db3f, type: 2}
@@ -2564,6 +2563,7 @@ MonoBehaviour:
   runningBackwards: 0
   wayToPoint: []
   playerContainer: {fileID: 1306226169}
+  createBoard: {fileID: 1394349742}
   relocate: 0
   canPassTurn: 0
   lastWinner1: 0
@@ -20101,8 +20101,6 @@ MonoBehaviour:
   cellPref: {fileID: 330532874729289670, guid: be1a2ceffcf833a4c998f15bcd9f767f, type: 3}
   height: 425
   padding: 0.923
-  obstaclesAmount: 20
-  complexity: 2
 --- !u!114 &1394349743
 MonoBehaviour:
   m_ObjectHideFlags: 0

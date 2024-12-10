@@ -33,12 +33,16 @@ public class CellDisplay : MonoBehaviour
     public List<PlayerManeger> NearPlayers = new List<PlayerManeger>();
     public TextMeshProUGUI endurence;
 
-    void Start()
+    void Awake()
     {
         gm = GameManeger.gameManeger;
+        gm.UpdateDisplay += AsignarCasillaCorrespondiente;
+
+    }
+    void Start()
+    {
 
         img_cell = GetComponent<Image>();
-        gm.UpdateDisplay += AsignarCasillaCorrespondiente;
         gm.DrawWay += DrawWay;
 
     }
@@ -54,10 +58,11 @@ public class CellDisplay : MonoBehaviour
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
             visited_color = gm.players[gm.turn].color;
-              if(cell.destroyableObs)
+            if (cell.destroyableObs)
             {
-                endurence.text = ""+cell.endurence;
-            }else
+                endurence.text = "" + cell.endurence;
+            }
+            else
             {
                 endurence.text = "";
             }
@@ -71,7 +76,7 @@ public class CellDisplay : MonoBehaviour
                 img_cell.color = gm.players[gm.turn].play.color;
 
             }
-          
+
             // else
             // if (cell.trap && cell.enableTrap)
             // {
@@ -104,7 +109,7 @@ public class CellDisplay : MonoBehaviour
 
 
             }
-             if (cell.powerUp)
+            if (cell.powerUp)
             {
                 img_cell.color = Color.blue;
 

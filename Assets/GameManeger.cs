@@ -28,7 +28,7 @@ public class GameManeger : MonoBehaviour
     public List<List<int>> distanciaToCenter = new List<List<int>>();
     // public Cell genericCell;
     //turno
-    public int turn = 0;
+    public int turn = -1;
 
     //Lista de jugadores
     [HideInInspector]
@@ -56,6 +56,9 @@ public class GameManeger : MonoBehaviour
     public delegate void Combate();
     public event Combate StartCombate;
 
+    public delegate void startDisplay(int n);
+    public event startDisplay StartDisplay;
+
     public delegate void SelectPlayerCombat();
     public event SelectPlayerCombat SelectplayerCombat;
 
@@ -64,7 +67,7 @@ public class GameManeger : MonoBehaviour
 
 
 
-
+    public CreateBoard createBoard;
 
 
 
@@ -88,8 +91,8 @@ public class GameManeger : MonoBehaviour
 
 
 
-    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9),(7,7),(7,9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10)};
-    public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6,9),(6,7),(7,10),(7,6), (9, 6), (10, 7), (9, 10), (10, 9) };
+    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
+    public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
     private void Awake()
     {
         if (gameManeger)
@@ -101,6 +104,7 @@ public class GameManeger : MonoBehaviour
             gameManeger = this;
         }
         AddCellsToMatriz();
+        createBoard.InitBoard(n);
 
     }
     // Start is called before the first frame update
@@ -126,51 +130,50 @@ public class GameManeger : MonoBehaviour
         players[2].Pos = new Vector2(1, 15);
         players[3].Pos = new Vector2(15, 15);
 
-        ///    players[3].Pos = new Vector2(0, 9);
 
-        
+
+
+        //loaded
+
+        FindPlayers();
+        BoardManeger.IniciarDistancias(ref distancia, n);
+        BoardManeger.IniciarDistancias(ref distanciaToCenter, n);
+        //maze 
+        MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
+        BoardManeger boardManeger = new BoardManeger(matriz);
+        boardManeger.AddTraps();
+        boardManeger.AddPowerUps();
+        //maze 
+
+        distanciaToCenter = BoardManeger.Lee(matriz, n / 2, n / 2, n * n);
+
+        ReachPointInMatriz();
+        UpdateStats(turn);
+
+        matriz[6][8].obstacle = true;
+        matriz[6][8].destroyableObs = true;
+
+        matriz[8][6].obstacle = true;
+        matriz[8][6].destroyableObs = true;
+
+        matriz[10][8].obstacle = true;
+        matriz[10][8].destroyableObs = true;
+
+        matriz[8][10].obstacle = true;
+        matriz[8][10].destroyableObs = true;
+
+        NextTurn();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (cellLoaded)
-        {
+        // UpdateDisplay();
 
 
-            FindPlayers();
-            BoardManeger.IniciarDistancias(ref distancia, n);
-            BoardManeger.IniciarDistancias(ref distanciaToCenter, n);
-            //maze 
-            MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
-            BoardManeger boardManeger = new BoardManeger(matriz);
-            boardManeger.AddTraps();
-            boardManeger.AddPowerUps();
-            //maze 
-
-            distanciaToCenter = BoardManeger.Lee(matriz, n / 2, n / 2, n * n);
-
-            ReachPointInMatriz();
-            UpdateStats(turn);
-            matriz[6][8].obstacle =true;
-            matriz[6][8].destroyableObs = true;
-
-            matriz[8][6].obstacle =true;
-            matriz[8][6].destroyableObs = true;
-
-            matriz[10][8].obstacle =true;
-            matriz[10][8].destroyableObs = true;
-
-            matriz[8][10].obstacle =true;
-            matriz[8][10].destroyableObs = true;
-
-
-            UpdateDisplay();
-            cellLoaded = false;
-        }
         #region DebugInputs
-         if (Input.GetKeyDown(KeyCode.D))//romper pared
+        if (Input.GetKeyDown(KeyCode.D))//romper pared
         {
             matriz[6][8].TakeDamage(5);
         }
@@ -846,7 +849,7 @@ public class GameManeger : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (matriz[i][j].reach && !predefinedEmptyCells.Contains((i,j)))
+                        if (matriz[i][j].reach && !predefinedEmptyCells.Contains((i, j)))
                         {
                             posiblesMoves.Add(matriz[i][j]);
                         }
@@ -884,7 +887,7 @@ public class GameManeger : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (matriz[i][j].reach && !predefinedEmptyCells.Contains((i,j)))
+                        if (matriz[i][j].reach && !predefinedEmptyCells.Contains((i, j)))
                         {
                             posiblesMoves.Add(matriz[i][j]);
                         }
@@ -1005,7 +1008,7 @@ public class GameManeger : MonoBehaviour
                     matriz[i - 1][(int)Levi.Pos.y].special = true;
                     break;
                 }
-               
+
             }
 
         }
@@ -1019,12 +1022,12 @@ public class GameManeger : MonoBehaviour
                     matriz[i + 1][(int)Levi.Pos.y].special = true;
                     break;
                 }
-                
+
             }
 
 
         }
-        
+
         if ((int)Levi.Pos.y + 2 <= n && !matriz[(int)Levi.Pos.x][(int)Levi.Pos.y + 1].obstacle)
         {
             for (int i = (int)Levi.Pos.y + 2; i < n; i++)
@@ -1035,10 +1038,10 @@ public class GameManeger : MonoBehaviour
                     matriz[(int)Levi.Pos.x][i - 1].special = true;
                     break;
                 }
-                
+
             }
 
-        }   
+        }
         if ((int)Levi.Pos.y - 2 >= 0 && !matriz[(int)Levi.Pos.x][(int)Levi.Pos.y - 1].obstacle)
         {
             for (int i = (int)Levi.Pos.y - 2; i >= 0; i--)
@@ -1049,7 +1052,7 @@ public class GameManeger : MonoBehaviour
                     matriz[(int)Levi.Pos.x][i + 1].special = true;
                     break;
                 }
-              
+
             }
 
         }
