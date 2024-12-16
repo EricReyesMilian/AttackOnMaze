@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: impostor
   m_EditorClassIdentifier: 
   nameTrap: Impostor
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 6d1945d0aac43504a9a62811d28a8f41, type: 3}
   type: 2
   description: -50% power. The impostor will win his next combat
   range: 2

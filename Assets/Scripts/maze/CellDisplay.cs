@@ -66,11 +66,7 @@ public class CellDisplay : MonoBehaviour
             {
                 endurence.text = "";
             }
-            if (cell.powerUp)
-            {
-                img_cell.color = Color.blue;
-
-            }
+          
             if (cell.special)
             {
                 img_cell.color = gm.players[gm.turn].play.color;
@@ -109,11 +105,7 @@ public class CellDisplay : MonoBehaviour
 
 
             }
-            if (cell.powerUp)
-            {
-                img_cell.color = Color.blue;
-
-            }
+            
             if (cell.obstacle)
             {
                 img_cell.color = obstacule_color;
@@ -132,12 +124,27 @@ public class CellDisplay : MonoBehaviour
                 }
                 img_cell.color = Color.white;
 
+            } else if (cell.powerUp)
+            {
+                img_cell.sprite = cell.powerUpType.sprite;
+                if(!hover)
+                {
+                    img_cell.color = Color.white;
+                    if(cell.reach)
+                    {
+                        img_cell.color = new Color(reach_color.r,reach_color.g,reach_color.b,reach_color.a*1.8f);
+
+
+                    }
+
+                }
+                
             }
             else
             {
                 img_cell.sprite = default_sprite;
             }
-            if (!(cell.hasAplayer || cell.obstacle || cell.reach || hover /*|| cell.trap*/ || cell.powerUp))
+            if (!(cell.hasAplayer || cell.obstacle || cell.reach || hover || cell.powerUp))
             {
                 img_cell.color = default_color;
             }
@@ -209,14 +216,18 @@ public class CellDisplay : MonoBehaviour
     public void Hover()
     {
         //print("hover");
-        if (!cell.reach)
+        if (!cell.reach && !cell.powerUp)
         {
             img_cell.color = hover_color;
 
         }
         else
         {
-            img_cell.color = reachHover_color;
+            if(cell.reach)
+            {
+                img_cell.color = reachHover_color;
+
+            }
         }
         hover = true;
         if (cell.hasAplayer)
@@ -236,10 +247,7 @@ public class CellDisplay : MonoBehaviour
             displayPlayerTurnInfo.statdisplay.UpdateStats(gm.turn);
 
         }
-        if (cell.trap)
-        {
-            print(cell.trapType);
-        }
+       
 
     }
     public void No_Hover()
