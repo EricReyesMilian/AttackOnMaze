@@ -1,5 +1,4 @@
 
-
 public class TrapTriggerEffect
 {
     private trap trap;
@@ -19,11 +18,21 @@ public class TrapTriggerEffect
             case Trap.none: None(); break;
             case Trap.spikes: Spikes(); break;
             case Trap.impostor: Impostor(); break;
+            case Trap.cold: Cold(); break;
+            case Trap.swap: Swap(); break;
         }
     }
     void None()
     {
 
+    }
+    void Swap()
+    {
+        player.SpeedUpNormalize(1, 2);
+    }
+    void Cold()
+    {
+        player.ResetCooldown();
     }
     void Spikes()
     {

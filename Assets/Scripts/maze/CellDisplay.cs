@@ -66,20 +66,14 @@ public class CellDisplay : MonoBehaviour
             {
                 endurence.text = "";
             }
-          
+
             if (cell.special)
             {
                 img_cell.color = gm.players[gm.turn].play.color;
 
             }
 
-            // else
-            // if (cell.trap && cell.enableTrap)
-            // {
-            //     //uncomment to debbug traps
-            //     // img_cell.color = Color.red;
 
-            // }
             else
             if (gm.isInCombat && !cell.hasAplayer && !cell.obstacle && !cell.powerUp)
             {
@@ -105,14 +99,14 @@ public class CellDisplay : MonoBehaviour
 
 
             }
-            
+
             if (cell.obstacle)
             {
                 img_cell.color = obstacule_color;
             }
             if (cell.hasAplayer)
             {
-                if (cell.player.Name == "Eren" && gm.ErenSkill)
+                if ((cell.player.Name == "Eren" && gm.ErenSkill) || (cell.player.Name == "Armin" && gm.ArminSkill) || (cell.player.Name == "Reiner" && gm.ReinerSkill))
                 {
                     img_cell.sprite = cell.player.sprite2;
 
@@ -124,21 +118,22 @@ public class CellDisplay : MonoBehaviour
                 }
                 img_cell.color = Color.white;
 
-            } else if (cell.powerUp)
+            }
+            else if (cell.powerUp)
             {
                 img_cell.sprite = cell.powerUpType.sprite;
-                if(!hover)
+                if (!hover)
                 {
                     img_cell.color = Color.white;
-                    if(cell.reach)
+                    if (cell.reach)
                     {
-                        img_cell.color = new Color(reach_color.r,reach_color.g,reach_color.b,reach_color.a*1.8f);
+                        img_cell.color = new Color(reach_color.r, reach_color.g, reach_color.b, reach_color.a * 1.8f);
 
 
                     }
 
                 }
-                
+
             }
             else
             {
@@ -152,6 +147,13 @@ public class CellDisplay : MonoBehaviour
             if (cell.trapActivated)
             {
                 //  print("activated" + cell.trapType);
+            }
+
+            if (cell.trap && cell.enableTrap && Input.GetKey(KeyCode.LeftShift))
+            {
+                //uncomment to debbug traps
+                img_cell.color = Color.red;
+
             }
         }
     }
@@ -169,7 +171,7 @@ public class CellDisplay : MonoBehaviour
                 }
                 else
                 {
-                    if (cell.player.Name == "Eren" && gm.ErenSkill)
+                    if ((cell.player.Name == "Eren" && gm.ErenSkill) || (cell.player.Name == "Armin" && gm.ArminSkill) || (cell.player.Name == "Reiner" && gm.ReinerSkill))
                     {
                         img_cell.sprite = cell.player.sprite2;
 
@@ -191,6 +193,13 @@ public class CellDisplay : MonoBehaviour
         // BoardManeger.AddTrapOn(gm.trapList[1],(int)coord.x,(int)coord.y,gm.matriz);
         if (!gm.isInCombat)
         {
+            if (gm.ReinerSkill)
+            {
+                if (cell.special)
+                {
+                    gm.players[gm.turn].DownCurrentSpeed(1);
+                }
+            }
             gm.MoveplayerTo(cell.coord, gm.turn);
 
         }
@@ -223,7 +232,7 @@ public class CellDisplay : MonoBehaviour
         }
         else
         {
-            if(cell.reach)
+            if (cell.reach)
             {
                 img_cell.color = reachHover_color;
 
@@ -247,7 +256,7 @@ public class CellDisplay : MonoBehaviour
             displayPlayerTurnInfo.statdisplay.UpdateStats(gm.turn);
 
         }
-       
+
 
     }
     public void No_Hover()

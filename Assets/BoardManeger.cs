@@ -168,7 +168,7 @@ public class BoardManeger
                 {
                     //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
                     if (!gm.predefinedEmptyCells.Contains((i, j))
-                    && !gm.matriz[i][j].trap && !matriz[i][j].obstacle && !trapFrontier[i, j])
+                    && !gm.matriz[i][j].trap && !matriz[i][j].obstacle && !trapFrontier[i, j] && !gm.matriz[i][j].destroyableObs)
                     {
                         int r = new Random().Next(0, 5);
                         int trapIndex = new Random().Next(0, gm.trapList.Count);
@@ -249,7 +249,7 @@ public class BoardManeger
                 {
                     //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
                     if (!gm.predefinedEmptyCells.Contains((i, j))
-                    && !gm.matriz[i][j].powerUp && !matriz[i][j].obstacle && !gm.matriz[i][j].trap)
+                    && !gm.matriz[i][j].powerUp && !matriz[i][j].obstacle && !gm.matriz[i][j].trap && !gm.matriz[i][j].destroyableObs)
                     {
                         int r = new Random().Next(0, 10);
                         int powerIndex = new Random().Next(0, gm.powerList.Count);

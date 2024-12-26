@@ -45,7 +45,7 @@ public class GameManeger : MonoBehaviour
     public List<Vector2> wayToPoint;
     public GameObject playerContainer;
 
-
+    bool skillWasActivatedThisTurn = false;
     public delegate void Accion();
     public event Accion UpdateDisplay;
 
@@ -91,6 +91,7 @@ public class GameManeger : MonoBehaviour
 
     public bool SkillEnable = false;
     public bool ErenSkill;
+    public bool ReinerSkill;
     public bool ArminSkill;
     public bool LeviSkill;
 
@@ -143,16 +144,8 @@ public class GameManeger : MonoBehaviour
         BoardManeger.IniciarDistancias(ref distanciaToCenter, n);
         //maze 
         MazeGenerator maze = new MazeGenerator(n, 7, 8, matriz, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
+        predefinedEmptyCells.Add((7, 8));
         BoardManeger boardManeger = new BoardManeger(matriz);
-        boardManeger.AddTraps();
-        boardManeger.AddPowerUps();
-        //maze 
-
-        distanciaToCenter = BoardManeger.Lee(matriz, n / 2, n / 2, n * n);
-
-        ReachPointInMatriz();
-        UpdateStats(turn);
-
         matriz[6][8].obstacle = true;
         matriz[6][8].destroyableObs = true;
 
@@ -164,6 +157,15 @@ public class GameManeger : MonoBehaviour
 
         matriz[8][10].obstacle = true;
         matriz[8][10].destroyableObs = true;
+
+        boardManeger.AddTraps();
+        boardManeger.AddPowerUps();
+        //maze 
+
+        distanciaToCenter = BoardManeger.Lee(matriz, n / 2, n / 2, n * n);
+
+        ReachPointInMatriz();
+        UpdateStats(turn);
 
         turn = -1;
         NextTurn();
@@ -178,6 +180,8 @@ public class GameManeger : MonoBehaviour
         #region DebugInputs
         if (Input.GetKeyDown(KeyCode.D))//romper pared
         {
+
+
             matriz[6][8].TakeDamage(5);
         }
         if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
@@ -281,6 +285,13 @@ public class GameManeger : MonoBehaviour
             InitReachCell();
             distancia = BoardManeger.Lee(matriz, (int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
             BoardManeger.ColorReachCell(matriz, distancia);
+            if (ReinerSkill && players[turn].play.name == "Reiner" && players[turn].currentSpeed > 0)
+            {
+                PlayerSkills.ReinerRun(players[turn], matriz, distancia, predefinedEmptyCells);
+
+                UpdateDisplay();
+
+            }
             ColorBattleZone();
 
         }
@@ -290,9 +301,34 @@ public class GameManeger : MonoBehaviour
     {
         if (!playingCorrutine && !isInCombat)
         {
-            if (turn >= 0)
+
+            if (round > 1)
             {
                 players[turn].DownCooldown();
+
+            }
+            if (skillWasActivatedThisTurn)
+            {
+                players[turn].ResetCooldown();
+                print("skill1");
+                skillWasActivatedThisTurn = false;
+            }
+            turn = NextTurnIndex(turn);
+
+            if (round > 1)
+            {
+                if (players[turn].play.name == "Reiner" && ReinerSkill)
+                {
+                    players[turn].CtransformTime++;
+                    if (players[turn].CtransformTime > players[turn].TransformTime)
+                    {
+                        ReinerSkill = false;
+                        PlayerSkills.ReinerSkillOff(players[turn]);
+                        players[turn].CtransformTime = 0;
+                        players[turn].ResetCooldown();
+                    }
+                }
+                else
                 if (players[turn].play.name == "Eren" && ErenSkill)
                 {
                     players[turn].CtransformTime++;
@@ -304,11 +340,20 @@ public class GameManeger : MonoBehaviour
                         players[turn].ResetCooldown();
                     }
                 }
+                else
+                               if (players[turn].play.name == "Armin" && ArminSkill)
+                {
+                    players[turn].CtransformTime++;
+                    if (players[turn].CtransformTime > players[turn].TransformTime)
+                    {
+                        ArminSkill = false;
+                        PlayerSkills.ArminSkillOff(players[turn]);
+                        players[turn].CtransformTime = 0;
+                        players[turn].ResetCooldown();
+                    }
+                }
             }
 
-
-
-            turn = NextTurnIndex(turn);
             ChangeTurnOrd();
             SetDist();
             InitReachCell();
@@ -322,7 +367,6 @@ public class GameManeger : MonoBehaviour
             }
             if (players[turn].currentCooldown == 0 && !players[turn].play.isTitan)
             {
-                print("enableskill");
                 SkillEnable = true;
             }
             else
@@ -346,10 +390,11 @@ public class GameManeger : MonoBehaviour
     {
         if (SkillEnable)
         {
-            SetFalseSkills();
+            skillWasActivatedThisTurn = true;
+            //SetFalseSkills();
             SkillEnable = false;
             player sCplayer = players[turn].play;
-            players[turn].ResetCooldown();
+
             switch (sCplayer.Name)
             {
                 case "Eren":
@@ -360,8 +405,21 @@ public class GameManeger : MonoBehaviour
                     UpdateDisplay();
 
                     break;
+                case "Reiner":
+                    ReinerSkill = true;
+                    PlayerSkills.ReinerSkillEf(players[turn], matriz, distancia, predefinedEmptyCells);
+                    ReachPointInMatriz();
+                    UpdateStats(turn);
+                    UpdateDisplay();
+
+                    break;
                 case "Armin":
                     ArminSkill = true;
+                    PlayerSkills.ArminSkillEf(players[turn], matriz, predefinedObstacleCells);
+                    ReachPointInMatriz();
+                    UpdateStats(turn);
+                    UpdateDisplay();
+
                     break;
                 case "Levi":
                     LeviSkill = true;
@@ -373,12 +431,7 @@ public class GameManeger : MonoBehaviour
 
         }
     }
-    private void SetFalseSkills()
-    {
-        ErenSkill = false;
-        ArminSkill = false;
-        LeviSkill = false;
-    }
+
     private void MoveTitan()
     {
         List<(int x, int y)> targets = new List<(int x, int y)>();

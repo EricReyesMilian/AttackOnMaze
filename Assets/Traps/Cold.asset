@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94fe6456bc6ae0d4d9079f498b2e87b1, type: 3}
-  m_Name: spikes
+  m_Name: Cold
   m_EditorClassIdentifier: 
-  nameTrap: Spikes
-  sprite: {fileID: 21300000, guid: 1fa615872ea5ff746b71fa84d623d622, type: 3}
+  nameTrap: Cold
+  sprite: {fileID: 21300000, guid: 697bae54a36485847a824ec3a7f37fb2, type: 3}
   type: 1
-  description: -1 power
+  description: Reset Cooldown
   range: 1
   activationTrap: 1

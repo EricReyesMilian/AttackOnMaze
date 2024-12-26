@@ -2549,6 +2549,7 @@ MonoBehaviour:
   trapList:
   - {fileID: 11400000, guid: 183f049d244f71441851c4ffe454e0fc, type: 2}
   - {fileID: 11400000, guid: 6a2bd29a294a6874ebebf290a7c8db3f, type: 2}
+  - {fileID: 11400000, guid: c9a68a56c6ac24241877a71f2fe6831d, type: 2}
   powerList:
   - {fileID: 11400000, guid: 401bd212406469f489ccfb2325be653c, type: 2}
   - {fileID: 11400000, guid: abd0249294659124783ad4dc8ae3d83f, type: 2}
@@ -2558,7 +2559,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f4f61606b561c1d4fac4de1207ee1111, type: 2}
   - {fileID: 11400000, guid: 5656a5b493a182f408381a9e5f301ad5, type: 2}
   - {fileID: 11400000, guid: 28957a6486ad8214d831f61e0b62a3ee, type: 2}
-  - {fileID: 11400000, guid: 453bfe09a4d09e345af4cb001f199b68, type: 2}
+  - {fileID: 11400000, guid: d6b24bce20e1ec34da76bde558f02a68, type: 2}
   playingCorrutine: 0
   runningBackwards: 0
   wayToPoint: []
@@ -2575,6 +2576,7 @@ MonoBehaviour:
   panelPowerUp: {fileID: 2034050968}
   SkillEnable: 1
   ErenSkill: 0
+  ReinerSkill: 0
   ArminSkill: 0
   LeviSkill: 0
 --- !u!1001 &169646519

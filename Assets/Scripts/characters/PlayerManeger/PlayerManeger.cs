@@ -22,6 +22,8 @@ public class PlayerManeger : MonoBehaviour
 
     List<(int x, int y)> powerUpTimer = new List<(int x, int y)>();
     List<(int x, int y)> speedUpTimer = new List<(int x, int y)>();
+    List<(int x, int y)> cooldownUpTimer = new List<(int x, int y)>();
+
 
     public List<(int x, int y)> lastMove = new List<(int x, int y)>();
 
@@ -48,6 +50,15 @@ public class PlayerManeger : MonoBehaviour
                     speedUpTimer.RemoveAt(i);
                 }
             }
+            for (int i = 0; i < cooldownUpTimer.Count; i++)
+            {
+                if (cooldownUpTimer[i].y == GameManeger.gameManeger.round)
+                {
+                    ResetCooldown();
+
+                    cooldownUpTimer.RemoveAt(i);
+                }
+            }
         }
         else
         {
@@ -69,14 +80,21 @@ public class PlayerManeger : MonoBehaviour
         currentCooldown = cooldown;
 
     }
-    public void SwapImg()
+    public void SwapImg(int i)
     {
-        if (img == play.sprite)
-            img = play.sprite2;
-        else
+        if (i == 1)
+        {
             img = play.sprite;
 
+        }
+        else
+        {
+            img = play.sprite2;
+
+        }
+
     }
+
     public void PowerUp(int amount)
     {
         power += amount;
@@ -107,6 +125,12 @@ public class PlayerManeger : MonoBehaviour
         speedUpTimer.Add((amount, GameManeger.gameManeger.round + dur));
 
     }
+    public void SpeedUpNormalize(int norm, int dur)
+    {
+        speedUpTimer.Add((speed, GameManeger.gameManeger.round + dur));
+        speed = norm;
+
+    }
     public void DownCurrentSpeed(int amount)
     {
         currentSpeed -= amount;
@@ -116,6 +140,11 @@ public class PlayerManeger : MonoBehaviour
     public void ResetCooldown()
     {
         currentCooldown = cooldown;
+    }
+    public void ResetCooldown(int dur)
+    {
+        cooldownUpTimer.Add((1, GameManeger.gameManeger.round + dur));
+
     }
     public void DownCooldown()
     {
