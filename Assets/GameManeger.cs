@@ -94,7 +94,7 @@ public class GameManeger : MonoBehaviour
     public bool ReinerSkill;
     public bool ArminSkill;
     public bool LeviSkill;
-
+    public PlayerManeger player2;
     public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
     private void Awake()
@@ -969,21 +969,33 @@ public class GameManeger : MonoBehaviour
         player1.PowerUp(combatScene.Reward(lastWinner1, 1));
         player2.PowerUp(combatScene.Reward(lastWinner1, 2));
 
-
+        this.player2 = player2;
         if (lastWinner1)//si gana el jugador poseedor del turno (player1)
         {
-            //seleccionar casilla
-
 
             distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)player2.Pos.x, (int)player2.Pos.y);
+
             if (!player1.play.isTitan)
             {
-                ListHelper.MoveElement(players, player2, 1);
+                print(player2.nameC);
+
+
+                if (players.IndexOf(player1) > players.IndexOf(player2))
+                {
+                    turn--;
+                    if (turn < 0)
+                    {
+                        turn = players.Count - 1;
+                    }
+                }
+                ListHelper.MoveElement(players, player2, players.IndexOf(player1));
+
                 ChangeTurnOrd();
 
             }
             BoardManeger.ColorReachCell(matriz, distancia);
             UpdateDisplay();
+            ChangeTurnOrd();
 
 
             looserTitan = true;
@@ -1019,6 +1031,7 @@ public class GameManeger : MonoBehaviour
         }
         else//si pierde el jugador poseedor del turno (player1)
         {
+
             distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)player1.Pos.x, (int)player1.Pos.y);
             BoardManeger.ColorReachCell(matriz, distancia);
             UpdateDisplay();

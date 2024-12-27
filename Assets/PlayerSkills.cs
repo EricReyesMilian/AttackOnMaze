@@ -15,8 +15,8 @@ static class PlayerSkills
 
                 if (matriz[i][(int)Levi.Pos.y].obstacle)
                 {
-
-                    reachSkillCells.Add((i - 1, (int)Levi.Pos.y));
+                    if (!matriz[i - 1][(int)Levi.Pos.y].hasAplayer)
+                        reachSkillCells.Add((i - 1, (int)Levi.Pos.y));
                     break;
                 }
 
@@ -29,7 +29,8 @@ static class PlayerSkills
             {
                 if (matriz[i][(int)Levi.Pos.y].obstacle)
                 {
-                    reachSkillCells.Add((i + 1, (int)Levi.Pos.y));
+                    if (!matriz[i + 1][(int)Levi.Pos.y].hasAplayer)
+                        reachSkillCells.Add((i + 1, (int)Levi.Pos.y));
 
                     break;
                 }
@@ -45,7 +46,9 @@ static class PlayerSkills
             {
                 if (matriz[(int)Levi.Pos.x][i].obstacle)
                 {
-                    reachSkillCells.Add(((int)Levi.Pos.x, i - 1));
+                    if (!matriz[(int)Levi.Pos.x][i - 1].hasAplayer)
+
+                        reachSkillCells.Add(((int)Levi.Pos.x, i - 1));
 
                     break;
                 }
@@ -59,8 +62,9 @@ static class PlayerSkills
             {
                 if (matriz[(int)Levi.Pos.x][i].obstacle)
                 {
+                    if (!matriz[(int)Levi.Pos.x][i + 1].hasAplayer)
 
-                    reachSkillCells.Add(((int)Levi.Pos.x, i + 1));
+                        reachSkillCells.Add(((int)Levi.Pos.x, i + 1));
 
                     break;
                 }

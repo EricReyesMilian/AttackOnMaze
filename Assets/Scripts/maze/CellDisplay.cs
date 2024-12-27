@@ -207,7 +207,7 @@ public class CellDisplay : MonoBehaviour
         {
             if (gm.lastWinner1)
             {
-                gm.MoveplayerTo(cell.coord, gm.NextTurnIndex(gm.turn));
+                gm.MoveplayerTo(cell.coord, gm.players.IndexOf(gm.player2));
 
             }
             else
