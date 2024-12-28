@@ -207,7 +207,7 @@ MonoBehaviour:
   Description: {fileID: 0}
   anim: {fileID: 5401262493726363931}
   Panel: {fileID: 0}
-  trap: {fileID: 0}
+  butt: {fileID: 0}
 --- !u!1 &695841519092753872
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,8 +276,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Next
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 18267cedbd63bcc4683a894dbf69ebb4, type: 2}
-  m_sharedMaterial: {fileID: 7231920901808776873, guid: 18267cedbd63bcc4683a894dbf69ebb4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
+  m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -301,8 +301,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -471,8 +471,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: The current player sdfasdfsdfasdfasdf
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 18267cedbd63bcc4683a894dbf69ebb4, type: 2}
-  m_sharedMaterial: {fileID: 7231920901808776873, guid: 18267cedbd63bcc4683a894dbf69ebb4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
+  m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1734,7 +1734,7 @@ MonoBehaviour:
   Description: {fileID: 0}
   anim: {fileID: 0}
   Panel: {fileID: 0}
-  trap: {fileID: 0}
+  butt: {fileID: 0}
 --- !u!1 &8595701323196668163
 GameObject:
   m_ObjectHideFlags: 0

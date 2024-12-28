@@ -90,6 +90,7 @@ public class GameManeger : MonoBehaviour
     public PanelPowerUp panelPowerUp;
 
     public bool SkillEnable = false;
+    public bool ZekeSkill;
     public bool ErenSkill;
     public bool ReinerSkill;
     public bool ArminSkill;
@@ -411,6 +412,12 @@ public class GameManeger : MonoBehaviour
                     ReachPointInMatriz();
                     UpdateStats(turn);
                     UpdateDisplay();
+
+                    break;
+                case "Zeke":
+                    ZekeSkill = true;
+                    PlayerSkills.ZekeSkillEf(players[turn], matriz, distancia);
+
 
                     break;
                 case "Armin":

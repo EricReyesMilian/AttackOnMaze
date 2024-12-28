@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 static class PlayerSkills
 {
+    public static void ZekeSkillEf(PlayerManeger Zeke, List<List<Cell>> matriz, List<List<int>> distancia)
+    {
+
+    }
     public static void LeviSkillEf(PlayerManeger Levi, List<List<Cell>> matriz, List<List<int>> distancia)
     {
         int n = matriz[0].Count;
