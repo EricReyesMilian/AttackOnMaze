@@ -7,7 +7,7 @@ public class SkillButtonUI : MonoBehaviour
 {
     public Color active;
     public Color disable;
-    Image img;
+    protected Image img;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,10 +17,15 @@ public class SkillButtonUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManeger.gameManeger.SkillEnable)
-            img.color = active;
-        else
-            img.color = disable;//
-
+       
+        SetColor();
+    
+    }
+    public virtual void SetColor()
+    {
+        if (GameManeger.gameManeger.NextEnable)
+                img.color = active;
+            else
+                img.color = disable;//
     }
 }

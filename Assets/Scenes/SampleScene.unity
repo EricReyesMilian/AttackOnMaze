@@ -655,6 +655,7 @@ GameObject:
   - component: {fileID: 23043114}
   - component: {fileID: 23043113}
   - component: {fileID: 23043112}
+  - component: {fileID: 23043115}
   m_Layer: 0
   m_Name: Next Turn Button
   m_TagString: Untagged
@@ -728,7 +729,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 161193692}
         m_TargetAssemblyTypeName: GameManeger, Assembly-CSharp
-        m_MethodName: NextTurn
+        m_MethodName: NextTurnBut
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -776,6 +777,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 23043110}
   m_CullTransparentMesh: 1
+--- !u!114 &23043115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23043110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ea41040e72bd1e4cadb8a862467d791, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: {r: 0.56078434, g: 0.54509807, b: 1, a: 1}
+  disable: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &36805430
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2707,7 +2722,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 401bd212406469f489ccfb2325be653c, type: 2}
   - {fileID: 11400000, guid: abd0249294659124783ad4dc8ae3d83f, type: 2}
   turn: 0
-  players: []
   player_Scriptable:
   - {fileID: 11400000, guid: 453bfe09a4d09e345af4cb001f199b68, type: 2}
   - {fileID: 11400000, guid: 453bfe09a4d09e345af4cb001f199b68, type: 2}
@@ -2725,13 +2739,13 @@ MonoBehaviour:
   nearPlayers: []
   panelTrap: {fileID: 2015092113}
   panelPowerUp: {fileID: 2034050968}
+  NextEnable: 1
   SkillEnable: 1
   ZekeSkill: 0
   ErenSkill: 0
   ReinerSkill: 0
   ArminSkill: 0
   LeviSkill: 0
-  player2: {fileID: 0}
 --- !u!1001 &167480497
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8193,8 +8207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d500cfc420ab24e8283bb3fad0d137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 0}
-  player2: {fileID: 0}
   img1: {fileID: 1542151630}
   img2: {fileID: 1050368376}
   power1: {fileID: 1465621875}

@@ -119,6 +119,7 @@
     <Compile Include="Assets\playerStatUI.cs" />
     <Compile Include="Assets\Panel Power.cs" />
     <Compile Include="Assets\buttonSelect.cs" />
+    <Compile Include="Assets\NextButtonUI.cs" />
     <Compile Include="Assets\Panels.cs" />
     <Compile Include="Assets\SelectionPlayer.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />

@@ -91,13 +91,14 @@ public class GameManeger : MonoBehaviour
 
     public PanelTrap panelTrap;
     public PanelPowerUp panelPowerUp;
-
+    public bool NextEnable = true;
     public bool SkillEnable = false;
     public bool ZekeSkill;
     public bool ErenSkill;
     public bool ReinerSkill;
     public bool ArminSkill;
     public bool LeviSkill;
+    public bool HasMoved = false;
     public PlayerManeger player2;
     public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
     public List<(int x, int y)> predefinedCenterCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 8), (7, 9) };
@@ -213,8 +214,7 @@ public class GameManeger : MonoBehaviour
 
         }
         #endregion
-
-
+        NextEnable = !players[turn].play.isTitan &&!playingCorrutine && !isInCombat && HasMoved;
     }
 
     //asigna el jugador a la casilla correspondiente
@@ -315,11 +315,15 @@ public class GameManeger : MonoBehaviour
         }
     }
     //verifica si es posible y pasa el turno
+    public void NextTurnBut()
+    {
+        if (NextEnable && HasMoved)
+            NextTurn();
+    }
     public void NextTurn()
     {
-        if (!playingCorrutine && !isInCombat)
-        {
-
+    
+        HasMoved = false;
             if (round > 1)
             {
                 players[turn].DownCooldown();
@@ -400,7 +404,7 @@ public class GameManeger : MonoBehaviour
             }
             UpdateStats(turn);
 
-        }
+        
 
     }
 
@@ -698,6 +702,7 @@ public class GameManeger : MonoBehaviour
                     ReachPointInMatriz();
 
                 }
+                            HasMoved = true;
 
 
             }
@@ -1003,12 +1008,11 @@ public class GameManeger : MonoBehaviour
 
             if (!player1.play.isTitan)
             {
-
+                //MoveElementInList();
                 players.RemoveAt(de);
                 int newDe = at < de ? at + 1 : at;
                 players.Insert(newDe, player2);
                 turn = players.IndexOf(player1);
-                //ListHelper.MoveElement(players, player2, player1);
 
                 ChangeTurnOrd();
 
