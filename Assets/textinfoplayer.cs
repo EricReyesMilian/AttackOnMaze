@@ -6,6 +6,8 @@ using TMPro;
 public class textinfoplayer : MonoBehaviour
 {
     TextMeshProUGUI text;
+    public TextMeshProUGUI numPlayer;
+
     public TextMeshProUGUI textI;
     // Start is called before the first frame update
     void Start()
@@ -17,6 +19,7 @@ public class textinfoplayer : MonoBehaviour
     void Update()
     {
         text.text = "Player " + MainMenuManeger.mm.PlayerIndex + " select";
+        numPlayer.text = MainMenuManeger.mm.PlayerCount + "";
         textI.text = "you can select up to " + MainMenuManeger.mm.selectables + " characters.";
     }
 }

@@ -39,7 +39,7 @@ public class boxController : MonoBehaviour
     }
     public void Select()
     {
-        if (MainMenuManeger.mm.selectables > 0)
+        if (MainMenuManeger.mm.selectables > 0 && !selected)
         {
             anim.SetTrigger("select");
             MainMenuManeger.mm.PlayerRemain--;

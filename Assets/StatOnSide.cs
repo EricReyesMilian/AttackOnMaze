@@ -11,10 +11,16 @@ public class StatOnSide : MonoBehaviour
     {
         gm = GameManeger.gameManeger;
         gm.ChangeTurnOrd += ChangeOrder;
-        for (int i = 0; i < gm.player_Scriptable.Count; i++)
+        for (int j = 0; j < gm.player_Scriptable.Count + MainMenuManeger.mm.playersList.Count; j++)
         {
             Instantiate(playerStatPrefb, Vector3.zero, Quaternion.identity, playerManegerPrefbWrapper.transform);
         }
+        for (int i = 0; i < MainMenuManeger.mm.playersList.Count; i++)
+        {
+
+
+        }
+
 
     }
 

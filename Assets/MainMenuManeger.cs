@@ -7,10 +7,11 @@ public class MainMenuManeger : MonoBehaviour
 {
     public List<List<player>> playersList = new List<List<player>>();
     public static MainMenuManeger mm;
-    public int PlayerCount;
+    public int PlayerCount = 2;
     public int PlayerIndex;
     public int PlayerRemain;
     public int selectables;
+    public Animator anim;
     void Awake()
     {
         if (mm)
@@ -22,14 +23,11 @@ public class MainMenuManeger : MonoBehaviour
             mm = this;
         }
         PlayerIndex = 1;
-        PlayerRemain = 5;
+        PlayerRemain = 5;//cantidad de personajes jugables
     }
     void Start()
     {
-        for (int i = 0; i < PlayerCount; i++)
-        {
-            playersList.Add(new List<player>());
-        }
+
     }
     void Update()
     {
@@ -39,5 +37,23 @@ public class MainMenuManeger : MonoBehaviour
     public void LoadScene(int s)
     {
         SceneManager.LoadScene(s);
+    }
+    public void Plus()
+    {
+
+        PlayerCount++;
+        if (PlayerCount > PlayerRemain)
+        {
+            PlayerCount = 2;
+        }
+    }
+    public void Less()
+    {
+
+        PlayerCount--;
+        if (PlayerCount < 2)
+        {
+            PlayerCount = PlayerRemain;
+        }
     }
 }

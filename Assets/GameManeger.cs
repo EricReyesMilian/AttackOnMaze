@@ -96,8 +96,10 @@ public class GameManeger : MonoBehaviour
     public bool ArminSkill;
     public bool LeviSkill;
     public PlayerManeger player2;
-    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
+    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
+    public List<(int x, int y)> predefinedCenterCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 8), (7, 9) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
+    public List<(int x, int y)> startCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15) };
     private void Awake()
     {
         if (gameManeger)
@@ -119,21 +121,32 @@ public class GameManeger : MonoBehaviour
         walls = new bool[n, n];
         //este metodo debe ser sustituido por los jugadores seleccionados
         //recordar luego de eso cambiar el orden de ejecucion de los script
+        for (int i = 0; i < MainMenuManeger.mm.playersList.Count; i++)
+        {
+            for (int j = 0; j < MainMenuManeger.mm.playersList[i].Count; j++)
+            {
+                player_Scriptable.Add(MainMenuManeger.mm.playersList[i][j]);
+            }
+
+        }
+
         for (int i = 0; i < player_Scriptable.Count; i++)
         {
             players.Add(playerContainer.transform.GetChild(i).GetComponent<PlayerManeger>());
             players[i].index = i;
             players[i].play = player_Scriptable[i];
             players[i].InitStats();
-
+            players[i].Pos = new Vector2(startCells[i].x, startCells[i].y);
             print(players[i].nameC);
+
         }
 
         //sets
-        players[0].Pos = new Vector2(1, 1);
-        players[1].Pos = new Vector2(15, 1);
-        players[2].Pos = new Vector2(1, 15);
-        players[3].Pos = new Vector2(15, 15);
+
+        // players[0].Pos = new Vector2(1, 1);
+        // players[1].Pos = new Vector2(15, 1);
+        // players[2].Pos = new Vector2(1, 15);
+        // players[3].Pos = new Vector2(15, 15);
 
 
 
@@ -192,7 +205,7 @@ public class GameManeger : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))//regenera el laberinto
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(2);
 
         }
         #endregion
@@ -980,22 +993,18 @@ public class GameManeger : MonoBehaviour
         if (lastWinner1)//si gana el jugador poseedor del turno (player1)
         {
 
-            distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)player2.Pos.x, (int)player2.Pos.y);
+            distancia = BoardManeger.ReachPointInSubMatriz(matriz, predefinedCenterCells, (int)player2.Pos.x, (int)player2.Pos.y);
+            int at = players.IndexOf(player1);
+            int de = players.IndexOf(player2);
 
             if (!player1.play.isTitan)
             {
-                print(player2.nameC);
 
-
-                if (players.IndexOf(player1) > players.IndexOf(player2))
-                {
-                    turn--;
-                    if (turn < 0)
-                    {
-                        turn = players.Count - 1;
-                    }
-                }
-                ListHelper.MoveElement(players, player2, players.IndexOf(player1));
+                players.RemoveAt(de);
+                int newDe = at < de ? at + 1 : at;
+                players.Insert(newDe, player2);
+                turn = players.IndexOf(player1);
+                //ListHelper.MoveElement(players, player2, player1);
 
                 ChangeTurnOrd();
 
@@ -1022,7 +1031,7 @@ public class GameManeger : MonoBehaviour
                     }
                 }
                 isInCombat = true;
-                ListHelper.MoveElement(players, player2, NextTurnIndex(players.IndexOf(player1)));
+                ListHelper.MoveElement(players, player2, player1);
                 ChangeTurnOrd();
                 MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player2));
 
@@ -1039,7 +1048,7 @@ public class GameManeger : MonoBehaviour
         else//si pierde el jugador poseedor del turno (player1)
         {
 
-            distancia = BoardManeger.ReachPointInSubMatriz(matriz, (int)player1.Pos.x, (int)player1.Pos.y);
+            distancia = BoardManeger.ReachPointInSubMatriz(matriz, predefinedCenterCells, (int)player1.Pos.x, (int)player1.Pos.y);
             BoardManeger.ColorReachCell(matriz, distancia);
             UpdateDisplay();
 

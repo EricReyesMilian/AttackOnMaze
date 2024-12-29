@@ -53,7 +53,7 @@ public class BoardManeger
     }
 
 
-    public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, int playerPosF, int playerPosC)
+    public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, List<(int x, int y)> predefinedEmptyCells, int playerPosF, int playerPosC)
     {
         List<List<int>> distancias = new List<List<int>>();
         int n = tablero[0].Count;
@@ -65,7 +65,7 @@ public class BoardManeger
             {
                 for (int j = (n) / 2; j < n; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
                 }
@@ -78,7 +78,7 @@ public class BoardManeger
             {
                 for (int j = 0; j < n / 2; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
 
@@ -92,7 +92,7 @@ public class BoardManeger
             {
                 for (int j = (n) / 2; j < n; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
 
@@ -106,7 +106,7 @@ public class BoardManeger
             {
                 for (int j = 0; j < n / 2; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle)
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
 

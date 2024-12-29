@@ -27,6 +27,14 @@ public class buttonMenu : MonoBehaviour
         text.color = Color.white;
 
     }
+    public void Click()
+    {
+        MainMenuManeger.mm.anim.SetTrigger("next");
+        for (int i = 0; i < MainMenuManeger.mm.PlayerCount; i++)
+        {
+            MainMenuManeger.mm.playersList.Add(new List<player>());
+        }
+    }
 
 
 

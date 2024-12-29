@@ -15,9 +15,10 @@ public class CreateBoard : MonoBehaviour
 
     public void InitBoard(int n)
     {
-        DestroyCells();
+        //DestroyCells();
         GridLayoutConfig(n);
-        InstantiateCells(n);
+        IAsigCells(n);
+        //InstantiateCells(n);
 
     }
     void Update()
@@ -52,6 +53,17 @@ public class CreateBoard : MonoBehaviour
             {
                 Instantiate(cellPref, Vector3.zero, Quaternion.identity, gameObject.transform);
                 cellPref.GetComponent<CellDisplay>().coord = new Vector2(i, j);
+            }
+        }
+
+    }
+    public void IAsigCells(int n)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                gameObject.transform.GetChild(i + j * (n)).GetComponent<CellDisplay>().coord = new Vector2(i, j);
             }
         }
 

@@ -486,7 +486,6 @@ GameObject:
   m_Component:
   - component: {fileID: 883632108}
   - component: {fileID: 883632110}
-  - component: {fileID: 883632109}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -510,14 +509,6 @@ Transform:
   - {fileID: 2115211191}
   m_Father: {fileID: 829799564}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &883632109
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 883632107}
-  m_Enabled: 1
 --- !u!20 &883632110
 Camera:
   m_ObjectHideFlags: 0
@@ -687,6 +678,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b3b249e43db08d49aff668c0fa464a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerCount: 2
+  PlayerIndex: 0
+  PlayerRemain: 0
+  selectables: 0
+  anim: {fileID: 0}
 --- !u!1 &938599238
 GameObject:
   m_ObjectHideFlags: 0
