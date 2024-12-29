@@ -2723,8 +2723,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: abd0249294659124783ad4dc8ae3d83f, type: 2}
   turn: 0
   player_Scriptable:
-  - {fileID: 11400000, guid: 453bfe09a4d09e345af4cb001f199b68, type: 2}
-  - {fileID: 11400000, guid: 453bfe09a4d09e345af4cb001f199b68, type: 2}
+  - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
+  - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
   playingCorrutine: 0
   runningBackwards: 0
   wayToPoint: []
@@ -2746,6 +2746,7 @@ MonoBehaviour:
   ReinerSkill: 0
   ArminSkill: 0
   LeviSkill: 0
+  HasMoved: 0
 --- !u!1001 &167480497
 PrefabInstance:
   m_ObjectHideFlags: 0
