@@ -62,6 +62,9 @@ public class GameManeger : MonoBehaviour
     public delegate void SelectPlayerCombat();
     public event SelectPlayerCombat SelectplayerCombat;
 
+
+    public delegate void CreatePlayerBoxInstances();
+    public event CreatePlayerBoxInstances createPlayerBoxInstances;
     public delegate void ChangeTurnOrder();
     public event ChangeTurnOrder ChangeTurnOrd;
 
@@ -132,7 +135,7 @@ public class GameManeger : MonoBehaviour
 
         for (int i = 0; i < player_Scriptable.Count; i++)
         {
-            players.Add(playerContainer.transform.GetChild(i).GetComponent<PlayerManeger>());
+            players.Add(new PlayerManeger());
             players[i].index = i;
             players[i].play = player_Scriptable[i];
             players[i].InitStats();
@@ -182,6 +185,7 @@ public class GameManeger : MonoBehaviour
         UpdateStats(turn);
 
         turn = -1;
+        createPlayerBoxInstances();
         NextTurn();
 
     }
@@ -1031,7 +1035,11 @@ public class GameManeger : MonoBehaviour
                     }
                 }
                 isInCombat = true;
-                ListHelper.MoveElement(players, player2, player1);
+
+                players.RemoveAt(de);
+                int newDe = at < de ? at + 1 : at;
+                players.Insert(newDe, player2);
+                turn = players.IndexOf(player1);
                 ChangeTurnOrd();
                 MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player2));
 

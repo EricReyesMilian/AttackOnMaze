@@ -7,19 +7,13 @@ using TMPro;
 public class playerStatUI : MonoBehaviour
 {
     public TextMeshProUGUI namePlayer;
-    public PlayerManeger player;
-    // Start is called before the first frame update
-    void Start()
-    {
+    public string player;
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        if(player)
+        if (player != null)
         {
-            namePlayer.text = player.play.Name;
+            namePlayer.text = player;
 
         }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManeger : MonoBehaviour
+public class PlayerManeger
 {
     public player play;
     public int index;

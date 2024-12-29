@@ -37,7 +37,7 @@ public class PanelCombat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player1 && player2)
+        if (player1 != null && player2 != null)
         {
             img1.sprite = player1.img;
             img2.sprite = player2.img;
