@@ -3,10 +3,10 @@ using System.Collections.Generic;
 public class Board
 {
     GameManager gm = GameManager.gameManeger;
-    List<List<Cell>> matriz;
-    public Board(List<List<Cell>> matriz)
+    List<List<Cell>> grid;
+    public Board(List<List<Cell>> grid)
     {
-        this.matriz = matriz;
+        this.grid = grid;
     }
     public static List<List<int>> Lee(List<List<Cell>> tablero, int filaInical, int columnaInicial, int speed)
     {
@@ -130,19 +130,19 @@ public class Board
     {
         return f >= 0 && f < n && c >= 0 && c < n;
     }
-    public static void ColorReachCell(List<List<Cell>> matriz, List<List<int>> distancias)
+    public static void ColorReachCell(List<List<Cell>> grid, List<List<int>> distancias)
     {
         for (int i = 0; i < distancias[0].Count; i++)
             for (int j = 0; j < distancias[0].Count; j++)
             {
                 if (distancias[i][j] != -1)
                 {
-                    matriz[i][j].reach = true;
+                    grid[i][j].reach = true;
 
                 }
                 else
                 {
-                    matriz[i][j].reach = false;
+                    grid[i][j].reach = false;
 
                 }
             }
@@ -162,7 +162,7 @@ public class Board
                 {
                     //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
                     if (!gm.predefinedEmptyCells.Contains((i, j))
-                    && !gm.matriz[i][j].trap && !matriz[i][j].obstacle && !trapFrontier[i, j] && !gm.matriz[i][j].destroyableObs)
+                    && !gm.grid[i][j].trap && !grid[i][j].obstacle && !trapFrontier[i, j] && !gm.grid[i][j].destroyableObs)
                     {
                         int r = new Random().Next(0, 5);
                         int trapIndex = new Random().Next(0, gm.trapList.Count);
@@ -175,7 +175,7 @@ public class Board
                             {
                                 for (int jT = j; jT < (j + gm.trapList[trapIndex].range); jT++)
                                 {
-                                    if (!(PosicionValida(gm.n, iT, jT) && !gm.matriz[iT][jT].trap)
+                                    if (!(PosicionValida(gm.n, iT, jT) && !gm.grid[iT][jT].trap)
                                     )
                                     {
                                         canPutTrap = false;
@@ -190,12 +190,12 @@ public class Board
                                 {
                                     for (int jT = j; jT < (j + gm.trapList[trapIndex].range); jT++)
                                     {
-                                        if ((PosicionValida(gm.n, iT, jT) && !gm.predefinedEmptyCells.Contains((iT, jT)) && !gm.matriz[iT][jT].trap && !matriz[iT][jT].obstacle)
+                                        if ((PosicionValida(gm.n, iT, jT) && !gm.predefinedEmptyCells.Contains((iT, jT)) && !gm.grid[iT][jT].trap && !grid[iT][jT].obstacle)
                                         )
                                         {
-                                            TrapCells.Add(matriz[iT][jT]);
-                                            matriz[iT][jT].trap = true;
-                                            matriz[iT][jT].trapType = gm.trapList[trapIndex];
+                                            TrapCells.Add(grid[iT][jT]);
+                                            grid[iT][jT].trap = true;
+                                            grid[iT][jT].trapType = gm.trapList[trapIndex];
 
                                             listadehijos.Add((iT, jT));
 
@@ -243,15 +243,15 @@ public class Board
                 {
                     //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
                     if (!gm.predefinedEmptyCells.Contains((i, j))
-                    && !gm.matriz[i][j].powerUp && !matriz[i][j].obstacle && !gm.matriz[i][j].trap && !gm.matriz[i][j].destroyableObs)
+                    && !gm.grid[i][j].powerUp && !grid[i][j].obstacle && !gm.grid[i][j].trap && !gm.grid[i][j].destroyableObs)
                     {
                         int r = new Random().Next(0, 10);
                         int powerIndex = new Random().Next(0, gm.powerList.Count);
                         if (r == 1)
                         {
 
-                            matriz[i][j].powerUp = true;
-                            matriz[i][j].powerUpType = gm.powerList[powerIndex];
+                            grid[i][j].powerUp = true;
+                            grid[i][j].powerUpType = gm.powerList[powerIndex];
 
 
 
@@ -263,7 +263,7 @@ public class Board
         }
 
     }
-    public static void AddTrapOn(trap trapType, int i, int j, List<List<Cell>> matriz)
+    public static void AddTrapOn(trap trapType, int i, int j, List<List<Cell>> grid)
     {
 
 
@@ -273,11 +273,11 @@ public class Board
         {
             for (int jT = j; jT < (j + trapType.range); jT++)
             {
-                if ((PosicionValida(matriz[0].Count, iT, jT) && !matriz[iT][jT].obstacle)
+                if ((PosicionValida(grid[0].Count, iT, jT) && !grid[iT][jT].obstacle)
                 )
                 {
-                    matriz[iT][jT].trap = true;
-                    matriz[iT][jT].trapType = trapType;
+                    grid[iT][jT].trap = true;
+                    grid[iT][jT].trapType = trapType;
 
                     listadehijos.Add((iT, jT));
 
@@ -288,7 +288,7 @@ public class Board
 
         for (int l = 0; l < listadehijos.Count; l++)
         {
-            matriz[listadehijos[l].x][listadehijos[l].y].childsTrap.Add(listadehijos[l]);
+            grid[listadehijos[l].x][listadehijos[l].y].childsTrap.Add(listadehijos[l]);
         }
 
 

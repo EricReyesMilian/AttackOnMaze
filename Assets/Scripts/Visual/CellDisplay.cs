@@ -190,7 +190,7 @@ public class CellDisplay : MonoBehaviour
     }
     public void Click()
     {
-        // Board.AddTrapOn(gm.trapList[1],(int)coord.x,(int)coord.y,gm.matriz);
+        // Board.AddTrapOn(gm.trapList[1],(int)coord.x,(int)coord.y,gm.grid);
         if (!gm.isInCombat)
         {
             if (gm.ReinerSkill)
@@ -267,7 +267,7 @@ public class CellDisplay : MonoBehaviour
     void AsignarCasillaCorrespondiente()
     {
 
-        cell = gm.matriz[(int)coord.x][(int)coord.y];
+        cell = gm.grid[(int)coord.x][(int)coord.y];
 
 
 

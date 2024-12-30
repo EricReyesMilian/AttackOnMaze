@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class TitanAI
 {
-    List<List<Cell>> matriz;
+    List<List<Cell>> grid;
     List<List<int>> distancia;
     List<List<int>> distanciaToCenter;
 
 
-    public TitanAI(List<List<Cell>> matriz, List<List<int>> distancia, List<List<int>> distanciaToCenter)
+    public TitanAI(List<List<Cell>> grid, List<List<int>> distancia, List<List<int>> distanciaToCenter)
     {
-        this.matriz = matriz;
+        this.grid = grid;
         this.distancia = distancia;
         this.distanciaToCenter = distanciaToCenter;
     }
@@ -72,7 +72,7 @@ public class TitanAI
         bool huboCambio = false;
         foreach (var coord in targets)
         {
-            if (matriz[coord.x][coord.y].nearPlayer)
+            if (grid[coord.x][coord.y].nearPlayer)
             {
                 return targets.IndexOf(coord);
             }
@@ -101,7 +101,7 @@ public class TitanAI
         bool huboCambio = false;
         foreach (var coord in targets)
         {
-            if (matriz[coord.x][coord.y].nearPlayer && titan.power >= matriz[coord.x][coord.y].player.power)
+            if (grid[coord.x][coord.y].nearPlayer && titan.power >= grid[coord.x][coord.y].player.power)
             {
                 return targets.IndexOf(coord);
             }
@@ -130,10 +130,10 @@ public class TitanAI
         bool huboCambio = false;
         foreach (var coord in targets)
         {
-            if (matriz[coord.x][coord.y].nearPlayer)
+            if (grid[coord.x][coord.y].nearPlayer)
             {
-                if (titan.power >= matriz[coord.x][coord.y].NearPlayers[0].power
-                && !matriz[coord.x][coord.y].NearPlayers[0].play.isTitan)
+                if (titan.power >= grid[coord.x][coord.y].NearPlayers[0].power
+                && !grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
                 {
                     huboCambio = true;
                     return targets.IndexOf(coord);
