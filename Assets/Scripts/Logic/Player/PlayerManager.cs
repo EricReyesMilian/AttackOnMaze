@@ -7,6 +7,7 @@ public class PlayerManager
     public player play;
     public bool titanForm;
     public int index;
+    public int team;
     public Vector2 positionOnBoard { get; private set; }
     public string nameC { get; private set; }
     public int speed { get; private set; }
@@ -134,6 +135,11 @@ public class PlayerManager
         {
             ResetSpeed();
         }
+    }
+    public void CSpeedUp(int amount)
+    {
+        currentSpeed += amount;
+
     }
     public void SpeedUpNormalize(int norm, int dur)
     {

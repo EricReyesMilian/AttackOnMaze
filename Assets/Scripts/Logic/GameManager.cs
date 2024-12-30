@@ -17,9 +17,10 @@ public class GameManager : MonoBehaviour
     // Configuración del juego
     public int n;
     public int round = 1;
+    public int WinPower = 30;
     public GameObject cellsContainer;
     public GameObject playerContainer;
-
+    public string winner;
     // Estado del juego
     [HideInInspector]
     public bool cellLoaded;
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
     public List<(int x, int y)> predefinedCenterCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 8), (7, 9) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
     public List<(int x, int y)> startCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15) };
+    public List<(int x, int y)> DoorCells = new List<(int, int)> { (6, 8), (8, 6), (10, 8), (8, 10) };
 
     // Delegados y eventos
     public delegate void Accion();
@@ -132,6 +134,10 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(2);
 
         }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            players[turn].PowerUp(WinPower);
+        }
         #endregion
         NextEnable = !players[turn].isTitan && !playingCorrutine && !isInCombat && HasMoved;
         if (players[turn].currentCooldown == 0 && !players[turn].isTitan)
@@ -149,7 +155,9 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < MainMenuManeger.mm.playersList[i].Count; j++)
             {
+                MainMenuManeger.mm.playersList[i][j].team = i;
                 player_Scriptable.Add(MainMenuManeger.mm.playersList[i][j]);
+
             }
 
         }
@@ -160,6 +168,7 @@ public class GameManager : MonoBehaviour
         {
             players.Add(new PlayerManager());
             players[i].index = i;
+            players[i].team = player_Scriptable[i].team;
             players[i].play = player_Scriptable[i];
             players[i].InitStats();
             players[i].Pos = new Vector2(startCells[i].x, startCells[i].y);
@@ -258,17 +267,13 @@ public class GameManager : MonoBehaviour
     }
     void AssignDestroyableWalls()
     {
-        grid[6][8].obstacle = true;
-        grid[6][8].destroyableObs = true;
+        for (int i = 0; i < DoorCells.Count; i++)
+        {
+            grid[DoorCells[i].x][DoorCells[i].y].obstacle = true;
+            grid[DoorCells[i].x][DoorCells[i].y].destroyableObs = true;
 
-        grid[8][6].obstacle = true;
-        grid[8][6].destroyableObs = true;
+        }
 
-        grid[10][8].obstacle = true;
-        grid[10][8].destroyableObs = true;
-
-        grid[8][10].obstacle = true;
-        grid[8][10].destroyableObs = true;
     }
     public void ReachPointInMatriz()
     {
@@ -324,7 +329,34 @@ public class GameManager : MonoBehaviour
 
         }
         turn = NextTurnIndex(turn);
+        if (players[turn].haveKey)
+        {
+            players[turn].PowerUp(1);
 
+            if (players[turn].power >= WinPower)
+            {
+                for (int i = 0; i < DoorCells.Count; i++)
+                {
+                    grid[DoorCells[i].x][DoorCells[i].y].obstacle = false;
+
+
+                }
+            }
+        }
+        else
+        {
+
+            for (int i = 0; i < DoorCells.Count; i++)
+            {
+                if (grid[DoorCells[i].x][DoorCells[i].y].endurence > 0)
+                {
+                    grid[DoorCells[i].x][DoorCells[i].y].obstacle = true;
+
+                }
+
+            }
+
+        }
         if (round > 1)
         {
             if (players[turn].titanForm)
@@ -488,6 +520,11 @@ public class GameManager : MonoBehaviour
 
 
     }
+    bool Win(PlayerManager player)
+    {
+        (int x, int y) a = ((int)player.Pos.x, (int)player.Pos.y);
+        return predefinedCenterCells.Contains(a);
+    }
     public void InitReachCell()
     {
         for (int i = 0; i < n; i++)
@@ -646,7 +683,11 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
-
+            if (Win(players[index ?? turn]))
+            {
+                winner = "Player " + players[index ?? turn].team + 1 + " Won";
+                SceneManager.LoadScene(3);
+            }
             runningBackwards = true;
             for (int w = 0; w < wayToPoint.Count; w++)
             {
@@ -833,7 +874,12 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 isInCombat = true;
-
+                if (player2.haveKey)
+                {
+                    player2.LoseKey();
+                    Board board = new Board(grid);
+                    board.DropKeyIn((int)player2.Pos.x, (int)player2.Pos.y);
+                }
                 players.RemoveAt(de);
                 int newDe = at < de ? at + 1 : at;
                 players.Insert(newDe, player2);
@@ -881,6 +927,12 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 isInCombat = true;
+                if (player1.haveKey)
+                {
+                    player1.LoseKey();
+                    Board board = new Board(grid);
+                    board.DropKeyIn((int)player1.Pos.x, (int)player1.Pos.y);
+                }
                 MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player1));
                 //NextTurn();
             }

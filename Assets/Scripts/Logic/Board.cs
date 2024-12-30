@@ -282,6 +282,12 @@ public class Board
         }
 
     }
+    public void DropKeyIn(int i, int j)
+    {
+        grid[i][j].powerUp = true;
+        grid[i][j].powerUpType = gm.TheKey;
+
+    }
     public static void AddTrapOn(trap trapType, int i, int j, List<List<Cell>> grid)
     {
 

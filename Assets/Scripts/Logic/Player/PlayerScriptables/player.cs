@@ -11,7 +11,7 @@ public class player : ScriptableObject
     public Color color;
     public Sprite sprite;
     public Sprite sprite2;
-
+    public int team;
     public int TransformTime;
 
     public bool isTitan;

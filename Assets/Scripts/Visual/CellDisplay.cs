@@ -12,6 +12,8 @@ public class CellDisplay : MonoBehaviour
     public Sprite default_sprite;
 
     public Color obstacule_color = Color.gray;
+    public Color centerCell_color;
+
     public Color default_color = Color.white;
     public Color hover_color = Color.white;
 
@@ -50,6 +52,10 @@ public class CellDisplay : MonoBehaviour
     {
         if (cell != null)
         {
+            if (gm.predefinedCenterCells.Contains(((int)cell.coord.x, (int)cell.coord.y)))
+            {
+                default_color = centerCell_color;
+            }
             hasAplayer = cell.hasAplayer;
             reach = cell.reach;
             obstacule = cell.obstacle;

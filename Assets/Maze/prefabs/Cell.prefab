@@ -94,6 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   default_sprite: {fileID: 0}
   obstacule_color: {r: 0.447, g: 0.447, b: 0.447, a: 1}
+  centerCell_color: {r: 0.08022222, g: 0.11399999, b: 0.038000003, a: 0.8117647}
   default_color: {r: 0.45882353, g: 0.5882353, b: 0.30588236, a: 0.12941177}
   hover_color: {r: 0.45882353, g: 0.5882353, b: 0.30588236, a: 1}
   reach_color: {r: 0.5882353, g: 0.58417815, b: 0.30588236, a: 0.4509804}
@@ -108,7 +109,6 @@ MonoBehaviour:
   hasAplayer: 0
   obstacule: 0
   reach: 0
-  NearPlayers: []
   endurence: {fileID: 1537274257771813498}
 --- !u!114 &5088132583706361436
 MonoBehaviour:

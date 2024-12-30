@@ -10,6 +10,7 @@ public class displayPlayerTurnInfo : MonoBehaviour
     public static displayPlayerTurnInfo statdisplay;
     public Image portrait;
     public TextMeshProUGUI name_c;
+    public TextMeshProUGUI player;
     public TextMeshProUGUI speed;
     public TextMeshProUGUI power;
     public TextMeshProUGUI skill_Cooldown;
@@ -48,7 +49,16 @@ public class displayPlayerTurnInfo : MonoBehaviour
         KeyImg.SetActive(gm.players[i].haveKey);
         power.text = "power: " + gm.players[i].power;
         skill_Cooldown.text = "cooldown: " + gm.players[i].currentCooldown;
+        if (!gm.players[i].play.isTitan)
+        {
+            player.text = "Player " + (gm.players[i].team + 1);
 
+        }
+        else
+        {
+            player.text = " ";
+
+        }
         if (i == gm.turn)
             speed.text = "speed: " + gm.players[i].speed + "(" + gm.players[i].currentSpeed + ")";
         else

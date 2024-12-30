@@ -32,7 +32,7 @@ public class PowerTrigger
     }
     void Fuel()
     {
-        player.SpeedUp(3, 0);
+        player.CSpeedUp(3);
     }
     void Serum()
     {

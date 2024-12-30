@@ -268,7 +268,7 @@ static class PlayerSkills
     }
     public static void ArminExplotion(PlayerManager Armin, List<List<Cell>> grid, List<(int x, int y)> predefinedObstacleCells)
     {
-        int range = 1;
+        int range = 2;
         for (int i = (int)Armin.Pos.x - range; i < Armin.Pos.x + range; i++)
         {
             for (int j = (int)Armin.Pos.y - range; j < Armin.Pos.y + range; j++)
