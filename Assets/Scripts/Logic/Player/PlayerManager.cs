@@ -20,7 +20,7 @@ public class PlayerManager
     public int CtransformTime;
     public Color color { get; private set; }
     public Vector2 Pos;
-
+    public bool isTitan;
     List<(int x, int y)> powerUpTimer = new List<(int x, int y)>();
     List<(int x, int y)> speedUpTimer = new List<(int x, int y)>();
     List<(int x, int y)> cooldownUpTimer = new List<(int x, int y)>();
@@ -28,6 +28,7 @@ public class PlayerManager
 
     public List<(int x, int y)> lastMove = new List<(int x, int y)>();
 
+    public bool haveKey = false;
 
     // Update is called once per frame
     void Update()
@@ -74,6 +75,7 @@ public class PlayerManager
         speed = play.speed;
         currentSpeed = speed;
         cooldown = play.cooldown;
+        isTitan = play.isTitan;
         power = play.power;
         img = play.sprite;
         color = play.color;
@@ -119,18 +121,28 @@ public class PlayerManager
             currentSpeed += amount;
         }
         speed = Floor(speed);
+        if (currentSpeed > speed)
+        {
+            ResetSpeed();
+        }
     }
     public void SpeedUp(int amount, int dur)
     {
         SpeedUp(amount);
         speedUpTimer.Add((amount, GameManager.gameManeger.round + dur));
-
+        if (currentSpeed > speed)
+        {
+            ResetSpeed();
+        }
     }
     public void SpeedUpNormalize(int norm, int dur)
     {
         speedUpTimer.Add((speed, GameManager.gameManeger.round + dur));
         speed = norm;
-
+        if (currentSpeed > speed)
+        {
+            ResetSpeed();
+        }
     }
     public void DownCurrentSpeed(int amount)
     {
@@ -142,10 +154,22 @@ public class PlayerManager
     {
         currentCooldown = cooldown;
     }
+    public void RemoveCooldown()
+    {
+        currentCooldown = 0;
+    }
     public void ResetCooldown(int dur)
     {
         cooldownUpTimer.Add((1, GameManager.gameManeger.round + dur));
 
+    }
+    public void TakeKey()
+    {
+        haveKey = true;
+    }
+    public void LoseKey()
+    {
+        haveKey = false;
     }
     public void DownCooldown()
     {

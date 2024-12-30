@@ -27,14 +27,14 @@ public class TrapTriggerEffect
             case Trap.spikes: Spikes(); break;
             case Trap.impostor: Impostor(); break;
             case Trap.cold: Cold(); break;
-            case Trap.swap: Swap(); break;
+            case Trap.swap: Swamp(); break;
         }
     }
     void None()
     {
 
     }
-    void Swap()
+    void Swamp()
     {
         player.SpeedUpNormalize(1, 2);
     }

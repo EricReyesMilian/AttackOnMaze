@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94fe6456bc6ae0d4d9079f498b2e87b1, type: 3}
-  m_Name: impostor
+  m_Script: {fileID: 11500000, guid: d43b0f4cc1444424d8a5eac7f1032d99, type: 3}
+  m_Name: Serum
   m_EditorClassIdentifier: 
-  nameTrap: Impostor
-  sprite: {fileID: 21300000, guid: 6d1945d0aac43504a9a62811d28a8f41, type: 3}
-  type: 2
-  description: -50% power
-  range: 2
-  activationTrap: 1
+  sprite: {fileID: 21300000, guid: 98754bc0e402f9e48b6a173ca1f52227, type: 3}
+  namepowerUp: Serum
+  description: Remove Cooldown
+  ePower: 3

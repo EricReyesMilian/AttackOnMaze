@@ -263,6 +263,25 @@ public class Board
         }
 
     }
+    public void AddKey()
+    {
+        while (true)
+        {
+            int i = new Random().Next(0, gm.n);
+            int j = new Random().Next(0, gm.n);
+
+            if (!gm.predefinedEmptyCells.Contains((i, j))
+                && !gm.grid[i][j].powerUp && !grid[i][j].obstacle && !gm.grid[i][j].trap && !gm.grid[i][j].destroyableObs)
+            {
+                grid[i][j].powerUp = true;
+                grid[i][j].powerUpType = gm.TheKey;
+                break;
+
+            }
+
+        }
+
+    }
     public static void AddTrapOn(trap trapType, int i, int j, List<List<Cell>> grid)
     {
 

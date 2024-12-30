@@ -14,7 +14,7 @@ public class displayPlayerTurnInfo : MonoBehaviour
     public TextMeshProUGUI power;
     public TextMeshProUGUI skill_Cooldown;
 
-
+    public GameObject KeyImg;
     void Awake()
     {
         if (statdisplay)
@@ -45,6 +45,7 @@ public class displayPlayerTurnInfo : MonoBehaviour
 
         portrait.sprite = gm.players[i].img;
         name_c.text = "" + gm.players[i].nameC;
+        KeyImg.SetActive(gm.players[i].haveKey);
         power.text = "power: " + gm.players[i].power;
         skill_Cooldown.text = "cooldown: " + gm.players[i].currentCooldown;
 

@@ -72,8 +72,6 @@ public class CellDisplay : MonoBehaviour
                 img_cell.color = gm.players[gm.turn].play.color;
 
             }
-
-
             else
             if (gm.isInCombat && !cell.hasAplayer && !cell.obstacle && !cell.powerUp)
             {
@@ -82,7 +80,7 @@ public class CellDisplay : MonoBehaviour
             else
             if (cell.reach && !cell.visitedOnMove && !hover && !cell.nearPlayer)
             {
-                if (!gm.runningBackwards)
+                if (!gm.runningBackwards && !gm.playingCorrutine)
                     img_cell.color = reach_color;
                 else
                     img_cell.color = default_color;
@@ -100,20 +98,21 @@ public class CellDisplay : MonoBehaviour
 
             }
 
+
             if (cell.obstacle)
             {
                 img_cell.color = obstacule_color;
             }
             if (cell.hasAplayer)
             {
-                if ((cell.player.Name == "Eren" && gm.ErenSkill) || (cell.player.Name == "Armin" && gm.ArminSkill) || (cell.player.Name == "Reiner" && gm.ReinerSkill))
+                if (cell.player.titanForm)
                 {
-                    img_cell.sprite = cell.player.sprite2;
+                    img_cell.sprite = cell.player.play.sprite2;
 
                 }
                 else
                 {
-                    img_cell.sprite = cell.player.sprite;
+                    img_cell.sprite = cell.player.play.sprite;
 
                 }
                 img_cell.color = Color.white;
@@ -125,7 +124,7 @@ public class CellDisplay : MonoBehaviour
                 if (!hover)
                 {
                     img_cell.color = Color.white;
-                    if (cell.reach)
+                    if (cell.reach && !gm.playingCorrutine)
                     {
                         img_cell.color = new Color(reach_color.r, reach_color.g, reach_color.b, reach_color.a * 1.8f);
 
@@ -144,10 +143,7 @@ public class CellDisplay : MonoBehaviour
                 img_cell.color = default_color;
             }
             DrawWay();
-            if (cell.trapActivated)
-            {
-                //  print("activated" + cell.trapType);
-            }
+
 
             if (cell.trap && cell.enableTrap && Input.GetKey(KeyCode.LeftShift))
             {
@@ -171,14 +167,14 @@ public class CellDisplay : MonoBehaviour
                 }
                 else
                 {
-                    if ((cell.player.Name == "Eren" && gm.ErenSkill) || (cell.player.Name == "Armin" && gm.ArminSkill) || (cell.player.Name == "Reiner" && gm.ReinerSkill))
+                    if (cell.player.titanForm)
                     {
-                        img_cell.sprite = cell.player.sprite2;
+                        img_cell.sprite = cell.player.play.sprite2;
 
                     }
                     else
                     {
-                        img_cell.sprite = cell.player.sprite;
+                        img_cell.sprite = cell.player.play.sprite;
 
                     }
                     img_cell.color = Color.white;
@@ -190,7 +186,50 @@ public class CellDisplay : MonoBehaviour
     }
     public void Click()
     {
-        // Board.AddTrapOn(gm.trapList[1],(int)coord.x,(int)coord.y,gm.grid);
+        if (gm.ZekeSkill)
+        {
+            if (cell.player != null)
+            {
+                if (cell.player.isTitan)
+                {
+                    int at = 0;
+                    int de = gm.players.IndexOf(cell.player);
+                    for (int i = 0; i < gm.players.Count; i++)
+                    {
+                        if (gm.players[i].nameC == "Zeke")
+                        {
+                            at = i;
+                            break;
+                        }
+                    }
+
+                    //gm.turn = gm.players.IndexOf(de);
+                    gm.players.RemoveAt(de);
+                    int newDe = at < de ? at + 1 : at;
+                    gm.players.Insert(newDe, cell.player);
+                    cell.player.isTitan = false;
+                    gm.turn = gm.players.IndexOf(gm.players[at]);
+                    gm.turn--;
+                    if (gm.turn < 0)
+                    {
+                        gm.turn = gm.players.Count;
+                    }
+                    for (int i = 0; i < gm.players.Count; i++)
+                    {
+                        if (gm.players[i].nameC == "Zeke")
+                        {
+                            gm.players[i].CtransformTime = gm.players[i].TransformTime;
+
+                        }
+                    }
+                    gm.NextTurn();
+
+
+
+                }
+
+            }
+        }
         if (!gm.isInCombat)
         {
             if (gm.ReinerSkill)
@@ -216,15 +255,11 @@ public class CellDisplay : MonoBehaviour
 
             }
 
-
-
-
         }
 
     }
     public void Hover()
     {
-        //print("hover");
         if (!cell.reach && !cell.powerUp)
         {
             img_cell.color = hover_color;
@@ -241,9 +276,16 @@ public class CellDisplay : MonoBehaviour
         hover = true;
         if (cell.hasAplayer)
         {
+
+            if (cell.player.play && cell.player.isTitan && gm.ZekeSkill)
+            {
+                img_cell.color = hover_color;
+
+            }
+
             for (int p = 0; p < gm.players.Count; p++)
             {
-                if (cell.player == gm.players[p].play)
+                if (cell.player == gm.players[p])
                 {
                     displayPlayerTurnInfo.statdisplay.UpdateStats(p);
 

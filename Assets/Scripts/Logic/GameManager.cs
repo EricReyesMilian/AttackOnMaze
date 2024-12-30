@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     public List<List<Cell>> grid = new List<List<Cell>>();
     public List<trap> trapList;
     public List<PowerUp> powerList;
+    public PowerUp TheKey;
     public List<List<int>> distancia = new List<List<int>>();
     public List<List<int>> distanciaToCenter = new List<List<int>>();
     [HideInInspector]
@@ -132,7 +133,15 @@ public class GameManager : MonoBehaviour
 
         }
         #endregion
-        NextEnable = !players[turn].play.isTitan && !playingCorrutine && !isInCombat && HasMoved;
+        NextEnable = !players[turn].isTitan && !playingCorrutine && !isInCombat && HasMoved;
+        if (players[turn].currentCooldown == 0 && !players[turn].isTitan)
+        {
+            SkillEnable = true;
+        }
+        else
+        {
+            SkillEnable = false;
+        }
     }
     void LoadPlayers()
     {
@@ -163,7 +172,7 @@ public class GameManager : MonoBehaviour
     void PlacePlayerIn(int i, int j, int index)
     {
         grid[i][j].hasAplayer = true;
-        grid[i][j].player = players[index].play;
+        grid[i][j].player = players[index];
 
     }
     void UnPlacePlayer(int i, int j)
@@ -182,6 +191,7 @@ public class GameManager : MonoBehaviour
         AssignDestroyableWalls();
         board.AddTraps();
         board.AddPowerUps();
+        board.AddKey();
         distanciaToCenter = Board.Lee(grid, n / 2, n / 2, n * n);
 
     }
@@ -303,6 +313,16 @@ public class GameManager : MonoBehaviour
             players[turn].ResetCooldown();
             skillWasActivatedThisTurn = false;
         }
+        if (turn >= 0)
+        {
+            if (players[turn].play.isTitan && !players[turn].isTitan && ZekeSkill)
+            {
+                players[turn].isTitan = true;
+
+
+            }
+
+        }
         turn = NextTurnIndex(turn);
 
         if (round > 1)
@@ -344,8 +364,16 @@ public class GameManager : MonoBehaviour
         if (turn == 0)
         {
             round++;
+            if (round % 6 == 0)
+            {
+                Board board = new Board(grid);
+
+                board.AddPowerUps();
+
+            }
+
         }
-        if (players[turn].currentCooldown == 0 && !players[turn].play.isTitan)
+        if (players[turn].currentCooldown == 0 && !players[turn].isTitan)
         {
             SkillEnable = true;
         }
@@ -354,7 +382,7 @@ public class GameManager : MonoBehaviour
             SkillEnable = false;
         }
         //move titan
-        if (players[turn].play.isTitan)
+        if (players[turn].isTitan)
         {
             MoveTitan();
         }
@@ -403,6 +431,7 @@ public class GameManager : MonoBehaviour
     {
         ErenSkill = true;
         PlayerSkills.ErenSkillEf(players[turn]);
+        players[turn].ResetCooldown();
         ReachPointInMatriz();
         UpdateStats(turn);
         UpdateDisplay();
@@ -411,6 +440,7 @@ public class GameManager : MonoBehaviour
     {
         ReinerSkill = true;
         PlayerSkills.ReinerSkillEf(players[turn], grid, distancia, predefinedCenterCells);
+        players[turn].ResetCooldown();
         ReachPointInMatriz();
         UpdateStats(turn);
         UpdateDisplay();
@@ -419,6 +449,7 @@ public class GameManager : MonoBehaviour
     {
         ArminSkill = true;
         PlayerSkills.ArminSkillEf(players[turn], grid, predefinedObstacleCells);
+        players[turn].ResetCooldown();
         ReachPointInMatriz();
         UpdateStats(turn);
         UpdateDisplay();
@@ -427,11 +458,14 @@ public class GameManager : MonoBehaviour
     {
         ZekeSkill = true;
         PlayerSkills.ZekeSkillEf(players[turn], grid, distancia);
+        players[turn].ResetCooldown();
+
     }
     void HandleLeviSkill()
     {
         LeviSkill = true;
         PlayerSkills.LeviSkillEf(players[turn], grid, distancia);
+        players[turn].ResetCooldown();
         UpdateDisplay();
     }
     private void MoveTitan()
@@ -484,7 +518,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(ActivateInteraction(target, index, aux));
             //
             UpdateStats(turn);
-            if (!players[turn].play.isTitan)
+            if (!players[turn].isTitan)
             {
                 ReachPointInMatriz();
             }
@@ -499,7 +533,7 @@ public class GameManager : MonoBehaviour
             ClearMatrizNearPlayers();
             isInCombat = false;
 
-            if (players[turn].play.isTitan)
+            if (players[turn].isTitan)
             {
                 InitReachCell();
                 SetDist();
@@ -567,9 +601,8 @@ public class GameManager : MonoBehaviour
         ReachPointInMatriz();
 
     }
-    public void ActivatePower(PowerUp powerUp, Vector2 target, PlayerManager player)
+    public void ActivatePower(PowerUp powerUp, PlayerManager player)
     {
-        grid[(int)target.x][(int)target.y].powerUp = false;
         PowerTrigger PowerManeger = new PowerTrigger(powerUp, player);
         openPanelPowerUp(powerUp);
 
@@ -651,7 +684,7 @@ public class GameManager : MonoBehaviour
 
         }
         playingCorrutine = false;
-        if (players[turn].play.isTitan && !grid[(int)target.x][(int)target.y].nearPlayer)
+        if (players[turn].isTitan && !grid[(int)target.x][(int)target.y].nearPlayer)
         {
 
             NextTurn();
@@ -666,7 +699,8 @@ public class GameManager : MonoBehaviour
         {
             if (isPowerUp(target) && !players[index].play.isTitan)
             {
-                ActivatePower(grid[(int)target.x][(int)target.y].powerUpType, target, players[index]);
+                grid[(int)target.x][(int)target.y].powerUp = false;
+                ActivatePower(grid[(int)target.x][(int)target.y].powerUpType, players[index]);
             }
             if (isTrap(target) && !players[index].play.isTitan)
             {
@@ -676,10 +710,10 @@ public class GameManager : MonoBehaviour
             if (grid[(int)target.x][(int)target.y].nearPlayer && !levi)
             {
                 InitReachCell();
-                SelectPlayer(target, players[index].play.isTitan);
+                SelectPlayer(target, players[index].isTitan);
 
             }
-            else if (!players[index].play.isTitan)
+            else if (!players[index].isTitan)
             {
                 InitReachCell();
                 SetDist();
@@ -766,7 +800,7 @@ public class GameManager : MonoBehaviour
             int at = players.IndexOf(player1);
             int de = players.IndexOf(player2);
 
-            if (!player1.play.isTitan)
+            if (!player1.isTitan)
             {
                 //MoveElementInList();
                 players.RemoveAt(de);
@@ -784,7 +818,7 @@ public class GameManager : MonoBehaviour
 
             looserTitan = true;
 
-            if (player1.play.isTitan)//si gano un titan
+            if (player1.isTitan)//si gano un titan
             {
                 looserTitan = false;
                 List<Cell> posiblesMoves = new List<Cell>();
@@ -810,6 +844,11 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                if (player2.haveKey)
+                {
+                    player2.LoseKey();
+                    player1.TakeKey();
+                }
                 isInCombat = true;
 
             }
@@ -826,7 +865,7 @@ public class GameManager : MonoBehaviour
 
             looserTitan = false;
 
-            if (player2.play.isTitan)//si gano un titan
+            if (player2.isTitan)//si gano un titan
             {
                 looserTitan = true;
 
@@ -847,6 +886,11 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                if (player1.haveKey)
+                {
+                    player1.LoseKey();
+                    player2.TakeKey();
+                }
                 isInCombat = true;
 
             }

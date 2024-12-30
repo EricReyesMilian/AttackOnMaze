@@ -1,5 +1,4 @@
 
-
 public class PowerTrigger
 {
     private PowerUp powerUp;
@@ -19,6 +18,8 @@ public class PowerTrigger
             case EPower.None: None(); break;
             case EPower.Sword: Sword(); break;
             case EPower.Fuel: Fuel(); break;
+            case EPower.Serum: Serum(); break;
+            case EPower.Key: Key(); break;
         }
     }
     void None()
@@ -32,5 +33,13 @@ public class PowerTrigger
     void Fuel()
     {
         player.SpeedUp(3, 0);
+    }
+    void Serum()
+    {
+        player.RemoveCooldown();
+    }
+    void Key()
+    {
+        player.TakeKey();
     }
 }

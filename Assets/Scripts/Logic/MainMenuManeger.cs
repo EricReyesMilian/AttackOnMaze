@@ -8,7 +8,7 @@ public class MainMenuManeger : MonoBehaviour
     public List<List<player>> playersList = new List<List<player>>();
     public static MainMenuManeger mm;
     public int PlayerCount = 2;
-    public int PlayerIndex;
+    public int PlayerIndex = 1;
     public int PlayerRemain;
     public int selectables;
     public Animator anim;

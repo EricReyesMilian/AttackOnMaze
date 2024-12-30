@@ -9,11 +9,15 @@ public class buttonSelect : buttonMenu
     // Update is called once per frame
     public override void Hover()
     {
-        if (MainMenuManeger.mm.playersList[MainMenuManeger.mm.PlayerIndex - 1].Count > 0)
+        if (MainMenuManeger.mm.PlayerIndex > 0)
         {
-            Color newColor;
-            ColorUtility.TryParseHtmlString("#8B956D", out newColor);
-            text.color = newColor;
+            if (MainMenuManeger.mm.playersList[MainMenuManeger.mm.PlayerIndex - 1].Count > 0)
+            {
+                Color newColor;
+                ColorUtility.TryParseHtmlString("#8B956D", out newColor);
+                text.color = newColor;
+
+            }
 
         }
     }

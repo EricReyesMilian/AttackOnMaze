@@ -6,7 +6,7 @@ public class Cell
 {
     public bool obstacle = true;
     public bool hasAplayer;
-    public player player;
+    public PlayerManager player;
     public bool reach;
     public Vector2 coord;
     public bool visitedOnMove;

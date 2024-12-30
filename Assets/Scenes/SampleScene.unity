@@ -2712,33 +2712,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   n: 17
   round: 1
-  cellLoaded: 0
   cellsContainer: {fileID: 1394349740}
-  trapList:
-  - {fileID: 11400000, guid: 183f049d244f71441851c4ffe454e0fc, type: 2}
-  - {fileID: 11400000, guid: 6a2bd29a294a6874ebebf290a7c8db3f, type: 2}
-  - {fileID: 11400000, guid: c9a68a56c6ac24241877a71f2fe6831d, type: 2}
-  powerList:
-  - {fileID: 11400000, guid: 401bd212406469f489ccfb2325be653c, type: 2}
-  - {fileID: 11400000, guid: abd0249294659124783ad4dc8ae3d83f, type: 2}
+  playerContainer: {fileID: 1306226169}
+  cellLoaded: 0
   turn: 0
-  player_Scriptable:
-  - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
-  - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
   playingCorrutine: 0
   runningBackwards: 0
-  wayToPoint: []
-  playerContainer: {fileID: 1306226169}
-  createBoard: {fileID: 1394349742}
-  relocate: 0
-  canPassTurn: 0
   lastWinner1: 0
   looserTitan: 0
   isInCombat: 0
-  combatZoneCoord: {x: 0, y: 0}
-  nearPlayers: []
-  panelTrap: {fileID: 2015092113}
-  panelPowerUp: {fileID: 2034050968}
   NextEnable: 1
   SkillEnable: 1
   ZekeSkill: 0
@@ -2747,6 +2729,24 @@ MonoBehaviour:
   ArminSkill: 0
   LeviSkill: 0
   HasMoved: 0
+  combatZoneCoord: {x: 0, y: 0}
+  trapList:
+  - {fileID: 11400000, guid: 183f049d244f71441851c4ffe454e0fc, type: 2}
+  - {fileID: 11400000, guid: 6a2bd29a294a6874ebebf290a7c8db3f, type: 2}
+  - {fileID: 11400000, guid: c9a68a56c6ac24241877a71f2fe6831d, type: 2}
+  - {fileID: 11400000, guid: 56e650a444894024f8da070cf0c0e4c9, type: 2}
+  powerList:
+  - {fileID: 11400000, guid: 401bd212406469f489ccfb2325be653c, type: 2}
+  - {fileID: 11400000, guid: abd0249294659124783ad4dc8ae3d83f, type: 2}
+  - {fileID: 11400000, guid: 0e313fe4010d07149b5764de53a1e61b, type: 2}
+  TheKey: {fileID: 11400000, guid: 60ba7aa3c261baa409c146ee00d8c0ca, type: 2}
+  player_Scriptable:
+  - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
+  - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
+  wayToPoint: []
+  nearPlayers: []
+  panelTrap: {fileID: 2015092113}
+  panelPowerUp: {fileID: 2034050968}
 --- !u!1001 &167480497
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9995,6 +9995,7 @@ RectTransform:
   m_LocalScale: {x: 0.89393, y: 0.89393, z: 0.89393}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 517356279}
   - {fileID: 362176689}
   - {fileID: 2060674089}
   - {fileID: 1952690412}
@@ -10023,6 +10024,7 @@ MonoBehaviour:
   speed: {fileID: 1814128062}
   power: {fileID: 1406909613}
   skill_Cooldown: {fileID: 500486785}
+  KeyImg: {fileID: 517356278}
 --- !u!1 &500486783
 GameObject:
   m_ObjectHideFlags: 0
@@ -10882,6 +10884,103 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9188109731277742154, guid: be1a2ceffcf833a4c998f15bcd9f767f, type: 3}
   m_PrefabInstance: {fileID: 515783615}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &517356278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 517356279}
+  - component: {fileID: 517356281}
+  - component: {fileID: 517356280}
+  - component: {fileID: 517356282}
+  m_Layer: 0
+  m_Name: Key img
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &517356279
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517356278}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.1379267, y: 1.1379267, z: 1.1379267}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 490271308}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -21, y: -150}
+  m_SizeDelta: {x: 242, y: 500}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &517356280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517356278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: b6f89eb479e29da4ebf30f2dbc9b53b4, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &517356281
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517356278}
+  m_CullTransparentMesh: 1
+--- !u!95 &517356282
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517356278}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4477657a5eec0244f89e3d9481ceb56b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -29394,7 +29493,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 26.151667, y: 26.151667}
+  m_CellSize: {x: 23, y: 23}
   m_Spacing: {x: 2.1816673, y: 2.1816673}
   m_Constraint: 2
   m_ConstraintCount: 17

@@ -133,7 +133,7 @@ public class TitanAI
             if (grid[coord.x][coord.y].nearPlayer)
             {
                 if (titan.power >= grid[coord.x][coord.y].NearPlayers[0].power
-                && !grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
+                && !grid[coord.x][coord.y].NearPlayers[0].isTitan)
                 {
                     huboCambio = true;
                     return targets.IndexOf(coord);

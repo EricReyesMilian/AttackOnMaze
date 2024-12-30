@@ -7,11 +7,14 @@ static class PlayerSkills
     {
         Zeke.titanForm = true;
         Zeke.SwapImg(2);
-        Zeke.PowerUp(5, Zeke.TransformTime + 1);
+        Zeke.PowerUp(5);
     }
     public static void ZekeSkillOff(PlayerManager Zeke)
     {
+
         Zeke.titanForm = false;
+        Zeke.PowerUp(-5);
+
         Zeke.SwapImg(1);
 
     }
@@ -113,12 +116,15 @@ static class PlayerSkills
     {
         Eren.titanForm = true;
         Eren.SwapImg(2);
-        Eren.PowerUp(Eren.power, Eren.TransformTime + 1);
-        Eren.SpeedUp(2, Eren.TransformTime + 1);
+        Eren.PowerUp(Eren.power);
+        Eren.SpeedUp(2);
     }
     public static void ErenSkillOff(PlayerManager Eren)
     {
         Eren.titanForm = false;
+        Eren.PowerUp(-Eren.power / 2);
+        Eren.SpeedUp(-2);
+
         Eren.SwapImg(1);
 
     }
@@ -128,11 +134,13 @@ static class PlayerSkills
         Reiner.titanForm = true;
         ReinerRun(Reiner, grid, distancia, predefinedEmptyCells);
         Reiner.SwapImg(2);
-        Reiner.PowerUp(5, Reiner.TransformTime);
+        Reiner.PowerUp(5);
     }
     public static void ReinerSkillOff(PlayerManager Reiner)
     {
         Reiner.titanForm = false;
+        Reiner.PowerUp(-5);
+
         Reiner.SwapImg(1);
 
     }
@@ -159,6 +167,7 @@ static class PlayerSkills
                     if (!grid[i][(int)Reiner.Pos.y].obstacle)
                     {
                         if (!predefinedEmptyCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
+
                             reachSkillCells.Add((i, (int)Reiner.Pos.y));
                         break;
                     }
@@ -186,29 +195,20 @@ static class PlayerSkills
                     if (!grid[i][(int)Reiner.Pos.y].obstacle)
                     {
                         if (!predefinedEmptyCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
-
                             reachSkillCells.Add((i, (int)Reiner.Pos.y));
                         break;
                     }
                 }
             }
-
-
         }
-
         {
             bool obs = false;
-
-
             for (int i = (int)Reiner.Pos.y + 1; i < n - 1; i++)
             {
                 if (!obs)
                 {
                     if (grid[(int)Reiner.Pos.x][i].obstacle)
-                    {
                         obs = true;
-
-                    }
 
                 }
                 else
@@ -216,7 +216,6 @@ static class PlayerSkills
                     if (!grid[(int)Reiner.Pos.x][i].obstacle)
                     {
                         if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
-
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
@@ -235,24 +234,18 @@ static class PlayerSkills
                     if (grid[(int)Reiner.Pos.x][i].obstacle)
                     {
                         obs = true;
-
                     }
-
                 }
                 else
                 {
                     if (!grid[(int)Reiner.Pos.x][i].obstacle)
                     {
                         if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
-
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
                 }
-
-
             }
-
         }
 
         foreach (var coord in reachSkillCells)
@@ -263,24 +256,22 @@ static class PlayerSkills
             distancia[coord.i][coord.j] = 0;
 
         }
-
         Board.ColorReachCell(grid, distancia);
-
-
     }
     public static void ArminSkillEf(PlayerManager Armin, List<List<Cell>> grid, List<(int x, int y)> predefinedObstacleCells)
     {
         Armin.titanForm = true;
         ArminExplotion(Armin, grid, predefinedObstacleCells);
         Armin.SwapImg(2);
-        Armin.PowerUp(20, Armin.TransformTime);
+        Armin.PowerUp(20);
         Armin.SpeedUpNormalize(2, Armin.TransformTime);
     }
     public static void ArminExplotion(PlayerManager Armin, List<List<Cell>> grid, List<(int x, int y)> predefinedObstacleCells)
     {
-        for (int i = (int)Armin.Pos.x - 3; i < Armin.Pos.x + 3; i++)
+        int range = 1;
+        for (int i = (int)Armin.Pos.x - range; i < Armin.Pos.x + range; i++)
         {
-            for (int j = (int)Armin.Pos.y - 3; j < Armin.Pos.y + 3; j++)
+            for (int j = (int)Armin.Pos.y - range; j < Armin.Pos.y + range; j++)
             {
                 if (i >= 0 && i < grid.Count && j >= 0 && j < grid.Count)
                 {
@@ -296,6 +287,8 @@ static class PlayerSkills
     public static void ArminSkillOff(PlayerManager Armin)
     {
         Armin.titanForm = false;
+        Armin.PowerUp(-20);
+
         Armin.SwapImg(1);
 
     }
