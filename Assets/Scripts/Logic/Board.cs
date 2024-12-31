@@ -49,6 +49,17 @@ public class Board
                 }
             }
         } while (huboCambio);
+
+        for (int f = 0; f < size; f++)
+        {
+            for (int c = 0; c < size; c++)
+            {
+                if (tablero[f][c].destroyableObs)
+                {
+                    distancias[f][c] = -1;
+                }
+            }
+        }
         return distancias;
     }
     public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, List<(int x, int y)> predefinedEmptyCells, int playerPosF, int playerPosC)

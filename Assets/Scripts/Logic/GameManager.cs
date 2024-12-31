@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     public List<(int x, int y)> predefinedCenterCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 8), (7, 9) };
     public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
     public List<(int x, int y)> startCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15) };
-    public List<(int x, int y)> DoorCells = new List<(int, int)> { (6, 8), (8, 6), (10, 8), (8, 10) };
+    public List<(int x, int y)> DoorCells = new List<(int, int)> { (8, 6), (6, 8), (10, 8), (8, 10) };
 
     // Delegados y eventos
     public delegate void Accion();
@@ -333,30 +333,11 @@ public class GameManager : MonoBehaviour
         {
             players[turn].PowerUp(1);
 
-            if (players[turn].power >= WinPower)
-            {
-                for (int i = 0; i < DoorCells.Count; i++)
-                {
-                    grid[DoorCells[i].x][DoorCells[i].y].obstacle = false;
-
-
-                }
-            }
-        }
-        else
-        {
-
-            for (int i = 0; i < DoorCells.Count; i++)
-            {
-                if (grid[DoorCells[i].x][DoorCells[i].y].endurence > 0)
-                {
-                    grid[DoorCells[i].x][DoorCells[i].y].obstacle = true;
-
-                }
-
-            }
 
         }
+        CheckSavior();
+
+
         if (round > 1)
         {
             if (players[turn].titanForm)
@@ -423,6 +404,44 @@ public class GameManager : MonoBehaviour
 
         UpdateStats(turn);
     }
+    public void CheckSavior()
+    {
+        if (Savior())
+        {
+            OpenDoorsToSavior();
+        }
+        else
+        {
+            CloseDoors();
+
+        }
+    }
+    public bool Savior()
+    {
+        return players[turn].power >= WinPower && players[turn].haveKey;
+    }
+    public void CloseDoors()
+    {
+        for (int i = 0; i < DoorCells.Count; i++)
+        {
+            if (grid[DoorCells[i].x][DoorCells[i].y].endurence > 0)
+            {
+                grid[DoorCells[i].x][DoorCells[i].y].obstacle = true;
+
+            }
+
+        }
+
+    }
+    public void OpenDoorsToSavior()
+    {
+        for (int i = 0; i < DoorCells.Count; i++)
+        {
+            grid[DoorCells[i].x][DoorCells[i].y].obstacle = false;
+
+
+        }
+    }
     public void Skill()
     {
         if (SkillEnable)
@@ -430,6 +449,7 @@ public class GameManager : MonoBehaviour
             skillWasActivatedThisTurn = true;
             SkillEnable = false;
             player sCplayer = players[turn].play;
+            UpdateStats(turn);
 
             switch (sCplayer.Name)
             {
@@ -513,11 +533,12 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        TitanAI titanAI = new TitanAI(grid, distancia, distanciaToCenter);
-
+        TitanAI titanAI = new TitanAI(grid, distancia);
         int destination = titanAI.GetMove(players[turn], targets);
-        MoveplayerTo(new Vector2(targets[destination].x, targets[destination].y), turn);
-
+        if (destination != -1)
+            MoveplayerTo(new Vector2(targets[destination].x, targets[destination].y), turn);
+        else
+            Invoke("NextTurn", 0.5f);
 
     }
     bool Win(PlayerManager player)
@@ -685,7 +706,16 @@ public class GameManager : MonoBehaviour
             }
             if (Win(players[index ?? turn]))
             {
-                winner = "Player " + players[index ?? turn].team + 1 + " Won";
+                if (players[index ?? turn].isTitan)
+                {
+                    winner = "Titans Won       humanity will remember";
+
+                }
+                else
+                {
+                    winner = "Player " + (players[index ?? turn].team + 1) + " Won";
+
+                }
                 SceneManager.LoadScene(3);
             }
             runningBackwards = true;

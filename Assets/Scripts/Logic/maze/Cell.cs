@@ -30,7 +30,7 @@ public class Cell
 
 
     public bool destroyableObs;
-    public int endurence = 30;
+    public int endurence = 5;
 
 
     public void TakeDamage(int damage)

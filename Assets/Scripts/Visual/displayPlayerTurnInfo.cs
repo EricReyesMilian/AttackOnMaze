@@ -10,6 +10,7 @@ public class displayPlayerTurnInfo : MonoBehaviour
     public static displayPlayerTurnInfo statdisplay;
     public Image portrait;
     public TextMeshProUGUI name_c;
+    public TextMeshProUGUI transf;
     public TextMeshProUGUI player;
     public TextMeshProUGUI speed;
     public TextMeshProUGUI power;
@@ -59,6 +60,11 @@ public class displayPlayerTurnInfo : MonoBehaviour
             player.text = " ";
 
         }
+        if (gm.players[i].CtransformTime > 0)
+            transf.text = "Transform: " + gm.players[i].CtransformTime;
+        else
+            transf.text = " ";
+
         if (i == gm.turn)
             speed.text = "speed: " + gm.players[i].speed + "(" + gm.players[i].currentSpeed + ")";
         else

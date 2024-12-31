@@ -23,7 +23,7 @@ public class SkillButtonUI : MonoBehaviour
     }
     public virtual void SetColor()
     {
-        if (GameManager.gameManeger.SkillEnable)
+        if (GameManager.gameManeger.SkillEnable && GameManager.gameManeger.players[GameManager.gameManeger.turn].CtransformTime == 0)
             img.color = active;
         else
             img.color = disable;

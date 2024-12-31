@@ -39,13 +39,13 @@ public class CellDisplay : MonoBehaviour
     {
         gm = GameManager.gameManeger;
         gm.UpdateDisplay += AsignarCasillaCorrespondiente;
+        gm.DrawWay += DrawWay;
 
     }
     void Start()
     {
 
         img_cell = GetComponent<Image>();
-        gm.DrawWay += DrawWay;
 
     }
     void Update()

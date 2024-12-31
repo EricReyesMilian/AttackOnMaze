@@ -103,16 +103,21 @@ public class PlayerManager
     {
         power += amount;
         power = Floor(power);
+        GameManager.gameManeger.CheckSavior();
     }
     public void PowerUp(int amount, int dur)
     {
         PowerUp(amount);
         powerUpTimer.Add((amount, GameManager.gameManeger.round + dur));
+        GameManager.gameManeger.CheckSavior();
+
     }
     public void PowerDivide(float n)
     {
         power = (int)Mathf.Abs(power / n);
         power = Floor(power);
+        GameManager.gameManeger.CheckSavior();
+
     }
     public void SpeedUp(int amount)
     {
