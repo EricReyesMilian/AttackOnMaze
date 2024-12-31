@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3576dbcfbca03c748a8e083948372a03, type: 3}
+  m_Name: Blond Titan
+  m_EditorClassIdentifier: 
+  Name: Blond Titan
+  speed: 3
+  cooldown: 0
+  power: 6
+  color: {r: 0.7686275, g: 0.7725491, b: 0.7411765, a: 1}
+  sprite: {fileID: 21300000, guid: 63ff868bca9640443b1e2b97a325e395, type: 3}
+  sprite2: {fileID: 0}
+  team: 0
+  TransformTime: 0
+  isTitan: 1
+  TitanIQ: 4

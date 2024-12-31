@@ -149,10 +149,17 @@ public class TitanAI : MonoBehaviour
         bool huboCambio = false;
         foreach (var coord in targets)
         {
-            if (grid[coord.x][coord.y].nearPlayer && titan.power >= grid[coord.x][coord.y].player.power)
+            if (grid[coord.x][coord.y].nearPlayer)
             {
-                return targets.IndexOf(coord);
+                if (titan.power >= grid[coord.x][coord.y].NearPlayers[0].power
+                && !grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
+                {
+                    huboCambio = true;
+                    return targets.IndexOf(coord);
+
+                }
             }
+
             if (distancia[coord.x][coord.y] >= max)
             {
                 if (!titan.lastMove.Contains(coord))

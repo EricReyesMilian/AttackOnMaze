@@ -2745,6 +2745,7 @@ MonoBehaviour:
   player_Scriptable:
   - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
   - {fileID: 11400000, guid: 46513b720583b2b4a9536239106cb7c6, type: 2}
+  - {fileID: 11400000, guid: cd009999f39a1424ba29ab80a2474d3e, type: 2}
   wayToPoint: []
   nearPlayers: []
   panelTrap: {fileID: 2015092113}

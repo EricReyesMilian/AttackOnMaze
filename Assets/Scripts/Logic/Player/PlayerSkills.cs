@@ -146,7 +146,7 @@ static class PlayerSkills
     }
     public static void ReinerRun(PlayerManager Reiner, List<List<Cell>> grid, List<List<int>> distancia, List<(int x, int y)> predefinedEmptyCells)
     {
-        int n = grid[0].Count;
+        int n = grid.Count;
         List<(int i, int j)> reachSkillCells = new List<(int i, int j)>();
 
         {
@@ -215,7 +215,7 @@ static class PlayerSkills
                 {
                     if (!grid[(int)Reiner.Pos.x][i].obstacle)
                     {
-                        if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
+                        if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
@@ -240,7 +240,7 @@ static class PlayerSkills
                 {
                     if (!grid[(int)Reiner.Pos.x][i].obstacle)
                     {
-                        if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
+                        if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
