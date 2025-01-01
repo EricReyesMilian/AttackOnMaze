@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 static class PlayerSkills
 {
-    public static void ZekeSkillEf(PlayerManager Zeke, List<List<Cell>> grid, List<List<int>> distancia)
+    public static void ZekeSkillEf(PlayerManager Zeke)
     {
         Zeke.titanForm = true;
         Zeke.SwapImg(2);
@@ -18,19 +18,19 @@ static class PlayerSkills
         Zeke.SwapImg(1);
 
     }
-    public static void LeviSkillEf(PlayerManager Levi, List<List<Cell>> grid, List<List<int>> distancia)
+    public static void LeviSkillEf(PlayerManager Levi)
     {
-        int n = grid[0].Count;
+        int n = Board.grid[0].Count;
         List<(int i, int j)> reachSkillCells = new List<(int i, int j)>();
 
-        if ((int)Levi.Pos.x + 2 <= n && !grid[(int)Levi.Pos.x + 1][(int)Levi.Pos.y].obstacle)
+        if ((int)Levi.Pos.x + 2 <= n && !Board.grid[(int)Levi.Pos.x + 1][(int)Levi.Pos.y].obstacle)
         {
             for (int i = (int)Levi.Pos.x + 2; i < n; i++)
             {
 
-                if (grid[i][(int)Levi.Pos.y].obstacle)
+                if (Board.grid[i][(int)Levi.Pos.y].obstacle)
                 {
-                    if (!grid[i - 1][(int)Levi.Pos.y].hasAplayer)
+                    if (!Board.grid[i - 1][(int)Levi.Pos.y].hasAplayer)
                         reachSkillCells.Add((i - 1, (int)Levi.Pos.y));
                     break;
                 }
@@ -38,13 +38,13 @@ static class PlayerSkills
             }
 
         }
-        if ((int)Levi.Pos.x - 2 >= 0 && !grid[(int)Levi.Pos.x - 1][(int)Levi.Pos.y].obstacle)
+        if ((int)Levi.Pos.x - 2 >= 0 && !Board.grid[(int)Levi.Pos.x - 1][(int)Levi.Pos.y].obstacle)
         {
             for (int i = (int)Levi.Pos.x - 2; i >= 0; i--)
             {
-                if (grid[i][(int)Levi.Pos.y].obstacle)
+                if (Board.grid[i][(int)Levi.Pos.y].obstacle)
                 {
-                    if (!grid[i + 1][(int)Levi.Pos.y].hasAplayer)
+                    if (!Board.grid[i + 1][(int)Levi.Pos.y].hasAplayer)
                         reachSkillCells.Add((i + 1, (int)Levi.Pos.y));
 
                     break;
@@ -55,13 +55,13 @@ static class PlayerSkills
 
         }
 
-        if ((int)Levi.Pos.y + 2 <= n && !grid[(int)Levi.Pos.x][(int)Levi.Pos.y + 1].obstacle)
+        if ((int)Levi.Pos.y + 2 <= n && !Board.grid[(int)Levi.Pos.x][(int)Levi.Pos.y + 1].obstacle)
         {
             for (int i = (int)Levi.Pos.y + 2; i < n; i++)
             {
-                if (grid[(int)Levi.Pos.x][i].obstacle)
+                if (Board.grid[(int)Levi.Pos.x][i].obstacle)
                 {
-                    if (!grid[(int)Levi.Pos.x][i - 1].hasAplayer)
+                    if (!Board.grid[(int)Levi.Pos.x][i - 1].hasAplayer)
 
                         reachSkillCells.Add(((int)Levi.Pos.x, i - 1));
 
@@ -71,13 +71,13 @@ static class PlayerSkills
             }
 
         }
-        if ((int)Levi.Pos.y - 2 >= 0 && !grid[(int)Levi.Pos.x][(int)Levi.Pos.y - 1].obstacle)
+        if ((int)Levi.Pos.y - 2 >= 0 && !Board.grid[(int)Levi.Pos.x][(int)Levi.Pos.y - 1].obstacle)
         {
             for (int i = (int)Levi.Pos.y - 2; i >= 0; i--)
             {
-                if (grid[(int)Levi.Pos.x][i].obstacle)
+                if (Board.grid[(int)Levi.Pos.x][i].obstacle)
                 {
-                    if (!grid[(int)Levi.Pos.x][i + 1].hasAplayer)
+                    if (!Board.grid[(int)Levi.Pos.x][i + 1].hasAplayer)
 
                         reachSkillCells.Add(((int)Levi.Pos.x, i + 1));
 
@@ -93,7 +93,7 @@ static class PlayerSkills
             {
                 for (int j = 0; j < n; j++)
                 {
-                    distancia[i][j] = -1;
+                    Board.distancia[i][j] = -1;
 
                 }
             }
@@ -101,13 +101,13 @@ static class PlayerSkills
         }
         foreach (var coord in reachSkillCells)
         {
-            grid[coord.i][coord.j].special = true;
+            Board.grid[coord.i][coord.j].special = true;
 
-            distancia[coord.i][coord.j] = 0;
+            Board.distancia[coord.i][coord.j] = 0;
 
         }
 
-        Board.ColorReachCell(grid, distancia);
+        Board.ColorReachCell();
 
 
     }
@@ -129,10 +129,10 @@ static class PlayerSkills
 
     }
 
-    public static void ReinerSkillEf(PlayerManager Reiner, List<List<Cell>> grid, List<List<int>> distancia)
+    public static void ReinerSkillEf(PlayerManager Reiner)
     {
         Reiner.titanForm = true;
-        ReinerRun(Reiner, grid, distancia);
+        ReinerRun(Reiner);
         Reiner.SwapImg(2);
         Reiner.PowerUp(5);
     }
@@ -144,9 +144,9 @@ static class PlayerSkills
         Reiner.SwapImg(1);
 
     }
-    public static void ReinerRun(PlayerManager Reiner, List<List<Cell>> grid, List<List<int>> distancia)
+    public static void ReinerRun(PlayerManager Reiner)
     {
-        int n = grid.Count;
+        int n = Board.grid.Count;
         List<(int i, int j)> reachSkillCells = new List<(int i, int j)>();
 
         {
@@ -155,7 +155,7 @@ static class PlayerSkills
             {
                 if (!obs)
                 {
-                    if (grid[i][(int)Reiner.Pos.y].obstacle)
+                    if (Board.grid[i][(int)Reiner.Pos.y].obstacle)
                     {
                         obs = true;
 
@@ -164,9 +164,9 @@ static class PlayerSkills
                 }
                 else
                 {
-                    if (!grid[i][(int)Reiner.Pos.y].obstacle)
+                    if (!Board.grid[i][(int)Reiner.Pos.y].obstacle)
                     {
-                        if (!Board.predefinedCenterCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains((i, (int)Reiner.Pos.y)) && !Board.grid[i][(int)Reiner.Pos.y].hasAplayer)
 
                             reachSkillCells.Add((i, (int)Reiner.Pos.y));
                         break;
@@ -183,7 +183,7 @@ static class PlayerSkills
             {
                 if (!obs)
                 {
-                    if (grid[i][(int)Reiner.Pos.y].obstacle)
+                    if (Board.grid[i][(int)Reiner.Pos.y].obstacle)
                     {
                         obs = true;
 
@@ -192,9 +192,9 @@ static class PlayerSkills
                 }
                 else
                 {
-                    if (!grid[i][(int)Reiner.Pos.y].obstacle)
+                    if (!Board.grid[i][(int)Reiner.Pos.y].obstacle)
                     {
-                        if (!Board.predefinedCenterCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains((i, (int)Reiner.Pos.y)) && !Board.grid[i][(int)Reiner.Pos.y].hasAplayer)
                             reachSkillCells.Add((i, (int)Reiner.Pos.y));
                         break;
                     }
@@ -207,15 +207,15 @@ static class PlayerSkills
             {
                 if (!obs)
                 {
-                    if (grid[(int)Reiner.Pos.x][i].obstacle)
+                    if (Board.grid[(int)Reiner.Pos.x][i].obstacle)
                         obs = true;
 
                 }
                 else
                 {
-                    if (!grid[(int)Reiner.Pos.x][i].obstacle)
+                    if (!Board.grid[(int)Reiner.Pos.x][i].obstacle)
                     {
-                        if (!Board.predefinedCenterCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains(((int)Reiner.Pos.x, i)) && !Board.grid[(int)Reiner.Pos.x][i].hasAplayer)
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
@@ -231,16 +231,16 @@ static class PlayerSkills
             {
                 if (!obs)
                 {
-                    if (grid[(int)Reiner.Pos.x][i].obstacle)
+                    if (Board.grid[(int)Reiner.Pos.x][i].obstacle)
                     {
                         obs = true;
                     }
                 }
                 else
                 {
-                    if (!grid[(int)Reiner.Pos.x][i].obstacle)
+                    if (!Board.grid[(int)Reiner.Pos.x][i].obstacle)
                     {
-                        if (!Board.predefinedCenterCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains(((int)Reiner.Pos.x, i)) && !Board.grid[(int)Reiner.Pos.x][i].hasAplayer)
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
@@ -251,33 +251,33 @@ static class PlayerSkills
         foreach (var coord in reachSkillCells)
         {
 
-            grid[coord.i][coord.j].special = true;
+            Board.grid[coord.i][coord.j].special = true;
 
-            distancia[coord.i][coord.j] = 0;
+            Board.distancia[coord.i][coord.j] = 0;
 
         }
-        Board.ColorReachCell(grid, distancia);
+        Board.ColorReachCell();
     }
-    public static void ArminSkillEf(PlayerManager Armin, List<List<Cell>> grid)
+    public static void ArminSkillEf(PlayerManager Armin)
     {
         Armin.titanForm = true;
-        ArminExplotion(Armin, grid);
+        ArminExplotion(Armin);
         Armin.SwapImg(2);
         Armin.PowerUp(20);
         Armin.SpeedUpNormalize(2, Armin.TransformTime);
     }
-    public static void ArminExplotion(PlayerManager Armin, List<List<Cell>> grid)
+    public static void ArminExplotion(PlayerManager Armin)
     {
         int range = 2;
         for (int i = (int)Armin.Pos.x - range; i < Armin.Pos.x + range; i++)
         {
             for (int j = (int)Armin.Pos.y - range; j < Armin.Pos.y + range; j++)
             {
-                if (i >= 0 && i < grid.Count && j >= 0 && j < grid.Count)
+                if (i >= 0 && i < Board.grid.Count && j >= 0 && j < Board.grid.Count)
                 {
-                    if (grid[i][j].obstacle && !grid[i][j].destroyableObs && !Board.predefinedObstacleCells.Contains((i, j)))
+                    if (Board.grid[i][j].obstacle && !Board.grid[i][j].destroyableObs && !Board.predefinedObstacleCells.Contains((i, j)))
                     {
-                        grid[i][j].obstacle = false;
+                        Board.grid[i][j].obstacle = false;
                     }
 
                 }

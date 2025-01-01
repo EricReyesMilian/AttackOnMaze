@@ -41,21 +41,17 @@ public class GameManager : MonoBehaviour
     bool skillWasActivatedThisTurn = false;
     public Vector2 combatZoneCoord;
     // Listas
-    public List<List<Cell>> grid = new List<List<Cell>>();
     public List<trap> trapList;
     public List<PowerUp> powerList;
     public PowerUp TheKey;
-    public List<List<int>> distancia = new List<List<int>>();
-    public List<List<int>> distanciaToCenter = new List<List<int>>();
     [HideInInspector]
     public List<PlayerManager> players = new List<PlayerManager>();
     public List<player> player_Scriptable = new List<player>();
     public List<Vector2> wayToPoint;
     public List<player> nearPlayers;
-    //board
+
     // Delegados y eventos
     public Action UpdateDisplay;
-
     public Action DrawWay;
     public Action StartCombate;
     public Action<int> StartDisplay;
@@ -82,7 +78,7 @@ public class GameManager : MonoBehaviour
         {
             gameManeger = this;
         }
-        AddCellsToMatriz();
+        Board.AddCellsToMatriz(n);
 
     }
     void Start()
@@ -98,7 +94,7 @@ public class GameManager : MonoBehaviour
         #region DebugInputs
         if (Input.GetKeyDown(KeyCode.D))//romper pared
         {
-            grid[6][8].TakeDamage(5);
+            Board.grid[6][8].TakeDamage(5);
         }
         if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
         {
@@ -147,125 +143,52 @@ public class GameManager : MonoBehaviour
             players[i].play = player_Scriptable[i];
             players[i].InitStats();
             players[i].Pos = new Vector2(Board.startCells[i].x, Board.startCells[i].y);
-            PlacePlayerIn(Board.startCells[i].x, Board.startCells[i].y, i);
+            Board.PlacePlayerIn(Board.startCells[i].x, Board.startCells[i].y, i);
             print(players[i].nameC);
 
         }
 
     }
-    void PlacePlayerIn(int i, int j, int index)
-    {
-        grid[i][j].hasAplayer = true;
-        grid[i][j].player = players[index];
 
-    }
-    void UnPlacePlayer(int i, int j)
-    {
-        grid[i][j].hasAplayer = false;
-        grid[i][j].player = null;
-
-    }
     void InitializeBoard()
     {
-        Board.IniciarDistancias(ref distancia, n);
-        Board.IniciarDistancias(ref distanciaToCenter, n);
-        MazeGenerator maze = new MazeGenerator(n, 7, 8, grid, Algorithm.Prim);
+        Board.IniciarDistancias(ref Board.distancia, n);
+        Board.IniciarDistancias(ref Board.distanciaToCenter, n);
+        MazeGenerator maze = new MazeGenerator(n, 7, 8, Board.grid, Algorithm.Prim);
         Board.predefinedEmptyCells.Add((7, 8));
-        Board board = new Board(grid);
-        AssignDestroyableWalls();
-        board.AddTraps();
-        board.AddPowerUps();
-        board.AddKey();
-        distanciaToCenter = Board.Lee(grid, n / 2, n / 2, n * n);
+        Board.AssignDestroyableWalls();
+        Board.AddTraps();
+        Board.AddPowerUps();
+        Board.AddKey();
+        Board.distanciaToCenter = Board.Lee(Board.grid, n / 2, n / 2, n * n);
 
     }
     void InitializeGame()
     {
-
         ReachPointInMatriz();
         UpdateStats(turn);
         turn = -1;
         createPlayerBoxInstances();
         NextTurn();
     }
-    void SetBattleZone()
-    {
-        ClearMatrizNearPlayers();
-        for (int p = 0; p < players.Count; p++)
-        {
-            if (p != turn)
-            {
-                int i = (int)((players[p].Pos.x));
-                int j = (int)((players[p].Pos.y));
-
-                if (i > 0)
-                {
-                    if (grid[i - 1][j].reach)
-                    {
-                        grid[i - 1][j].nearPlayer = true;
-                        grid[i - 1][j].NearPlayers.Add(players[p]);
-                    }
-                }
-                if (j > 0)
-                {
-                    if (grid[i][j - 1].reach)
-                    {
-                        grid[i][j - 1].nearPlayer = true;
-                        grid[i][j - 1].NearPlayers.Add(players[p]);
-                    }
-
-
-
-                }
-                if (i < n - 1)
-                {
-                    if (grid[i + 1][j].reach)
-                    {
-                        grid[i + 1][j].nearPlayer = true;
-                        grid[i + 1][j].NearPlayers.Add(players[p]);
-                    }
-
-                }
-
-                if (j < n - 1)
-                {
-                    if (grid[i][j + 1].reach)
-                    {
-                        grid[i][j + 1].nearPlayer = true;
-                        grid[i][j + 1].NearPlayers.Add(players[p]);
-                    }
-
-                }
-            }
-        }
-        UpdateDisplay();
-    }
-    void AssignDestroyableWalls()//board
-    {
-        for (int i = 0; i < Board.DoorCells.Count; i++)
-        {
-            grid[Board.DoorCells[i].x][Board.DoorCells[i].y].obstacle = true;
-            grid[Board.DoorCells[i].x][Board.DoorCells[i].y].destroyableObs = true;
-
-        }
-
-    }
     public void ReachPointInMatriz()
     {
         if (!isInCombat)
         {
             int speed = players[turn].currentSpeed;
-            InitReachCell();
-            distancia = Board.Lee(grid, (int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
-            Board.ColorReachCell(grid, distancia);
+            Board.InitReachCell();
+            Board.distancia = Board.Lee(Board.grid, (int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
+            Board.ColorReachCell();
             if (ReinerSkill && players[turn].play.name == "Reiner" && players[turn].currentSpeed > 0)
             {
-                PlayerSkills.ReinerRun(players[turn], grid, distancia);
+                PlayerSkills.ReinerRun(players[turn]);
 
                 UpdateDisplay();
 
             }
-            SetBattleZone();
+            Board.SetBattleZone(players);
+            UpdateDisplay();
+
 
         }
     }
@@ -344,8 +267,8 @@ public class GameManager : MonoBehaviour
         }
 
         ChangeTurnOrd();
-        SetDist();
-        InitReachCell();
+        Board.SetDist();
+        Board.InitReachCell();
         players[turn].ResetSpeed();
         ReachPointInMatriz();
 
@@ -354,9 +277,8 @@ public class GameManager : MonoBehaviour
             round++;
             if (round % 6 == 0)
             {
-                Board board = new Board(grid);
 
-                board.AddPowerUps();
+                Board.AddPowerUps();
 
             }
 
@@ -383,39 +305,17 @@ public class GameManager : MonoBehaviour
     {
         if (Savior())
         {
-            OpenDoorsToSavior();
+            Board.OpenDoorsToSavior();
         }
         else
         {
-            CloseDoors();
+            Board.CloseDoors();
 
         }
     }
     public bool Savior()
     {
         return players[turn].power >= WinPower && players[turn].haveKey;
-    }
-    public void CloseDoors()
-    {
-        for (int i = 0; i < Board.DoorCells.Count; i++)
-        {
-            if (grid[Board.DoorCells[i].x][Board.DoorCells[i].y].endurence > 0)
-            {
-                grid[Board.DoorCells[i].x][Board.DoorCells[i].y].obstacle = true;
-
-            }
-
-        }
-
-    }
-    public void OpenDoorsToSavior()
-    {
-        for (int i = 0; i < Board.DoorCells.Count; i++)
-        {
-            grid[Board.DoorCells[i].x][Board.DoorCells[i].y].obstacle = false;
-
-
-        }
     }
     public void Skill()
     {
@@ -447,7 +347,7 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < n; j++)
             {
-                if (grid[i][j].reach)
+                if (Board.grid[i][j].reach)
                     return true;
 
             }
@@ -466,7 +366,7 @@ public class GameManager : MonoBehaviour
     void HandleReinerSkill()
     {
         ReinerSkill = true;
-        PlayerSkills.ReinerSkillEf(players[turn], grid, distancia);
+        PlayerSkills.ReinerSkillEf(players[turn]);
         players[turn].ResetCooldown();
         ReachPointInMatriz();
         UpdateStats(turn);
@@ -475,7 +375,7 @@ public class GameManager : MonoBehaviour
     void HandleArminSkill()
     {
         ArminSkill = true;
-        PlayerSkills.ArminSkillEf(players[turn], grid);
+        PlayerSkills.ArminSkillEf(players[turn]);
         players[turn].ResetCooldown();
         ReachPointInMatriz();
         UpdateStats(turn);
@@ -484,14 +384,14 @@ public class GameManager : MonoBehaviour
     void HandleZekeSkill()
     {
         ZekeSkill = true;
-        PlayerSkills.ZekeSkillEf(players[turn], grid, distancia);
+        PlayerSkills.ZekeSkillEf(players[turn]);
         players[turn].ResetCooldown();
 
     }
     void HandleLeviSkill()
     {
         LeviSkill = true;
-        PlayerSkills.LeviSkillEf(players[turn], grid, distancia);
+        PlayerSkills.LeviSkillEf(players[turn]);
         players[turn].ResetCooldown();
         UpdateDisplay();
     }
@@ -502,13 +402,13 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < n; j++)
             {
-                if (grid[i][j].reach)
+                if (Board.grid[i][j].reach)
                 {
-                    targets.Add(((int)grid[i][j].coord.x, (int)grid[i][j].coord.y));
+                    targets.Add(((int)Board.grid[i][j].coord.x, (int)Board.grid[i][j].coord.y));
                 }
             }
         }
-        TitanAI titanAI = new TitanAI(grid, distancia);
+        TitanAI titanAI = new TitanAI();
         int destination = titanAI.GetMove(players[turn], targets);
         if (destination != -1)
             MoveplayerTo(new Vector2(targets[destination].x, targets[destination].y), turn);
@@ -521,22 +421,10 @@ public class GameManager : MonoBehaviour
         (int x, int y) a = ((int)player.Pos.x, (int)player.Pos.y);
         return Board.predefinedCenterCells.Contains(a);
     }
-    public void InitReachCell()
-    {
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                grid[i][j].reach = false;
-                grid[i][j].nearPlayer = false;
-                grid[i][j].special = false;
-            }
-        }
 
-    }
     public void MoveplayerTo(Vector2 target, int index)
     {
-        if (index == turn && !isInCombat && ReachPoint(target) && !playingCorrutine)
+        if (index == turn && !isInCombat && Board.ReachPoint(target) && !playingCorrutine)
         {
             bool aux = LeviSkill;
             if (LeviSkill)
@@ -546,7 +434,7 @@ public class GameManager : MonoBehaviour
             }
 
             players[turn].lastMove.Add(((int)players[turn].Pos.x, (int)players[turn].Pos.y));
-            UnPlacePlayer((int)players[turn].Pos.x, (int)players[turn].Pos.y);
+            Board.UnPlacePlayer((int)players[turn].Pos.x, (int)players[turn].Pos.y);
             StartCoroutine(MovePlayerCorutine(target, index));
             //
             UpdateStats(turn);
@@ -556,26 +444,26 @@ public class GameManager : MonoBehaviour
             }
             HasMoved = true;
         }
-        else if (isInCombat && !playingCorrutine && ReachPoint(target))
+        else if (isInCombat && !playingCorrutine && Board.ReachPoint(target))
         {
 
-            UnPlacePlayer((int)players[index].Pos.x, (int)players[index].Pos.y);
+            Board.UnPlacePlayer((int)players[index].Pos.x, (int)players[index].Pos.y);
             players[index].Pos = target;
-            PlacePlayerIn((int)target.x, (int)target.y, index);
-            ClearMatrizNearPlayers();
+            Board.PlacePlayerIn((int)target.x, (int)target.y, index);
+            Board.ClearMatrizNearPlayers();
             isInCombat = false;
 
             if (players[turn].isTitan)
             {
-                InitReachCell();
-                SetDist();
+                Board.InitReachCell();
+                Board.SetDist();
                 ReachPointInMatriz();
                 NextTurn();
             }
             else
             {
-                InitReachCell();
-                SetDist();
+                Board.InitReachCell();
+                Board.SetDist();
                 ReachPointInMatriz();
             }
 
@@ -583,7 +471,7 @@ public class GameManager : MonoBehaviour
         }
 
     }
-    void ApplyDamageOnLeviMove(Vector2 target)
+    void ApplyDamageOnLeviMove(Vector2 target)//sacar
     {
         if ((int)players[turn].Pos.x == (int)target.x)
         {
@@ -609,25 +497,18 @@ public class GameManager : MonoBehaviour
         }
 
     }
-    bool isTrap(Vector2 target)
-    {
-        return grid[(int)target.x][(int)target.y].trap && grid[(int)target.x][(int)target.y].enableTrap;
-    }
-    bool isPowerUp(Vector2 target)
-    {
-        return grid[(int)target.x][(int)target.y].powerUp;
-    }
+
     public void ActivateTrap(trap trap, Vector2 target, PlayerManager player)
     {
-        grid[(int)target.x][(int)target.y].trapActivated = true;
+        Board.grid[(int)target.x][(int)target.y].trapActivated = true;
         TrapTriggerEffect trapManeger = new TrapTriggerEffect(trap, player);
         openPanelTrap(trap);
         if (trap.activationTrap)
         {
-            foreach (var trapChild in grid[(int)target.x][(int)target.y].childsTrap)
+            foreach (var trapChild in Board.grid[(int)target.x][(int)target.y].childsTrap)
             {
                 print("pop");
-                grid[trapChild.x][trapChild.y].enableTrap = false;
+                Board.grid[trapChild.x][trapChild.y].enableTrap = false;
             }
         }
         ReachPointInMatriz();
@@ -648,13 +529,13 @@ public class GameManager : MonoBehaviour
     {
         playingCorrutine = true;
 
-        grid[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = false;
+        Board.grid[(int)players[index ?? turn].Pos.x][(int)players[index ?? turn].Pos.y].hasAplayer = false;
 
         if (index == turn && !isInCombat)
         {
-            players[index ?? turn].DownCurrentSpeed(distancia[(int)target.x][(int)target.y]);
+            players[index ?? turn].DownCurrentSpeed(Board.distancia[(int)target.x][(int)target.y]);
             wayToPoint.Clear();
-            SavePath(target);
+            Board.SavePath(target, players[turn].Pos);
             wayToPoint.Reverse();
             for (int w = 0; w < wayToPoint.Count; w++)//avanza el player hasta la casilla
             {
@@ -664,10 +545,10 @@ public class GameManager : MonoBehaviour
                     {
                         if (i == wayToPoint[w].x && j == wayToPoint[w].y)
                         {
-                            grid[i][j].visitedOnMove = true;
-                            UnPlacePlayer((int)players[index ?? turn].Pos.x, (int)players[index ?? turn].Pos.y);
+                            Board.grid[i][j].visitedOnMove = true;
+                            Board.UnPlacePlayer((int)players[index ?? turn].Pos.x, (int)players[index ?? turn].Pos.y);
                             players[index ?? turn].Pos = new Vector2(wayToPoint[w].x, wayToPoint[w].y);
-                            PlacePlayerIn((int)wayToPoint[w].x, (int)wayToPoint[w].y, index ?? turn);
+                            Board.PlacePlayerIn((int)wayToPoint[w].x, (int)wayToPoint[w].y, index ?? turn);
 
 
                             UpdateDisplay();
@@ -693,7 +574,7 @@ public class GameManager : MonoBehaviour
                     {
                         if (i == wayToPoint[w].x && j == wayToPoint[w].y)
                         {
-                            grid[i][j].visitedOnMove = false;
+                            Board.grid[i][j].visitedOnMove = false;
 
                             DrawWay();
                             if (w < wayToPoint.Count - 1)
@@ -709,14 +590,14 @@ public class GameManager : MonoBehaviour
             {
                 for (int j = 0; j < n; j++)
                 {
-                    grid[i][j].visitedOnMove = false;
+                    Board.grid[i][j].visitedOnMove = false;
                     UpdateDisplay();
                 }
             }
             wayToPoint.Clear();
             playingCorrutine = false;
-            InitReachCell();
-            SetDist();
+            Board.InitReachCell();
+            Board.SetDist();
             ReachPointInMatriz();
             //
             ActivateInteraction(target, turn, LeviSkill);
@@ -724,7 +605,7 @@ public class GameManager : MonoBehaviour
 
         }
         playingCorrutine = false;
-        if (players[turn].isTitan && !grid[(int)target.x][(int)target.y].nearPlayer)
+        if (players[turn].isTitan && !Board.grid[(int)target.x][(int)target.y].nearPlayer)
         {
 
             NextTurn();
@@ -734,50 +615,40 @@ public class GameManager : MonoBehaviour
     }
     void ActivateInteraction(Vector2 target, int index, bool levi)
     {
-        if (isPowerUp(target) && !players[index].play.isTitan)
+        if (Board.isPowerUp(target) && !players[index].play.isTitan)
         {
-            grid[(int)target.x][(int)target.y].powerUp = false;
-            ActivatePower(grid[(int)target.x][(int)target.y].powerUpType, players[index]);
+            Board.grid[(int)target.x][(int)target.y].powerUp = false;
+            ActivatePower(Board.grid[(int)target.x][(int)target.y].powerUpType, players[index]);
         }
-        if (isTrap(target) && !players[index].play.isTitan)
+        if (Board.isTrap(target) && !players[index].play.isTitan)
         {
-            ActivateTrap(grid[(int)target.x][(int)target.y].trapType, target, players[index]);
+            ActivateTrap(Board.grid[(int)target.x][(int)target.y].trapType, target, players[index]);
 
         }
-        if (grid[(int)target.x][(int)target.y].nearPlayer && !LeviSkill)
+        if (Board.grid[(int)target.x][(int)target.y].nearPlayer && !LeviSkill)
         {
-            InitReachCell();
+            Board.InitReachCell();
             SelectPlayer(target, players[index].isTitan);
 
         }
         else if (!players[index].isTitan)
         {
-            InitReachCell();
-            SetDist();
+            Board.InitReachCell();
+            Board.SetDist();
 
             ReachPointInMatriz();
 
         }
 
     }
-    void ClearMatrizNearPlayers()
-    {
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                grid[i][j].NearPlayers.Clear();
 
-            }
-        }
-    }
     private void SelectPlayer(Vector2 target, bool titan)
     {
         nearPlayers.Clear();
         combatZoneCoord = target;
-        for (int k = 0; k < grid[(int)target.x][(int)target.y].NearPlayers.Count; k++)
+        for (int k = 0; k < Board.grid[(int)target.x][(int)target.y].NearPlayers.Count; k++)
         {
-            nearPlayers.Add(grid[(int)target.x][(int)target.y].NearPlayers[k].play);
+            nearPlayers.Add(Board.grid[(int)target.x][(int)target.y].NearPlayers[k].play);
         }
         if (titan)
         {
@@ -808,7 +679,7 @@ public class GameManager : MonoBehaviour
     public void Combat(Vector2 target, int indexNearPlayer)
     {
         PlayerManager player1 = players[turn];
-        PlayerManager player2 = grid[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer];
+        PlayerManager player2 = Board.grid[(int)target.x][(int)target.y].NearPlayers[indexNearPlayer];
 
         combatScene = new Combat(player1, player2);
         StartCombate();
@@ -824,25 +695,22 @@ public class GameManager : MonoBehaviour
         if (lastWinner1)//si gana el jugador poseedor del turno (player1)
         {
 
-            distancia = Board.ReachPointInSubMatriz(grid, (int)player2.Pos.x, (int)player2.Pos.y);
+            Board.distancia = Board.ReachPointInSubMatriz(Board.grid, (int)player2.Pos.x, (int)player2.Pos.y);
             int at = players.IndexOf(player1);
             int de = players.IndexOf(player2);
 
             if (!player1.isTitan)
             {
-                //MoveElementInList();
                 players.RemoveAt(de);
                 int newDe = at < de ? at + 1 : at;
                 players.Insert(newDe, player2);
                 turn = players.IndexOf(player1);
-
                 ChangeTurnOrd();
 
             }
-            Board.ColorReachCell(grid, distancia);
+            Board.ColorReachCell();
             UpdateDisplay();
             ChangeTurnOrd();
-
 
             looserTitan = true;
 
@@ -854,9 +722,9 @@ public class GameManager : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
+                        if (Board.grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
                         {
-                            posiblesMoves.Add(grid[i][j]);
+                            posiblesMoves.Add(Board.grid[i][j]);
                         }
                     }
                 }
@@ -864,8 +732,7 @@ public class GameManager : MonoBehaviour
                 if (player2.haveKey)
                 {
                     player2.LoseKey();
-                    Board board = new Board(grid);
-                    board.DropKeyIn((int)player2.Pos.x, (int)player2.Pos.y);
+                    Board.DropKeyIn((int)player2.Pos.x, (int)player2.Pos.y);
                 }
                 players.RemoveAt(de);
                 int newDe = at < de ? at + 1 : at;
@@ -885,15 +752,11 @@ public class GameManager : MonoBehaviour
                 isInCombat = true;
 
             }
-
-
-
         }
         else//si pierde el jugador poseedor del turno (player1)
         {
-
-            distancia = Board.ReachPointInSubMatriz(grid, (int)player1.Pos.x, (int)player1.Pos.y);
-            Board.ColorReachCell(grid, distancia);
+            Board.distancia = Board.ReachPointInSubMatriz(Board.grid, (int)player1.Pos.x, (int)player1.Pos.y);
+            Board.ColorReachCell();
             UpdateDisplay();
 
             looserTitan = false;
@@ -907,9 +770,9 @@ public class GameManager : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
+                        if (Board.grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
                         {
-                            posiblesMoves.Add(grid[i][j]);
+                            posiblesMoves.Add(Board.grid[i][j]);
                         }
                     }
                 }
@@ -917,11 +780,9 @@ public class GameManager : MonoBehaviour
                 if (player1.haveKey)
                 {
                     player1.LoseKey();
-                    Board board = new Board(grid);
-                    board.DropKeyIn((int)player1.Pos.x, (int)player1.Pos.y);
+                    Board.DropKeyIn((int)player1.Pos.x, (int)player1.Pos.y);
                 }
                 MoveplayerTo(posiblesMoves[UnityEngine.Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player1));
-                //NextTurn();
             }
             else
             {
@@ -933,67 +794,8 @@ public class GameManager : MonoBehaviour
                 isInCombat = true;
 
             }
-
             UpdateDisplay();
 
-            //seleccionar casilla   
-        }
-
-
-    }
-    void SavePath(Vector2 target)
-    {
-        wayToPoint.Add(target);
-        if (target != players[turn].Pos && distancia[(int)target.x][(int)target.y] != 0)
-        {
-            bool taken = false;
-            if (target.y + 1 < n && !taken && distancia[(int)target.x][(int)target.y + 1] - distancia[(int)target.x][(int)target.y] == -1)
-            {
-                SavePath(new Vector2(target.x, target.y + 1));
-                taken = true;
-            }
-            if (target.y - 1 >= 0 && !taken && distancia[(int)target.x][(int)target.y - 1] - distancia[(int)target.x][(int)target.y] == -1)
-            {
-                SavePath(new Vector2(target.x, target.y - 1));
-                taken = true;
-            }
-            if (target.x + 1 < n && !taken && distancia[(int)target.x + 1][(int)target.y] - distancia[(int)target.x][(int)target.y] == -1)
-            {
-                SavePath(new Vector2(target.x + 1, target.y));
-                taken = true;
-            }
-            if (target.x - 1 >= 0 && !taken && distancia[(int)target.x - 1][(int)target.y] - distancia[(int)target.x][(int)target.y] == -1)
-            {
-                SavePath(new Vector2(target.x - 1, target.y));
-                taken = true;
-            }
-        }
-    }
-    bool ReachPoint(Vector2 target)
-    {
-        return grid[(int)target.x][(int)target.y].reach;
-    }
-    void AddCellsToMatriz()
-    {
-        for (int i = 0; i < n; i++)
-        {
-            grid.Add(new List<Cell>());
-            for (int j = 0; j < n; j++)
-            {
-                grid[i].Add(new Cell());
-                grid[i][j].coord = new Vector2(i, j);
-
-            }
-        }
-    }
-    public void SetDist()
-    {
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                distancia[i][j] = -1;
-            }
         }
     }
 }

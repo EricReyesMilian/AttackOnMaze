@@ -52,7 +52,7 @@ public class CellDisplay : MonoBehaviour
     {
         if (cell != null)
         {
-            if (gm.predefinedCenterCells.Contains(((int)cell.coord.x, (int)cell.coord.y)))
+            if (Board.predefinedCenterCells.Contains(((int)cell.coord.x, (int)cell.coord.y)))
             {
                 default_color = centerCell_color;
             }
@@ -60,7 +60,7 @@ public class CellDisplay : MonoBehaviour
             reach = cell.reach;
             obstacule = cell.obstacle;
             NearPlayers = cell.NearPlayers;
-            distToCell = gm.distancia[(int)coord.x][(int)coord.y]; //+ gm.distanciaToCenter[(int)coord.x][(int)coord.y];
+            distToCell = Board.distancia[(int)coord.x][(int)coord.y]; //+ gm.distanciaToCenter[(int)coord.x][(int)coord.y];
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
             visited_color = gm.players[gm.turn].color;
@@ -315,7 +315,7 @@ public class CellDisplay : MonoBehaviour
     void AsignarCasillaCorrespondiente()
     {
 
-        cell = gm.grid[(int)coord.x][(int)coord.y];
+        cell = Board.grid[(int)coord.x][(int)coord.y];
 
 
 

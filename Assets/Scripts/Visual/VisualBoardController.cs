@@ -7,7 +7,7 @@ public class VisualBoardController : MonoBehaviour
 {
 
     public GameObject cellPref;
-    GridLayoutGroup grid;
+    GridLayoutGroup layoutGrid;
     public float height = 600;
     [Range(0, 0.99f)]
     public float padding;
@@ -39,11 +39,11 @@ public class VisualBoardController : MonoBehaviour
 
     public void GridLayoutConfig(int n)
     {
-        grid = GetComponent<GridLayoutGroup>();
+        layoutGrid = GetComponent<GridLayoutGroup>();
 
-        grid.constraintCount = n;
-        grid.cellSize = new Vector2((height / n) * padding, (height / n) * padding);
-        grid.spacing = new Vector2((height / n) * (1 - padding), (height / n) * (1 - padding));
+        layoutGrid.constraintCount = n;
+        layoutGrid.cellSize = new Vector2((height / n) * padding, (height / n) * padding);
+        layoutGrid.spacing = new Vector2((height / n) * (1 - padding), (height / n) * (1 - padding));
 
     }
     public void InstantiateCells(int n)

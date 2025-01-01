@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class TitanAI : MonoBehaviour
 {
-    List<List<Cell>> grid;
-    List<List<int>> distancia;
     List<List<List<int>>> distanciaToDoor = new List<List<List<int>>>();
 
     public List<(int x, int y)> predefinedAgroCells = new List<(int, int)> { (8, 5), (5, 8), (11, 8), (8, 11) };
@@ -14,10 +12,9 @@ public class TitanAI : MonoBehaviour
 
 
 
-    public TitanAI(List<List<Cell>> grid, List<List<int>> distancia)
+    public TitanAI()
     {
-        this.grid = grid;
-        this.distancia = distancia;
+
         InitDistToDoors();
     }
     void InitDistToDoors()
@@ -25,10 +22,10 @@ public class TitanAI : MonoBehaviour
         for (int l = 0; l < 4; l++)
         {
             distanciaToDoor.Add(new List<List<int>>());
-            for (int i = 0; i < grid.Count; i++)
+            for (int i = 0; i < Board.grid.Count; i++)
             {
                 distanciaToDoor[l].Add(new List<int>());
-                for (int j = 0; j < grid.Count; j++)
+                for (int j = 0; j < Board.grid.Count; j++)
                 {
                     distanciaToDoor[l][i].Add(-1);
                 }
@@ -38,7 +35,7 @@ public class TitanAI : MonoBehaviour
         }
         for (int l = 0; l < 4; l++)
         {
-            distanciaToDoor[l] = Board.Lee(grid, predefinedAgroCells[l].x, predefinedAgroCells[l].y, grid.Count * grid.Count);
+            distanciaToDoor[l] = Board.Lee(Board.grid, predefinedAgroCells[l].x, predefinedAgroCells[l].y, Board.grid.Count * Board.grid.Count);
 
         }
 
@@ -59,7 +56,7 @@ public class TitanAI : MonoBehaviour
         {
             if (((int)titan.Pos.x, (int)titan.Pos.y) == predefinedAgroCells[i])
             {
-                grid[DoorCells[i].x][DoorCells[i].y].TakeDamage(1);
+                Board.grid[DoorCells[i].x][DoorCells[i].y].TakeDamage(1);
                 return -1;
             }
         }
@@ -95,12 +92,12 @@ public class TitanAI : MonoBehaviour
         foreach (var coord in targets)
         {
 
-            if (distancia[coord.x][coord.y] >= max)
+            if (Board.distancia[coord.x][coord.y] >= max)
             {
                 if (!titan.lastMove.Contains(coord))
                 {
                     i = targets.IndexOf(coord);
-                    max = distancia[coord.x][coord.y];
+                    max = Board.distancia[coord.x][coord.y];
                     huboCambio = true;
                 }
             }
@@ -120,16 +117,16 @@ public class TitanAI : MonoBehaviour
         bool huboCambio = false;
         foreach (var coord in targets)
         {
-            if (grid[coord.x][coord.y].nearPlayer)
+            if (Board.grid[coord.x][coord.y].nearPlayer)
             {
                 return targets.IndexOf(coord);
             }
-            if (distancia[coord.x][coord.y] >= max)
+            if (Board.distancia[coord.x][coord.y] >= max)
             {
                 if (!titan.lastMove.Contains(coord))
                 {
                     i = targets.IndexOf(coord);
-                    max = distancia[coord.x][coord.y];
+                    max = Board.distancia[coord.x][coord.y];
                     huboCambio = true;
                 }
             }
@@ -149,10 +146,10 @@ public class TitanAI : MonoBehaviour
         bool huboCambio = false;
         foreach (var coord in targets)
         {
-            if (grid[coord.x][coord.y].nearPlayer)
+            if (Board.grid[coord.x][coord.y].nearPlayer)
             {
-                if (titan.power >= grid[coord.x][coord.y].NearPlayers[0].power
-                && !grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
+                if (titan.power >= Board.grid[coord.x][coord.y].NearPlayers[0].power
+                && !Board.grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
                 {
                     huboCambio = true;
                     return targets.IndexOf(coord);
@@ -160,12 +157,12 @@ public class TitanAI : MonoBehaviour
                 }
             }
 
-            if (distancia[coord.x][coord.y] >= max)
+            if (Board.distancia[coord.x][coord.y] >= max)
             {
                 if (!titan.lastMove.Contains(coord))
                 {
                     i = targets.IndexOf(coord);
-                    max = distancia[coord.x][coord.y];
+                    max = Board.distancia[coord.x][coord.y];
                     huboCambio = true;
                 }
             }
@@ -199,22 +196,22 @@ public class TitanAI : MonoBehaviour
         distanciaToCenter = distanciaToDoor[agroIndex];
         foreach (var coord in targets)
         {
-            if (grid[coord.x][coord.y].nearPlayer)
+            if (Board.grid[coord.x][coord.y].nearPlayer)
             {
-                if (titan.power >= grid[coord.x][coord.y].NearPlayers[0].power
-                && !grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
+                if (titan.power >= Board.grid[coord.x][coord.y].NearPlayers[0].power
+                && !Board.grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
                 {
                     huboCambio = true;
                     return targets.IndexOf(coord);
 
                 }
             }
-            if (distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y] >= max)
+            if (Board.distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y] >= max)
             {
                 if (!titan.lastMove.Contains(coord))
                 {
                     i = targets.IndexOf(coord);
-                    max = distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y];
+                    max = Board.distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y];
                     huboCambio = true;
                 }
             }
