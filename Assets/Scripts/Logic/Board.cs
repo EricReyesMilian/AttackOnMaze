@@ -4,6 +4,13 @@ public class Board
 {
     GameManager gm = GameManager.gameManeger;
     List<List<Cell>> grid;
+    public static List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
+    public static List<(int x, int y)> predefinedCenterCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 8), (7, 9) };
+    public static List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
+    public static List<(int x, int y)> startCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15) };
+    public static List<(int x, int y)> DoorCells = new List<(int, int)> { (8, 6), (6, 8), (10, 8), (8, 10) };
+
+
     public Board(List<List<Cell>> grid)
     {
         this.grid = grid;
@@ -62,7 +69,7 @@ public class Board
         }
         return distancias;
     }
-    public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, List<(int x, int y)> predefinedEmptyCells, int playerPosF, int playerPosC)
+    public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, int playerPosF, int playerPosC)
     {
         List<List<int>> distancias = new List<List<int>>();
         int n = tablero[0].Count;
@@ -172,7 +179,7 @@ public class Board
                 for (int j = 0; j < gm.n; j++)
                 {
                     //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
-                    if (!gm.predefinedEmptyCells.Contains((i, j))
+                    if (!Board.predefinedEmptyCells.Contains((i, j))
                     && !gm.grid[i][j].trap && !grid[i][j].obstacle && !trapFrontier[i, j] && !gm.grid[i][j].destroyableObs)
                     {
                         int r = new Random().Next(0, 5);
@@ -201,7 +208,7 @@ public class Board
                                 {
                                     for (int jT = j; jT < (j + gm.trapList[trapIndex].range); jT++)
                                     {
-                                        if ((PosicionValida(gm.n, iT, jT) && !gm.predefinedEmptyCells.Contains((iT, jT)) && !gm.grid[iT][jT].trap && !grid[iT][jT].obstacle)
+                                        if ((PosicionValida(gm.n, iT, jT) && !Board.predefinedEmptyCells.Contains((iT, jT)) && !gm.grid[iT][jT].trap && !grid[iT][jT].obstacle)
                                         )
                                         {
                                             TrapCells.Add(grid[iT][jT]);
@@ -253,7 +260,7 @@ public class Board
                 for (int j = 0; j < gm.n; j++)
                 {
                     //comprueba que no es una casilla con un obstaculo o una casilla predefinnida como vacia
-                    if (!gm.predefinedEmptyCells.Contains((i, j))
+                    if (!Board.predefinedEmptyCells.Contains((i, j))
                     && !gm.grid[i][j].powerUp && !grid[i][j].obstacle && !gm.grid[i][j].trap && !gm.grid[i][j].destroyableObs)
                     {
                         int r = new Random().Next(0, 10);
@@ -281,7 +288,7 @@ public class Board
             int i = new Random().Next(0, gm.n);
             int j = new Random().Next(0, gm.n);
 
-            if (!gm.predefinedEmptyCells.Contains((i, j))
+            if (!Board.predefinedEmptyCells.Contains((i, j))
                 && !gm.grid[i][j].powerUp && !grid[i][j].obstacle && !gm.grid[i][j].trap && !gm.grid[i][j].destroyableObs)
             {
                 grid[i][j].powerUp = true;

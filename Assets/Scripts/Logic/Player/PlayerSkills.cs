@@ -129,10 +129,10 @@ static class PlayerSkills
 
     }
 
-    public static void ReinerSkillEf(PlayerManager Reiner, List<List<Cell>> grid, List<List<int>> distancia, List<(int x, int y)> predefinedEmptyCells)
+    public static void ReinerSkillEf(PlayerManager Reiner, List<List<Cell>> grid, List<List<int>> distancia)
     {
         Reiner.titanForm = true;
-        ReinerRun(Reiner, grid, distancia, predefinedEmptyCells);
+        ReinerRun(Reiner, grid, distancia);
         Reiner.SwapImg(2);
         Reiner.PowerUp(5);
     }
@@ -144,7 +144,7 @@ static class PlayerSkills
         Reiner.SwapImg(1);
 
     }
-    public static void ReinerRun(PlayerManager Reiner, List<List<Cell>> grid, List<List<int>> distancia, List<(int x, int y)> predefinedEmptyCells)
+    public static void ReinerRun(PlayerManager Reiner, List<List<Cell>> grid, List<List<int>> distancia)
     {
         int n = grid.Count;
         List<(int i, int j)> reachSkillCells = new List<(int i, int j)>();
@@ -166,7 +166,7 @@ static class PlayerSkills
                 {
                     if (!grid[i][(int)Reiner.Pos.y].obstacle)
                     {
-                        if (!predefinedEmptyCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
 
                             reachSkillCells.Add((i, (int)Reiner.Pos.y));
                         break;
@@ -194,7 +194,7 @@ static class PlayerSkills
                 {
                     if (!grid[i][(int)Reiner.Pos.y].obstacle)
                     {
-                        if (!predefinedEmptyCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains((i, (int)Reiner.Pos.y)) && !grid[i][(int)Reiner.Pos.y].hasAplayer)
                             reachSkillCells.Add((i, (int)Reiner.Pos.y));
                         break;
                     }
@@ -215,7 +215,7 @@ static class PlayerSkills
                 {
                     if (!grid[(int)Reiner.Pos.x][i].obstacle)
                     {
-                        if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
@@ -240,7 +240,7 @@ static class PlayerSkills
                 {
                     if (!grid[(int)Reiner.Pos.x][i].obstacle)
                     {
-                        if (!predefinedEmptyCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
+                        if (!Board.predefinedCenterCells.Contains(((int)Reiner.Pos.x, i)) && !grid[(int)Reiner.Pos.x][i].hasAplayer)
                             reachSkillCells.Add(((int)Reiner.Pos.x, i));
                         break;
                     }
@@ -258,15 +258,15 @@ static class PlayerSkills
         }
         Board.ColorReachCell(grid, distancia);
     }
-    public static void ArminSkillEf(PlayerManager Armin, List<List<Cell>> grid, List<(int x, int y)> predefinedObstacleCells)
+    public static void ArminSkillEf(PlayerManager Armin, List<List<Cell>> grid)
     {
         Armin.titanForm = true;
-        ArminExplotion(Armin, grid, predefinedObstacleCells);
+        ArminExplotion(Armin, grid);
         Armin.SwapImg(2);
         Armin.PowerUp(20);
         Armin.SpeedUpNormalize(2, Armin.TransformTime);
     }
-    public static void ArminExplotion(PlayerManager Armin, List<List<Cell>> grid, List<(int x, int y)> predefinedObstacleCells)
+    public static void ArminExplotion(PlayerManager Armin, List<List<Cell>> grid)
     {
         int range = 2;
         for (int i = (int)Armin.Pos.x - range; i < Armin.Pos.x + range; i++)
@@ -275,7 +275,7 @@ static class PlayerSkills
             {
                 if (i >= 0 && i < grid.Count && j >= 0 && j < grid.Count)
                 {
-                    if (grid[i][j].obstacle && !grid[i][j].destroyableObs && !predefinedObstacleCells.Contains((i, j)))
+                    if (grid[i][j].obstacle && !grid[i][j].destroyableObs && !Board.predefinedObstacleCells.Contains((i, j)))
                     {
                         grid[i][j].obstacle = false;
                     }

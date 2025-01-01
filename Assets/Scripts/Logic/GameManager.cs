@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public int WinPower = 30;
     public GameObject cellsContainer;
     public GameObject playerContainer;
-    public string winner;
+    public PlayerManager winner;
     // Estado del juego
     [HideInInspector]
     public bool cellLoaded;
@@ -52,45 +52,20 @@ public class GameManager : MonoBehaviour
     public List<player> player_Scriptable = new List<player>();
     public List<Vector2> wayToPoint;
     public List<player> nearPlayers;
-    public List<(int x, int y)> predefinedEmptyCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15), (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 9), (8, 6), (8, 10), (10, 8), (10, 6), (6, 10), (10, 10) };
-    public List<(int x, int y)> predefinedCenterCells = new List<(int, int)> { (8, 7), (8, 8), (8, 9), (9, 7), (9, 8), (9, 9), (7, 7), (7, 8), (7, 9) };
-    public List<(int x, int y)> predefinedObstacleCells = new List<(int, int)> { (6, 9), (6, 7), (7, 10), (7, 6), (9, 6), (10, 7), (9, 10), (10, 9) };
-    public List<(int x, int y)> startCells = new List<(int, int)> { (1, 1), (15, 1), (1, 15), (15, 15), (7, 1), (15, 8), (1, 7), (8, 15) };
-    public List<(int x, int y)> DoorCells = new List<(int, int)> { (8, 6), (6, 8), (10, 8), (8, 10) };
-
+    //board
     // Delegados y eventos
-    public delegate void Accion();
-    public event Accion UpdateDisplay;
+    public Action UpdateDisplay;
 
-    public delegate void Draw();
-    public event Draw DrawWay;
-
-    public delegate void Combate();
-    public event Combate StartCombate;
-
-    public delegate void startDisplay(int n);
-    public event startDisplay StartDisplay;
-
-    public delegate void OpenPanelTrap(trap trap);
-    public event OpenPanelTrap openPanelTrap;
-
-    public delegate void OpenPanelPowerUp(PowerUp powerUp);
-    public event OpenPanelPowerUp openPanelPowerUp;
-
-    public delegate void SelectPlayerCombat();
-    public event SelectPlayerCombat SelectplayerCombat;
-
-    public delegate void CreatePlayerBoxInstances();
-    public event CreatePlayerBoxInstances createPlayerBoxInstances;
-
-    public delegate void ChangeTurnOrder();
-    public event ChangeTurnOrder ChangeTurnOrd;
-
-    public delegate void DisplayGrid();
-    public event DisplayGrid displayGrid;
-
-    public delegate void Stats(int i);
-    public event Stats UpdateStats;
+    public Action DrawWay;
+    public Action StartCombate;
+    public Action<int> StartDisplay;
+    public Action<trap> openPanelTrap;
+    public Action<PowerUp> openPanelPowerUp;
+    public Action SelectplayerCombat;
+    public Action createPlayerBoxInstances;
+    public Action ChangeTurnOrd;
+    public Action displayGrid;
+    public Action<int> UpdateStats;
 
     // Otros
     public Combat combatScene;
@@ -171,8 +146,8 @@ public class GameManager : MonoBehaviour
             players[i].team = player_Scriptable[i].team;
             players[i].play = player_Scriptable[i];
             players[i].InitStats();
-            players[i].Pos = new Vector2(startCells[i].x, startCells[i].y);
-            PlacePlayerIn(startCells[i].x, startCells[i].y, i);
+            players[i].Pos = new Vector2(Board.startCells[i].x, Board.startCells[i].y);
+            PlacePlayerIn(Board.startCells[i].x, Board.startCells[i].y, i);
             print(players[i].nameC);
 
         }
@@ -194,8 +169,8 @@ public class GameManager : MonoBehaviour
     {
         Board.IniciarDistancias(ref distancia, n);
         Board.IniciarDistancias(ref distanciaToCenter, n);
-        MazeGenerator maze = new MazeGenerator(n, 7, 8, grid, Algorithm.Prim, predefinedEmptyCells, predefinedObstacleCells);
-        predefinedEmptyCells.Add((7, 8));
+        MazeGenerator maze = new MazeGenerator(n, 7, 8, grid, Algorithm.Prim);
+        Board.predefinedEmptyCells.Add((7, 8));
         Board board = new Board(grid);
         AssignDestroyableWalls();
         board.AddTraps();
@@ -265,12 +240,12 @@ public class GameManager : MonoBehaviour
         }
         UpdateDisplay();
     }
-    void AssignDestroyableWalls()
+    void AssignDestroyableWalls()//board
     {
-        for (int i = 0; i < DoorCells.Count; i++)
+        for (int i = 0; i < Board.DoorCells.Count; i++)
         {
-            grid[DoorCells[i].x][DoorCells[i].y].obstacle = true;
-            grid[DoorCells[i].x][DoorCells[i].y].destroyableObs = true;
+            grid[Board.DoorCells[i].x][Board.DoorCells[i].y].obstacle = true;
+            grid[Board.DoorCells[i].x][Board.DoorCells[i].y].destroyableObs = true;
 
         }
 
@@ -285,7 +260,7 @@ public class GameManager : MonoBehaviour
             Board.ColorReachCell(grid, distancia);
             if (ReinerSkill && players[turn].play.name == "Reiner" && players[turn].currentSpeed > 0)
             {
-                PlayerSkills.ReinerRun(players[turn], grid, distancia, predefinedCenterCells);
+                PlayerSkills.ReinerRun(players[turn], grid, distancia);
 
                 UpdateDisplay();
 
@@ -422,11 +397,11 @@ public class GameManager : MonoBehaviour
     }
     public void CloseDoors()
     {
-        for (int i = 0; i < DoorCells.Count; i++)
+        for (int i = 0; i < Board.DoorCells.Count; i++)
         {
-            if (grid[DoorCells[i].x][DoorCells[i].y].endurence > 0)
+            if (grid[Board.DoorCells[i].x][Board.DoorCells[i].y].endurence > 0)
             {
-                grid[DoorCells[i].x][DoorCells[i].y].obstacle = true;
+                grid[Board.DoorCells[i].x][Board.DoorCells[i].y].obstacle = true;
 
             }
 
@@ -435,9 +410,9 @@ public class GameManager : MonoBehaviour
     }
     public void OpenDoorsToSavior()
     {
-        for (int i = 0; i < DoorCells.Count; i++)
+        for (int i = 0; i < Board.DoorCells.Count; i++)
         {
-            grid[DoorCells[i].x][DoorCells[i].y].obstacle = false;
+            grid[Board.DoorCells[i].x][Board.DoorCells[i].y].obstacle = false;
 
 
         }
@@ -491,7 +466,7 @@ public class GameManager : MonoBehaviour
     void HandleReinerSkill()
     {
         ReinerSkill = true;
-        PlayerSkills.ReinerSkillEf(players[turn], grid, distancia, predefinedCenterCells);
+        PlayerSkills.ReinerSkillEf(players[turn], grid, distancia);
         players[turn].ResetCooldown();
         ReachPointInMatriz();
         UpdateStats(turn);
@@ -500,7 +475,7 @@ public class GameManager : MonoBehaviour
     void HandleArminSkill()
     {
         ArminSkill = true;
-        PlayerSkills.ArminSkillEf(players[turn], grid, predefinedObstacleCells);
+        PlayerSkills.ArminSkillEf(players[turn], grid);
         players[turn].ResetCooldown();
         ReachPointInMatriz();
         UpdateStats(turn);
@@ -544,7 +519,7 @@ public class GameManager : MonoBehaviour
     bool Win(PlayerManager player)
     {
         (int x, int y) a = ((int)player.Pos.x, (int)player.Pos.y);
-        return predefinedCenterCells.Contains(a);
+        return Board.predefinedCenterCells.Contains(a);
     }
     public void InitReachCell()
     {
@@ -573,7 +548,6 @@ public class GameManager : MonoBehaviour
             players[turn].lastMove.Add(((int)players[turn].Pos.x, (int)players[turn].Pos.y));
             UnPlacePlayer((int)players[turn].Pos.x, (int)players[turn].Pos.y);
             StartCoroutine(MovePlayerCorutine(target, index));
-            StartCoroutine(ActivateInteraction(target, index, aux));
             //
             UpdateStats(turn);
             if (!players[turn].isTitan)
@@ -682,7 +656,7 @@ public class GameManager : MonoBehaviour
             wayToPoint.Clear();
             SavePath(target);
             wayToPoint.Reverse();
-            for (int w = 0; w < wayToPoint.Count; w++)
+            for (int w = 0; w < wayToPoint.Count; w++)//avanza el player hasta la casilla
             {
                 for (int i = 0; i < n; i++)
                 {
@@ -704,22 +678,14 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
-            if (Win(players[index ?? turn]))
+            if (Win(players[index ?? turn]))//check winner
             {
-                if (players[index ?? turn].isTitan)
-                {
-                    winner = "Titans Won       humanity will remember";
 
-                }
-                else
-                {
-                    winner = "Player " + (players[index ?? turn].team + 1) + " Won";
-
-                }
+                winner = players[index ?? turn];
                 SceneManager.LoadScene(3);
             }
             runningBackwards = true;
-            for (int w = 0; w < wayToPoint.Count; w++)
+            for (int w = 0; w < wayToPoint.Count; w++)//elimina el camino recorrido
             {
                 for (int i = 0; i < n; i++)
                 {
@@ -752,6 +718,9 @@ public class GameManager : MonoBehaviour
             InitReachCell();
             SetDist();
             ReachPointInMatriz();
+            //
+            ActivateInteraction(target, turn, LeviSkill);
+            //
 
         }
         playingCorrutine = false;
@@ -763,42 +732,30 @@ public class GameManager : MonoBehaviour
         StopCoroutine(MovePlayerCorutine(target, index));
 
     }
-    IEnumerator ActivateInteraction(Vector2 target, int index, bool levi)
+    void ActivateInteraction(Vector2 target, int index, bool levi)
     {
-        yield return new WaitForSeconds(0.25f); // Espera 0.5 segundos
-        if (!playingCorrutine)
+        if (isPowerUp(target) && !players[index].play.isTitan)
         {
-            if (isPowerUp(target) && !players[index].play.isTitan)
-            {
-                grid[(int)target.x][(int)target.y].powerUp = false;
-                ActivatePower(grid[(int)target.x][(int)target.y].powerUpType, players[index]);
-            }
-            if (isTrap(target) && !players[index].play.isTitan)
-            {
-                ActivateTrap(grid[(int)target.x][(int)target.y].trapType, target, players[index]);
-
-            }
-            if (grid[(int)target.x][(int)target.y].nearPlayer && !levi)
-            {
-                InitReachCell();
-                SelectPlayer(target, players[index].isTitan);
-
-            }
-            else if (!players[index].isTitan)
-            {
-                InitReachCell();
-                SetDist();
-
-                ReachPointInMatriz();
-
-            }
-
-            StopAllCoroutines();
+            grid[(int)target.x][(int)target.y].powerUp = false;
+            ActivatePower(grid[(int)target.x][(int)target.y].powerUpType, players[index]);
+        }
+        if (isTrap(target) && !players[index].play.isTitan)
+        {
+            ActivateTrap(grid[(int)target.x][(int)target.y].trapType, target, players[index]);
 
         }
-        else
+        if (grid[(int)target.x][(int)target.y].nearPlayer && !LeviSkill)
         {
-            StartCoroutine(ActivateInteraction(target, index, levi));
+            InitReachCell();
+            SelectPlayer(target, players[index].isTitan);
+
+        }
+        else if (!players[index].isTitan)
+        {
+            InitReachCell();
+            SetDist();
+
+            ReachPointInMatriz();
 
         }
 
@@ -867,7 +824,7 @@ public class GameManager : MonoBehaviour
         if (lastWinner1)//si gana el jugador poseedor del turno (player1)
         {
 
-            distancia = Board.ReachPointInSubMatriz(grid, predefinedCenterCells, (int)player2.Pos.x, (int)player2.Pos.y);
+            distancia = Board.ReachPointInSubMatriz(grid, (int)player2.Pos.x, (int)player2.Pos.y);
             int at = players.IndexOf(player1);
             int de = players.IndexOf(player2);
 
@@ -897,7 +854,7 @@ public class GameManager : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (grid[i][j].reach && !predefinedEmptyCells.Contains((i, j)))
+                        if (grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
                         {
                             posiblesMoves.Add(grid[i][j]);
                         }
@@ -915,7 +872,7 @@ public class GameManager : MonoBehaviour
                 players.Insert(newDe, player2);
                 turn = players.IndexOf(player1);
                 ChangeTurnOrd();
-                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player2));
+                MoveplayerTo(posiblesMoves[UnityEngine.Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player2));
 
             }
             else
@@ -935,7 +892,7 @@ public class GameManager : MonoBehaviour
         else//si pierde el jugador poseedor del turno (player1)
         {
 
-            distancia = Board.ReachPointInSubMatriz(grid, predefinedCenterCells, (int)player1.Pos.x, (int)player1.Pos.y);
+            distancia = Board.ReachPointInSubMatriz(grid, (int)player1.Pos.x, (int)player1.Pos.y);
             Board.ColorReachCell(grid, distancia);
             UpdateDisplay();
 
@@ -950,7 +907,7 @@ public class GameManager : MonoBehaviour
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (grid[i][j].reach && !predefinedEmptyCells.Contains((i, j)))
+                        if (grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
                         {
                             posiblesMoves.Add(grid[i][j]);
                         }
@@ -963,7 +920,7 @@ public class GameManager : MonoBehaviour
                     Board board = new Board(grid);
                     board.DropKeyIn((int)player1.Pos.x, (int)player1.Pos.y);
                 }
-                MoveplayerTo(posiblesMoves[Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player1));
+                MoveplayerTo(posiblesMoves[UnityEngine.Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player1));
                 //NextTurn();
             }
             else
