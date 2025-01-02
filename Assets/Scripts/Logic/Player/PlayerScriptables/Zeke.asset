@@ -19,6 +19,8 @@ MonoBehaviour:
   color: {r: 0.3773585, g: 0.18049875, b: 0.13622642, a: 1}
   sprite: {fileID: 21300000, guid: 343eba96592ed104f84f2dbcb311a8df, type: 3}
   sprite2: {fileID: 21300000, guid: 1a5cea48521bb704fa1a7dfb975f6670, type: 3}
+  team: 1
   TransformTime: 2
   isTitan: 0
   TitanIQ: 0
+  skill: {fileID: 11400000, guid: 24df8c39c011edc4ea06269434334b0b, type: 2}

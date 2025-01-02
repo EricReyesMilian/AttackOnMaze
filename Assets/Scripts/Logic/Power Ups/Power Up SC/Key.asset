@@ -16,3 +16,5 @@ MonoBehaviour:
   namepowerUp: Key
   description: You have the key. You will have the power of knowledge
   ePower: 4
+  rarity: 10
+  powerEffect: {fileID: 11400000, guid: 01b77968874e9424f9823bd030851884, type: 2}

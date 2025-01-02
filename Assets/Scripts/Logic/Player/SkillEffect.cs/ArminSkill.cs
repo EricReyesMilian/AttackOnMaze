@@ -16,6 +16,8 @@ public class ArminSkill : Skill
         OnActive(player);
 
     }
+    public override void PasiveOnWalk(PlayerManager player) { }
+
     public void OnActive(PlayerManager player)
     {
         for (int i = (int)player.Pos.x - range; i < player.Pos.x + range; i++)

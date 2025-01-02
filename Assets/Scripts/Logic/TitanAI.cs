@@ -14,11 +14,12 @@ public class TitanAI
 
     public TitanAI()
     {
-
         InitDistToDoors();
     }
+
     void InitDistToDoors()
     {
+        distanciaToDoor.Clear();
         for (int l = 0; l < 4; l++)
         {
             distanciaToDoor.Add(new List<List<int>>());
@@ -35,7 +36,7 @@ public class TitanAI
         }
         for (int l = 0; l < 4; l++)
         {
-            distanciaToDoor[l] = Board.Lee(Board.grid, predefinedAgroCells[l].x, predefinedAgroCells[l].y, Board.grid.Count * Board.grid.Count);
+            distanciaToDoor[l] = Board.Lee(predefinedAgroCells[l].x, predefinedAgroCells[l].y, Board.grid.Count * Board.grid.Count);
 
         }
 
@@ -149,7 +150,7 @@ public class TitanAI
             if (Board.grid[coord.x][coord.y].nearPlayer)
             {
                 if (titan.power >= Board.grid[coord.x][coord.y].NearPlayers[0].power
-                && !Board.grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
+                && !Board.grid[coord.x][coord.y].NearPlayers[0].isTitan)
                 {
                     huboCambio = true;
                     return targets.IndexOf(coord);
@@ -185,9 +186,9 @@ public class TitanAI
         int agroIndex = 0;
         for (int l = 0; l < 4; l++)
         {
-            if (CalcularDistanciaManhattan(titan.Pos, new Vector2(predefinedAgroCells[l].x, predefinedAgroCells[l].y)) < min)
+            if (distanciaToDoor[l][predefinedAgroCells[l].x][predefinedAgroCells[l].y] < min)
             {
-                min = CalcularDistanciaManhattan(titan.Pos, new Vector2(predefinedAgroCells[l].x, predefinedAgroCells[l].y));
+                min = distanciaToDoor[l][predefinedAgroCells[l].x][predefinedAgroCells[l].y];
                 agroIndex = l;
             }
 
@@ -199,7 +200,7 @@ public class TitanAI
             if (Board.grid[coord.x][coord.y].nearPlayer)
             {
                 if (titan.power >= Board.grid[coord.x][coord.y].NearPlayers[0].power
-                && !Board.grid[coord.x][coord.y].NearPlayers[0].play.isTitan)
+                && !Board.grid[coord.x][coord.y].NearPlayers[0].isTitan)
                 {
                     huboCambio = true;
                     return targets.IndexOf(coord);

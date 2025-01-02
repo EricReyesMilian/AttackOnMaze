@@ -25,11 +25,11 @@ public class Board
             }
         }
     }
-    public static List<List<int>> Lee(List<List<Cell>> tablero, int filaInical, int columnaInicial, int speed)
+    public static List<List<int>> Lee(int filaInical, int columnaInicial, int speed)
     {
-        int size = tablero[0].Count;
+        int size = grid[0].Count;
         List<List<int>> distancias = new List<List<int>>();
-        IniciarDistancias(ref distancias, tablero[0].Count);
+        IniciarDistancias(ref distancias, grid[0].Count);
         //Marcar casilla inicial
         distancias[filaInical][columnaInicial] = 0;
         //           N   S  E  W
@@ -41,7 +41,7 @@ public class Board
         do
         {
             huboCambio = false;
-            //Para cada posible celda del tablero
+            //Para cada posible celda del grid
             for (int f = 0; f < size; f++)
             {
                 for (int c = 0; c < size; c++)
@@ -49,15 +49,15 @@ public class Board
                     //saltarse las celdas no marcadas
                     if (distancias[f][c] == -1 || distancias[f][c] == speed) continue;
                     //saltarse las invalidas
-                    if (tablero[f][c].obstacle) continue;
+                    if (grid[f][c].obstacle) continue;
                     //inspeccionar celdas vecinas
                     for (int d = 0; d < df.Length; d++)
                     {
                         int vf = f + df[d];
                         int vc = c + dc[d];
                         //determinar si es un vecino valido
-                        if (PosicionValida(size, vf, vc) && !tablero[vf][vc].hasAplayer
-                        && !tablero[vf][vc].obstacle && distancias[vf][vc] == -1)
+                        if (PosicionValida(size, vf, vc) && !grid[vf][vc].hasAplayer
+                        && !grid[vf][vc].obstacle && distancias[vf][vc] == -1)
                         {
                             distancias[vf][vc] = distancias[f][c] + 1;
                             huboCambio = true;
@@ -71,7 +71,7 @@ public class Board
         {
             for (int c = 0; c < size; c++)
             {
-                if (tablero[f][c].destroyableObs)
+                if (grid[f][c].destroyableObs)
                 {
                     distancias[f][c] = -1;
                 }
@@ -79,11 +79,11 @@ public class Board
         }
         return distancias;
     }
-    public static List<List<int>> ReachPointInSubMatriz(List<List<Cell>> tablero, int playerPosF, int playerPosC)
+    public static List<List<int>> ReachPointInSubMatriz(int playerPosF, int playerPosC)
     {
         List<List<int>> distancias = new List<List<int>>();
-        int n = tablero[0].Count;
-        IniciarDistancias(ref distancias, tablero[0].Count);
+        int n = grid[0].Count;
+        IniciarDistancias(ref distancias, grid[0].Count);
         if (playerPosC < (n) / 2 && playerPosF <= (n) / 2)
         {
 
@@ -91,7 +91,7 @@ public class Board
             {
                 for (int j = (n) / 2; j < n; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
+                    if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
                 }
@@ -104,7 +104,7 @@ public class Board
             {
                 for (int j = 0; j < n / 2; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
+                    if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
 
@@ -118,7 +118,7 @@ public class Board
             {
                 for (int j = (n) / 2; j < n; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
+                    if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
 
@@ -132,7 +132,7 @@ public class Board
             {
                 for (int j = 0; j < n / 2; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
+                    if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
 
@@ -183,7 +183,7 @@ public class Board
         bool[,] trapFrontier = new bool[GameManager.gameManeger.n, GameManager.gameManeger.n];
         if (GameManager.gameManeger.trapList.Count > 0)
         {
-            //recorre todo el tablero
+            //recorre todo el grid
             for (int i = 0; i < GameManager.gameManeger.n; i++)
             {
                 for (int j = 0; j < GameManager.gameManeger.n; j++)
@@ -264,7 +264,7 @@ public class Board
     {
         if (GameManager.gameManeger.powerList.Count > 0)
         {
-            //recorre todo el tablero
+            //recorre todo el grid
             for (int i = 0; i < GameManager.gameManeger.n; i++)
             {
                 for (int j = 0; j < GameManager.gameManeger.n; j++)

@@ -85,7 +85,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\Scripts\Visual\SelectionPlayer.cs" />
     <Compile Include="Assets\Scripts\Logic\Trap\Effects Scriptables\ImpostorEffect.cs" />
-    <Compile Include="Assets\Scripts\Logic\MazeGenerator.cs" />
     <Compile Include="Assets\Scripts\Logic\Player\SkillEffect.cs\NullSkill.cs" />
     <Compile Include="Assets\Scripts\Visual\NextButtonUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
@@ -99,10 +98,11 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\Scripts\Visual\boxController.cs" />
-    <Compile Include="Assets\Scripts\Logic\Board.cs" />
+    <Compile Include="Assets\Scripts\Logic\maze\MazeGenerator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Scripts\Visual\buttonSelect.cs" />
     <Compile Include="Assets\Scripts\Logic\Power Ups\PowerTrigger.cs" />
+    <Compile Include="Assets\Scripts\Logic\Trap\Effects Scriptables\TitanEffect.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\Scripts\Logic\Power Ups\Effects Scriptables\FuelPower.cs" />
     <Compile Include="Assets\Scripts\Logic\Player\SkillEffect.cs\ErenSkill.cs" />
@@ -138,6 +138,7 @@
     <Compile Include="Assets\Scripts\Logic\Trap\Effects Scriptables\SpikesEffect.cs" />
     <Compile Include="Assets\Scripts\Logic\Trap\TrapEffect.cs" />
     <Compile Include="Assets\Scripts\Visual\StatOnSide.cs" />
+    <Compile Include="Assets\Scripts\Logic\maze\Board.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
   </ItemGroup>
   <ItemGroup>

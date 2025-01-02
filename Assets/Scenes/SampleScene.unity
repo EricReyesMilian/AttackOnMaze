@@ -2715,7 +2715,6 @@ MonoBehaviour:
   WinPower: 30
   cellsContainer: {fileID: 1394349740}
   playerContainer: {fileID: 1306226169}
-  winner: 
   cellLoaded: 0
   turn: 0
   playingCorrutine: 0
@@ -2737,6 +2736,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6a2bd29a294a6874ebebf290a7c8db3f, type: 2}
   - {fileID: 11400000, guid: c9a68a56c6ac24241877a71f2fe6831d, type: 2}
   - {fileID: 11400000, guid: 56e650a444894024f8da070cf0c0e4c9, type: 2}
+  - {fileID: 11400000, guid: aacc0b9804947294fa913841af1c17e1, type: 2}
   powerList:
   - {fileID: 11400000, guid: 401bd212406469f489ccfb2325be653c, type: 2}
   - {fileID: 11400000, guid: abd0249294659124783ad4dc8ae3d83f, type: 2}

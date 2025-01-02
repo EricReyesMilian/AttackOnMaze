@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameTrap: Impostor
   sprite: {fileID: 21300000, guid: 6d1945d0aac43504a9a62811d28a8f41, type: 3}
-  type: 2
   description: -50% power
-  range: 2
+  range: 1
+  rarity: 8
   activationTrap: 1
+  trapEffect: {fileID: 11400000, guid: 00b734c53136ca947b74a8cb2d0d50b1, type: 2}

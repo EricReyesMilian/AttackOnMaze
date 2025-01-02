@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94fe6456bc6ae0d4d9079f498b2e87b1, type: 3}
-  m_Name: swamp
+  m_Name: Titan
   m_EditorClassIdentifier: 
-  nameTrap: Swamp
-  sprite: {fileID: 21300000, guid: 69ccbe056107948479d433a903d3703b, type: 3}
-  description: '2 turn speed = 1 '
+  nameTrap: Spinal
+  sprite: {fileID: 21300000, guid: a6c3bef78d34aab4b9b5d8dc18ef079b, type: 3}
+  description: You become Titan 2 turn
   range: 1
   rarity: 5
   activationTrap: 1
-  trapEffect: {fileID: 11400000, guid: a318781bbd992a84d92f67cbd2e22142, type: 2}
+  trapEffect: {fileID: 11400000, guid: f15cd762cd4c400418d9b2ff6dbe3c43, type: 2}

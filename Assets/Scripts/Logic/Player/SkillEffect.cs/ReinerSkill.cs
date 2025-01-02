@@ -11,7 +11,7 @@ public class ReinerSkill : Skill
         player.SwapImg(2);
         player.PowerUp(5);
     }
-    public override void Pasive(PlayerManager player)
+    public override void PasiveOnWalk(PlayerManager player)
     {
         int n = Board.grid.Count;
         List<(int i, int j)> reachSkillCells = new List<(int i, int j)>();
@@ -120,10 +120,15 @@ public class ReinerSkill : Skill
 
             Board.grid[coord.i][coord.j].special = true;
 
-            Board.distancia[coord.i][coord.j] = 0;
+            Board.distancia[coord.i][coord.j] = 1;
 
         }
         Board.ColorReachCell();
+    }
+
+    public override void Pasive(PlayerManager player)
+    {
+
     }
 
     public override void Desactive(PlayerManager player)

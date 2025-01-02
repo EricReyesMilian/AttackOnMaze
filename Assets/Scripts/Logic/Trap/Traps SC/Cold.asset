@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameTrap: Cold
   sprite: {fileID: 21300000, guid: 697bae54a36485847a824ec3a7f37fb2, type: 3}
-  type: 3
   description: Reset Cooldown
   range: 1
+  rarity: 5
   activationTrap: 1
+  trapEffect: {fileID: 11400000, guid: 3b9cd15e11b326e4bb045b33876742a0, type: 2}

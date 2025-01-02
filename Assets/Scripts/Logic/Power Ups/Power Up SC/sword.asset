@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: b93b585b9d4c19b4a8d30d2ee0bbc096, type: 3}
   namepowerUp: Sword
-  description: +1 power
-  ePower: 1
+  description: +5 power
+  ePower: 0
+  rarity: 7
+  powerEffect: {fileID: 11400000, guid: ab0a099548941564d9c8ef06e333ccde, type: 2}

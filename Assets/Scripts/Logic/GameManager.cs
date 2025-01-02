@@ -137,10 +137,9 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < player_Scriptable.Count; i++)
         {
-            players.Add(new PlayerManager());
+            players.Add(new PlayerManager(player_Scriptable[i]));
             players[i].index = i;
             players[i].team = player_Scriptable[i].team;
-            players[i].play = player_Scriptable[i];
             players[i].InitStats();
             players[i].Pos = new Vector2(Board.startCells[i].x, Board.startCells[i].y);
             Board.PlacePlayerIn(Board.startCells[i].x, Board.startCells[i].y, i);
@@ -160,7 +159,7 @@ public class GameManager : MonoBehaviour
         Board.AddTraps();
         Board.AddPowerUps();
         Board.AddKey();
-        Board.distanciaToCenter = Board.Lee(Board.grid, n / 2, n / 2, n * n);
+        Board.distanciaToCenter = Board.Lee(n / 2, n / 2, n * n);
 
     }
     void InitializeGame()
@@ -177,15 +176,10 @@ public class GameManager : MonoBehaviour
         {
             int speed = players[turn].currentSpeed;
             Board.InitReachCell();
-            Board.distancia = Board.Lee(Board.grid, (int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
+            Board.distancia = Board.Lee((int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
             Board.ColorReachCell();
-            if (ReinerSkill && players[turn].play.name == "Reiner" && players[turn].currentSpeed > 0)
-            {
-                PlayerSkills.ReinerRun(players[turn]);
-
-                UpdateDisplay();
-
-            }
+            if (players[turn].titanForm)
+                players[turn].play.skill.PasiveOnWalk(players[turn]);
             Board.SetBattleZone(players);
             UpdateDisplay();
 
@@ -216,6 +210,7 @@ public class GameManager : MonoBehaviour
             players[turn].ResetCooldown();
             skillWasActivatedThisTurn = false;
         }
+
         if (turn >= 0)
         {
             if (players[turn].play.isTitan && !players[turn].isTitan && ZekeSkill)
@@ -224,9 +219,20 @@ public class GameManager : MonoBehaviour
 
 
             }
+            if (players[turn].sick)
+            {
+                players[turn].sickTime -= 1;
+                if (players[turn].sickTime < 0)
+                {
+                    players[turn].sickTime = 2;
+                    players[turn].sick = false;
+                    players[turn].isTitan = false;
+                }
+            }
 
         }
         turn = NextTurnIndex(turn);
+        players[turn].Update();
         if (players[turn].haveKey)
         {
             players[turn].PowerUp(1);
@@ -234,7 +240,6 @@ public class GameManager : MonoBehaviour
 
         }
         CheckSavior();
-
 
         if (round > 1)
         {
@@ -245,24 +250,28 @@ public class GameManager : MonoBehaviour
                 {
                     players[turn].CtransformTime = 0;
                     players[turn].ResetCooldown();
+                    players[turn].play.skill.Desactive(players[turn]);
+                    if (players[turn].titanForm)
+                        players[turn].play.skill.Pasive(players[turn]);
 
-                    switch (players[turn].play.name)
-                    {
-                        case "Reiner":
-                            ReinerSkill = false;
-                            PlayerSkills.ReinerSkillOff(players[turn]); break;
-                        case "Eren":
-                            ErenSkill = false;
-                            PlayerSkills.ErenSkillOff(players[turn]); break;
-                        case "Armin":
-                            ArminSkill = false;
-                            PlayerSkills.ArminSkillOff(players[turn]); break;
-                        case "Zeke":
-                            ZekeSkill = false;
-                            PlayerSkills.ZekeSkillOff(players[turn]); break;
+                    // switch (players[turn].play.name)
+                    // {
+                    //     case "Reiner":
+                    //         ReinerSkill = false;
+                    //         PlayerSkills.ReinerSkillOff(players[turn]); break;
+                    //     case "Eren":
+                    //         ErenSkill = false;
+                    //         PlayerSkills.ErenSkillOff(players[turn]); break;
+                    //     case "Armin":
+                    //         ArminSkill = false;
+                    //         PlayerSkills.ArminSkillOff(players[turn]); break;
+                    //     case "Zeke":
+                    //         ZekeSkill = false;
+                    //         PlayerSkills.ZekeSkillOff(players[turn]); break;
 
-                    }
+                    // }
                 }
+
             }
         }
 
@@ -298,7 +307,6 @@ public class GameManager : MonoBehaviour
         }
         if (PlayerCanMove())
             HasMoved = false;
-
         UpdateStats(turn);
     }
     public void CheckSavior()
@@ -319,26 +327,21 @@ public class GameManager : MonoBehaviour
     }
     public void Skill()
     {
-        if (SkillEnable)
+        if (SkillEnable && !players[turn].titanForm)
         {
             skillWasActivatedThisTurn = true;
             SkillEnable = false;
-            player sCplayer = players[turn].play;
+
+            players[turn].ResetCooldown();
+            if (players[turn].play.Name != "Levi")
+                ReachPointInMatriz();
+            players[turn].play.skill.Active(players[turn]);
+            if (players[turn].play.Name == "Reiner" || players[turn].play.Name == "Armin")
+                ReachPointInMatriz();
+            UpdateStats(turn);
+            UpdateDisplay();
             UpdateStats(turn);
 
-            switch (sCplayer.Name)
-            {
-                case "Eren":
-                    HandleErenSkill(); break;
-                case "Reiner":
-                    HandleReinerSkill(); break;
-                case "Zeke":
-                    HandleZekeSkill(); break;
-                case "Armin":
-                    HandleArminSkill(); break;
-                case "Levi":
-                    HandleLeviSkill(); break;
-            }
         }
     }
     bool PlayerCanMove()
@@ -353,47 +356,6 @@ public class GameManager : MonoBehaviour
             }
         }
         return false;
-    }
-    void HandleErenSkill()
-    {
-        ErenSkill = true;
-        PlayerSkills.ErenSkillEf(players[turn]);
-        players[turn].ResetCooldown();
-        ReachPointInMatriz();
-        UpdateStats(turn);
-        UpdateDisplay();
-    }
-    void HandleReinerSkill()
-    {
-        ReinerSkill = true;
-        PlayerSkills.ReinerSkillEf(players[turn]);
-        players[turn].ResetCooldown();
-        ReachPointInMatriz();
-        UpdateStats(turn);
-        UpdateDisplay();
-    }
-    void HandleArminSkill()
-    {
-        ArminSkill = true;
-        PlayerSkills.ArminSkillEf(players[turn]);
-        players[turn].ResetCooldown();
-        ReachPointInMatriz();
-        UpdateStats(turn);
-        UpdateDisplay();
-    }
-    void HandleZekeSkill()
-    {
-        ZekeSkill = true;
-        PlayerSkills.ZekeSkillEf(players[turn]);
-        players[turn].ResetCooldown();
-
-    }
-    void HandleLeviSkill()
-    {
-        LeviSkill = true;
-        PlayerSkills.LeviSkillEf(players[turn]);
-        players[turn].ResetCooldown();
-        UpdateDisplay();
     }
     private void MoveTitan()
     {
@@ -411,7 +373,11 @@ public class GameManager : MonoBehaviour
         TitanAI titanAI = new TitanAI();
         int destination = titanAI.GetMove(players[turn], targets);
         if (destination != -1)
+        {
+            print("(" + targets[destination].x + " " + targets[destination].y + ")");
             MoveplayerTo(new Vector2(targets[destination].x, targets[destination].y), turn);
+
+        }
         else
             Invoke("NextTurn", 0.5f);
 
@@ -627,6 +593,7 @@ public class GameManager : MonoBehaviour
         }
         if (Board.grid[(int)target.x][(int)target.y].nearPlayer && !LeviSkill)
         {
+
             Board.InitReachCell();
             SelectPlayer(target, players[index].isTitan);
 
@@ -648,7 +615,19 @@ public class GameManager : MonoBehaviour
         combatZoneCoord = target;
         for (int k = 0; k < Board.grid[(int)target.x][(int)target.y].NearPlayers.Count; k++)
         {
-            nearPlayers.Add(Board.grid[(int)target.x][(int)target.y].NearPlayers[k].play);
+            if (titan)
+            {
+                if (!Board.grid[(int)target.x][(int)target.y].NearPlayers[k].isTitan)
+                {
+                    nearPlayers.Add(Board.grid[(int)target.x][(int)target.y].NearPlayers[k].play);
+
+                }
+            }
+            else
+            {
+                nearPlayers.Add(Board.grid[(int)target.x][(int)target.y].NearPlayers[k].play);
+
+            }
         }
         if (titan)
         {
@@ -663,7 +642,10 @@ public class GameManager : MonoBehaviour
                 }
 
             }
-            Combat(combatZoneCoord, indexFightForTitan);
+            if (nearPlayers.Count > 0)
+                Combat(combatZoneCoord, indexFightForTitan);
+            else
+                NextTurn();
 
         }
         else
@@ -695,7 +677,7 @@ public class GameManager : MonoBehaviour
         if (lastWinner1)//si gana el jugador poseedor del turno (player1)
         {
 
-            Board.distancia = Board.ReachPointInSubMatriz(Board.grid, (int)player2.Pos.x, (int)player2.Pos.y);
+            Board.distancia = Board.ReachPointInSubMatriz((int)player2.Pos.x, (int)player2.Pos.y);
             int at = players.IndexOf(player1);
             int de = players.IndexOf(player2);
 
@@ -755,7 +737,7 @@ public class GameManager : MonoBehaviour
         }
         else//si pierde el jugador poseedor del turno (player1)
         {
-            Board.distancia = Board.ReachPointInSubMatriz(Board.grid, (int)player1.Pos.x, (int)player1.Pos.y);
+            Board.distancia = Board.ReachPointInSubMatriz((int)player1.Pos.x, (int)player1.Pos.y);
             Board.ColorReachCell();
             UpdateDisplay();
 

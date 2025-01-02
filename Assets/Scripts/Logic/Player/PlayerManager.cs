@@ -8,6 +8,9 @@ public class PlayerManager
     public bool titanForm;
     public int index;
     public int team;
+    public bool sick;
+    public int sickTime = 2;
+    public Sprite spriteTitan;
     public Vector2 positionOnBoard { get; private set; }
     public string nameC { get; private set; }
     public int speed { get; private set; }
@@ -31,42 +34,42 @@ public class PlayerManager
 
     public bool haveKey = false;
 
-    // Update is called once per frame
-    void Update()
+    public PlayerManager(player play)
     {
-        if (index == GameManager.gameManeger.turn)
-        {
-            isPlayerTurn = true;
-            for (int i = 0; i < powerUpTimer.Count; i++)
-            {
-                if (powerUpTimer[i].y == GameManager.gameManeger.round)
-                {
-                    PowerUp(-powerUpTimer[i].x);
-                    powerUpTimer.RemoveAt(i);
-                }
-            }
-            for (int i = 0; i < speedUpTimer.Count; i++)
-            {
-                if (speedUpTimer[i].y == GameManager.gameManeger.round)
-                {
-                    SpeedUp(-speedUpTimer[i].x);
-                    speedUpTimer.RemoveAt(i);
-                }
-            }
-            for (int i = 0; i < cooldownUpTimer.Count; i++)
-            {
-                if (cooldownUpTimer[i].y == GameManager.gameManeger.round)
-                {
-                    ResetCooldown();
+        this.play = play;
+        spriteTitan = Resources.Load<Sprite>("norm");
+    }
+    // Update is called once per frame
+    public void Update()
+    {
 
-                    cooldownUpTimer.RemoveAt(i);
-                }
+        for (int i = 0; i < powerUpTimer.Count; i++)
+        {
+            if (powerUpTimer[i].y == GameManager.gameManeger.round)
+            {
+                PowerUp(-powerUpTimer[i].x);
+                powerUpTimer.RemoveAt(i);
             }
         }
-        else
+        for (int i = 0; i < speedUpTimer.Count; i++)
         {
-            isPlayerTurn = false;
+            if (speedUpTimer[i].y == GameManager.gameManeger.round)
+            {
+                SpeedUp(-speedUpTimer[i].x);
+                speedUpTimer.RemoveAt(i);
+            }
         }
+        for (int i = 0; i < cooldownUpTimer.Count; i++)
+        {
+            if (cooldownUpTimer[i].y == GameManager.gameManeger.round)
+            {
+                ResetCooldown();
+
+                cooldownUpTimer.RemoveAt(i);
+            }
+        }
+
+
 
 
     }

@@ -7,7 +7,6 @@ public class trap : ScriptableObject
 {
     public string nameTrap;
     public Sprite sprite;
-    public Trap type;
     public string description;
     public int range = 1;
     public int rarity = 5;

@@ -149,8 +149,15 @@ public class CellDisplay : MonoBehaviour
                 img_cell.color = default_color;
             }
             DrawWay();
+            if (cell.player != null)
+            {
+                if (cell.player.sick)
+                {
+                    img_cell.sprite = cell.player.spriteTitan;
 
+                }
 
+            }
             if (cell.trap && cell.enableTrap && Input.GetKey(KeyCode.LeftShift))
             {
                 //uncomment to debbug traps

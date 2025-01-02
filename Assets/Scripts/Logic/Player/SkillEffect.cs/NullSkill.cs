@@ -12,6 +12,7 @@ public class NullSkill : Skill
     public override void Pasive(PlayerManager player)
     {
     }
+    public override void PasiveOnWalk(PlayerManager player) { }
 
     public override void Desactive(PlayerManager player)
     {

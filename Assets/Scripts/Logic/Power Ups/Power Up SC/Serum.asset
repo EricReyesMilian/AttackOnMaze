@@ -15,4 +15,6 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 98754bc0e402f9e48b6a173ca1f52227, type: 3}
   namepowerUp: Serum
   description: Remove Cooldown
-  ePower: 3
+  ePower: 0
+  rarity: 12
+  powerEffect: {fileID: 11400000, guid: be4536723ea13614bb1ef57cd7647032, type: 2}

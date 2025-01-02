@@ -15,4 +15,6 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 6c667944bf84ca74eacae49057f43370, type: 3}
   namepowerUp: Fuel
   description: +3 speed
-  ePower: 2
+  ePower: 0
+  rarity: 10
+  powerEffect: {fileID: 11400000, guid: 8c5d76ad62db03243821f933f9304b09, type: 2}

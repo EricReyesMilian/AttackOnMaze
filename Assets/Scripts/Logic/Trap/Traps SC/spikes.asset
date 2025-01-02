@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameTrap: Spikes
   sprite: {fileID: 21300000, guid: 1fa615872ea5ff746b71fa84d623d622, type: 3}
-  type: 1
   description: -1 power
   range: 1
+  rarity: 5
   activationTrap: 1
+  trapEffect: {fileID: 11400000, guid: f0388840c5b860941aae6c65a165ab6e, type: 2}
