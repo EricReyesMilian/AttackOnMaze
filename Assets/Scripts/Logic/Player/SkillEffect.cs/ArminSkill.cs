@@ -12,6 +12,7 @@ public class ArminSkill : Skill
         player.titanForm = true;
         player.SwapImg(2);
         player.PowerUp(20);
+        AudioManager.speaker.Play(Resources.Load<AudioClip>(player.play.Name));
         player.SpeedUpNormalize(2, player.TransformTime);
         OnActive(player);
 

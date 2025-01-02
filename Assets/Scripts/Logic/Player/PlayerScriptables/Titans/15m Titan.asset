@@ -21,6 +21,8 @@ MonoBehaviour:
   sprite2: {fileID: 0}
   team: 0
   TransformTime: 0
+  infoSkill: '"And in those days men will seek death and will not find it; they will
+    desire to die, and death will flee from them." - Apocalipsis 9:6'
   isTitan: 1
   TitanIQ: 4
   skill: {fileID: 11400000, guid: 72a846f574a21234994600435af71a88, type: 2}

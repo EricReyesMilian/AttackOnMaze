@@ -6,6 +6,8 @@ public class SerumPower : PowerEffect
 {
     public override void Active(PlayerManager player)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("serum"));
+
         player.RemoveCooldown();
 
     }

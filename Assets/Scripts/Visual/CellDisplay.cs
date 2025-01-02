@@ -205,6 +205,7 @@ public class CellDisplay : MonoBehaviour
             {
                 if (cell.player.isTitan)
                 {
+
                     int at = 0;
                     int de = gm.players.IndexOf(cell.player);
                     for (int i = 0; i < gm.players.Count; i++)
@@ -252,6 +253,7 @@ public class CellDisplay : MonoBehaviour
                     gm.players[gm.turn].DownCurrentSpeed(1);
                 }
             }
+
             gm.MoveplayerTo(cell.coord, gm.turn);
 
         }
@@ -259,11 +261,15 @@ public class CellDisplay : MonoBehaviour
         {
             if (gm.lastWinner1)
             {
+                AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
+
                 gm.MoveplayerTo(cell.coord, gm.players.IndexOf(gm.player2));
 
             }
             else
             {
+                AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
+
                 gm.MoveplayerTo(cell.coord, gm.turn);
 
             }
@@ -273,6 +279,11 @@ public class CellDisplay : MonoBehaviour
     }
     public void Hover()
     {
+        if (cell.reach)
+        {
+            AudioManager.speaker.Play(Resources.Load<AudioClip>("tick"));
+
+        }
         if (!cell.reach && !cell.powerUp)
         {
             img_cell.color = hover_color;

@@ -8,6 +8,8 @@ public class SpikesTrap : TrapEffect
     public int amount = 1;
     public override void Active(PlayerManager player)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("spikes"));
+
         player.PowerUp(-amount);
     }
 }

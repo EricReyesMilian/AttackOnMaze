@@ -7,6 +7,7 @@ public class KeyPower : PowerEffect
     public override void Active(PlayerManager player)
     {
         player.TakeKey();
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("key"));
 
     }
 }

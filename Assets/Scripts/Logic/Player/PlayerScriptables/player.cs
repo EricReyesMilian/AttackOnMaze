@@ -13,7 +13,7 @@ public class player : ScriptableObject
     public Sprite sprite2;
     public int team;
     public int TransformTime;
-
+    public string infoSkill;
     public bool isTitan;
     public int TitanIQ;
 

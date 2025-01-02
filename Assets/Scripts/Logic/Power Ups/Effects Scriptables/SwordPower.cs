@@ -9,6 +9,8 @@ public class SwordPower : PowerEffect
 
     public override void Active(PlayerManager player)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("sword"));
+
         player.PowerUp(powerUp);
     }
 }

@@ -21,6 +21,9 @@ MonoBehaviour:
   sprite2: {fileID: 0}
   team: 0
   TransformTime: 0
+  infoSkill: '"And the fifth angel sounded, and I saw a star fall from heaven unto
+    the earth: and to him was given the key of the bottomless pit." - Apocalipsis
+    9:1'
   isTitan: 1
   TitanIQ: 4
   skill: {fileID: 11400000, guid: 72a846f574a21234994600435af71a88, type: 2}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3576dbcfbca03c748a8e083948372a03, type: 3}
   m_Name: Titan Hembra
   m_EditorClassIdentifier: 
-  Name: Titan Hembra
+  Name: Smilling Titan
   speed: 4
   cooldown: 2
   power: 30
@@ -21,6 +21,9 @@ MonoBehaviour:
   sprite2: {fileID: 0}
   team: 0
   TransformTime: 0
+  infoSkill: '"The first angel sounded, and there followed hail and fire mingled
+    with blood, and they were cast upon the earth: and the third part of trees was
+    burnt up, and all green grass was burnt up."- Apocalipsis 8:7'
   isTitan: 1
   TitanIQ: 3
   skill: {fileID: 11400000, guid: 72a846f574a21234994600435af71a88, type: 2}

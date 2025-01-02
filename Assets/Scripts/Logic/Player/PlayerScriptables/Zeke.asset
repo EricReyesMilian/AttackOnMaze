@@ -21,6 +21,8 @@ MonoBehaviour:
   sprite2: {fileID: 21300000, guid: 1a5cea48521bb704fa1a7dfb975f6670, type: 3}
   team: 1
   TransformTime: 2
+  infoSkill: '"Zeke transforms into a Titan, increasing his power by 5. On your turn,
+    you can control an enemy Titan, but you will revert back on your next turn."'
   isTitan: 0
   TitanIQ: 0
   skill: {fileID: 11400000, guid: 24df8c39c011edc4ea06269434334b0b, type: 2}

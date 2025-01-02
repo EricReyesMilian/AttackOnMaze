@@ -9,6 +9,8 @@ public class LeviSkill : Skill
     public override void Active(PlayerManager player)
     {
         int n = Board.grid[0].Count;
+        AudioManager.speaker.Play(Resources.Load<AudioClip>(player.play.Name));
+
         List<(int i, int j)> reachSkillCells = new List<(int i, int j)>();
 
         if ((int)player.Pos.x + 2 <= n && !Board.grid[(int)player.Pos.x + 1][(int)player.Pos.y].obstacle)

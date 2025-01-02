@@ -139,6 +139,7 @@
     <Compile Include="Assets\Scripts\Logic\Trap\TrapEffect.cs" />
     <Compile Include="Assets\Scripts\Visual\StatOnSide.cs" />
     <Compile Include="Assets\Scripts\Logic\maze\Board.cs" />
+    <Compile Include="Assets\AudioManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
   </ItemGroup>
   <ItemGroup>

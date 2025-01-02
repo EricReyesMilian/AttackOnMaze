@@ -13,6 +13,8 @@ public class buttonSelect : buttonMenu
         {
             if (MainMenuManeger.mm.playersList[MainMenuManeger.mm.PlayerIndex - 1].Count > 0)
             {
+                AudioManager.speaker.Play(Resources.Load<AudioClip>("tick"));
+
                 Color newColor;
                 ColorUtility.TryParseHtmlString("#8B956D", out newColor);
                 text.color = newColor;
@@ -25,6 +27,8 @@ public class buttonSelect : buttonMenu
     {
         if (MainMenuManeger.mm.playersList[MainMenuManeger.mm.PlayerIndex - 1].Count > 0)
         {
+            AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
+
             if (MainMenuManeger.mm.PlayerIndex < MainMenuManeger.mm.PlayerCount)
             {
                 MainMenuManeger.mm.PlayerIndex++;
@@ -33,6 +37,7 @@ public class buttonSelect : buttonMenu
             else
             {
                 //load scene
+                MainMenuManeger.mm.AddTitans();
                 MainMenuManeger.mm.LoadScene(2);
 
             }

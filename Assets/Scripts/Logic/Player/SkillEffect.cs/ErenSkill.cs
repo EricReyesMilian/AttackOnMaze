@@ -10,6 +10,8 @@ public class ErenSkill : Skill
     {
         player.titanForm = true;
         player.SwapImg(2);
+        AudioManager.speaker.Play(Resources.Load<AudioClip>(player.play.Name));
+
         player.PowerUp(player.power);
         player.SpeedUp(2);
 

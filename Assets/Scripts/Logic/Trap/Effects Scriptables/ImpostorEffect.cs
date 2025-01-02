@@ -8,6 +8,7 @@ public class ImpostorTrap : TrapEffect
 
     public override void Active(PlayerManager player)
     {
-        player.PowerDivide(2);
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("fear"));
+        player.PowerUp(-(player.power / 2), 2);
     }
 }

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     // Configuración del juego
     public int n;
-    public int round = 1;
+    public int round = 0;
     public int WinPower = 30;
     public GameObject cellsContainer;
     public GameObject playerContainer;
@@ -189,7 +189,11 @@ public class GameManager : MonoBehaviour
     public void NextTurnBut()
     {
         if (NextEnable && HasMoved)
+        {
+            AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
             NextTurn();
+        }
+
     }
     public int NextTurnIndex(int turn)
     {
@@ -201,6 +205,7 @@ public class GameManager : MonoBehaviour
     }
     public void NextTurn()
     {
+        print("NextTurn");
         if (round > 1 && !players[turn].titanForm)
         {
             players[turn].DownCooldown();
@@ -235,7 +240,7 @@ public class GameManager : MonoBehaviour
         players[turn].Update();
         if (players[turn].haveKey)
         {
-            players[turn].PowerUp(1);
+            players[turn].PowerUp(5);
 
 
         }
@@ -254,22 +259,6 @@ public class GameManager : MonoBehaviour
                     if (players[turn].titanForm)
                         players[turn].play.skill.Pasive(players[turn]);
 
-                    // switch (players[turn].play.name)
-                    // {
-                    //     case "Reiner":
-                    //         ReinerSkill = false;
-                    //         PlayerSkills.ReinerSkillOff(players[turn]); break;
-                    //     case "Eren":
-                    //         ErenSkill = false;
-                    //         PlayerSkills.ErenSkillOff(players[turn]); break;
-                    //     case "Armin":
-                    //         ArminSkill = false;
-                    //         PlayerSkills.ArminSkillOff(players[turn]); break;
-                    //     case "Zeke":
-                    //         ZekeSkill = false;
-                    //         PlayerSkills.ZekeSkillOff(players[turn]); break;
-
-                    // }
                 }
 
             }
@@ -329,6 +318,8 @@ public class GameManager : MonoBehaviour
     {
         if (SkillEnable && !players[turn].titanForm)
         {
+            AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
+
             skillWasActivatedThisTurn = true;
             SkillEnable = false;
 
@@ -336,7 +327,7 @@ public class GameManager : MonoBehaviour
             if (players[turn].play.Name != "Levi")
                 ReachPointInMatriz();
             players[turn].play.skill.Active(players[turn]);
-            if (players[turn].play.Name == "Reiner" || players[turn].play.Name == "Armin")
+            if (players[turn].play.Name != "Levi")
                 ReachPointInMatriz();
             UpdateStats(turn);
             UpdateDisplay();
@@ -364,22 +355,28 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < n; j++)
             {
-                if (Board.grid[i][j].reach)
+                if (Board.grid[i][j].reach && !targets.Contains(((int)Board.grid[i][j].coord.x, (int)Board.grid[i][j].coord.y)))
                 {
                     targets.Add(((int)Board.grid[i][j].coord.x, (int)Board.grid[i][j].coord.y));
                 }
             }
         }
+        print(players[turn].nameC);
+        for (int j = 0; j < targets.Count; j++)
+        {
+            print("index " + j + ": (" + targets[j].x + "," + targets[j].y + ")");
+        }
         TitanAI titanAI = new TitanAI();
         int destination = titanAI.GetMove(players[turn], targets);
-        if (destination != -1)
+        print(destination);
+        if (destination != -1 || destination < targets.Count)
         {
             print("(" + targets[destination].x + " " + targets[destination].y + ")");
             MoveplayerTo(new Vector2(targets[destination].x, targets[destination].y), turn);
 
         }
-        else
-            Invoke("NextTurn", 0.5f);
+        //else
+        // Invoke("NextTurn", 0.5f);
 
     }
     bool Win(PlayerManager player)
@@ -392,6 +389,8 @@ public class GameManager : MonoBehaviour
     {
         if (index == turn && !isInCombat && Board.ReachPoint(target) && !playingCorrutine)
         {
+            AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
+
             bool aux = LeviSkill;
             if (LeviSkill)
             {
@@ -665,6 +664,7 @@ public class GameManager : MonoBehaviour
 
         combatScene = new Combat(player1, player2);
         StartCombate();
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("fight"));
 
 
         //combat maneger
@@ -700,11 +700,12 @@ public class GameManager : MonoBehaviour
             {
                 looserTitan = false;
                 List<Cell> posiblesMoves = new List<Cell>();
+
                 for (int i = 0; i < n; i++)
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (Board.grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
+                        if (Board.grid[i][j].reach && !Board.predefinedCenterCells.Contains((i, j)))
                         {
                             posiblesMoves.Add(Board.grid[i][j]);
                         }
@@ -716,11 +717,11 @@ public class GameManager : MonoBehaviour
                     player2.LoseKey();
                     Board.DropKeyIn((int)player2.Pos.x, (int)player2.Pos.y);
                 }
-                players.RemoveAt(de);
-                int newDe = at < de ? at + 1 : at;
-                players.Insert(newDe, player2);
-                turn = players.IndexOf(player1);
-                ChangeTurnOrd();
+                // players.RemoveAt(de);
+                // int newDe = at < de ? at + 1 : at;
+                // players.Insert(newDe, player2);
+                // turn = players.IndexOf(player1);
+                // ChangeTurnOrd();
                 MoveplayerTo(posiblesMoves[UnityEngine.Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player2));
 
             }

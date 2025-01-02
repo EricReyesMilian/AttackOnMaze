@@ -7,6 +7,8 @@ public class TitanTrap : TrapEffect
     [SerializeField]
     public override void Active(PlayerManager player)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("titan"));
+
         player.isTitan = true;
         player.sick = true;
     }

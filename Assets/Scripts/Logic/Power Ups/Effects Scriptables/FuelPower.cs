@@ -9,6 +9,8 @@ public class FuelPower : PowerEffect
 
     public override void Active(PlayerManager player)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("fuel"));
+
         player.CSpeedUp(amountSpeed);
     }
 }

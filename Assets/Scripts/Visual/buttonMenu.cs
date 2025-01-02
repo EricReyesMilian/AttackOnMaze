@@ -16,6 +16,8 @@ public class buttonMenu : MonoBehaviour
     // Update is called once per frame
     public virtual void Hover()
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("tick"));
+
         text.fontStyle = FontStyles.Underline;
         Color newColor;
         ColorUtility.TryParseHtmlString("#8B956D", out newColor);
@@ -29,6 +31,8 @@ public class buttonMenu : MonoBehaviour
     }
     public void Click()
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
+
         MainMenuManeger.mm.anim.SetTrigger("next");
         for (int i = 0; i < MainMenuManeger.mm.PlayerCount; i++)
         {

@@ -180,10 +180,11 @@ public class TitanAI
     {
         int max = int.MinValue;
         int min = int.MaxValue;
-        int i = 1;
+        int i = 0;
         bool huboCambio = false;
         List<List<int>> distanciaToCenter;
         int agroIndex = 0;
+
         for (int l = 0; l < 4; l++)
         {
             if (distanciaToDoor[l][predefinedAgroCells[l].x][predefinedAgroCells[l].y] < min)

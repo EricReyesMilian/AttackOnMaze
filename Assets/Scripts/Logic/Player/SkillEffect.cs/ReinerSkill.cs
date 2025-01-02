@@ -8,6 +8,8 @@ public class ReinerSkill : Skill
     {
         player.titanForm = true;
         Pasive(player);
+        AudioManager.speaker.Play(Resources.Load<AudioClip>(player.play.Name));
+
         player.SwapImg(2);
         player.PowerUp(5);
     }

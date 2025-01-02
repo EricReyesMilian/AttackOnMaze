@@ -21,6 +21,9 @@ MonoBehaviour:
   sprite2: {fileID: 21300000, guid: cd3d9f77f74d13c4992035dda3a38519, type: 3}
   team: 0
   TransformTime: 4
+  infoSkill: '"Armin transforms into a Titan, causing an explosion that destroys
+    obstacles around him. His power increases by 20 units, and his speed is set to
+    2."'
   isTitan: 0
   TitanIQ: 0
   skill: {fileID: 11400000, guid: 02cb3a015a246bc4fac566236d68959e, type: 2}

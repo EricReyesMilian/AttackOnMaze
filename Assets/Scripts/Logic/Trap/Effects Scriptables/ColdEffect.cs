@@ -8,6 +8,8 @@ public class ColdTrap : TrapEffect
 
     public override void Active(PlayerManager player)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("cold"));
+
         player.ResetCooldown();
     }
 }

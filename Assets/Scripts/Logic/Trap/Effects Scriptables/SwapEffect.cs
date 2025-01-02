@@ -9,6 +9,8 @@ public class SwapTrap : TrapEffect
     public int duration = 2;
     public override void Active(PlayerManager player)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("swamp"));
+
         player.SpeedUpNormalize(amount, duration);
     }
 }

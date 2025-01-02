@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94fe6456bc6ae0d4d9079f498b2e87b1, type: 3}
-  m_Name: impostor
+  m_Name: Fear
   m_EditorClassIdentifier: 
-  nameTrap: Impostor
-  sprite: {fileID: 21300000, guid: 6d1945d0aac43504a9a62811d28a8f41, type: 3}
-  description: -50% power
+  nameTrap: Fear
+  sprite: {fileID: 21300000, guid: 15b363f7ff29ad343ba0e5ed82221520, type: 3}
+  description: You lose half of your power for 2 turns.
   range: 1
   rarity: 8
   activationTrap: 1

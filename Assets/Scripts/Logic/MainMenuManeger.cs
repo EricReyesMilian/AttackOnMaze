@@ -6,7 +6,10 @@ using UnityEngine.SceneManagement;
 public class MainMenuManeger : MonoBehaviour
 {
     public List<List<player>> playersList = new List<List<player>>();
+    public List<player> titanList = new List<player>();
+
     public static MainMenuManeger mm;
+
     public int PlayerCount = 2;
     public int PlayerIndex = 1;
     public int PlayerRemain;
@@ -29,6 +32,10 @@ public class MainMenuManeger : MonoBehaviour
     {
 
     }
+    public void AddTitans()
+    {
+        playersList.Add(titanList);
+    }
     void Update()
     {
         selectables = PlayerRemain - (PlayerCount - PlayerIndex);
@@ -36,10 +43,13 @@ public class MainMenuManeger : MonoBehaviour
     }
     public void LoadScene(int s)
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
+
         SceneManager.LoadScene(s);
     }
     public void Plus()
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
 
         PlayerCount++;
         if (PlayerCount > PlayerRemain)
@@ -49,6 +59,7 @@ public class MainMenuManeger : MonoBehaviour
     }
     public void Less()
     {
+        AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
 
         PlayerCount--;
         if (PlayerCount < 2)
