@@ -91,7 +91,7 @@ public class Board
             {
                 for (int j = (n) / 2; j < n; j++)
                 {
-                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedEmptyCells.Contains((i, j)))
+                    if (!tablero[i][j].hasAplayer && !tablero[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
 
                 }
@@ -192,8 +192,8 @@ public class Board
                     if (!Board.predefinedEmptyCells.Contains((i, j))
                     && !grid[i][j].trap && !grid[i][j].obstacle && !trapFrontier[i, j] && !grid[i][j].destroyableObs)
                     {
-                        int r = new System.Random().Next(0, 5);
                         int trapIndex = new System.Random().Next(0, GameManager.gameManeger.trapList.Count);
+                        int r = new System.Random().Next(0, GameManager.gameManeger.trapList[trapIndex].rarity);
                         if (r == 1)
                         {
                             List<(int x, int y)> listadehijos = new List<(int x, int y)>();
@@ -273,8 +273,8 @@ public class Board
                     if (!Board.predefinedEmptyCells.Contains((i, j))
                     && !grid[i][j].powerUp && !grid[i][j].obstacle && !grid[i][j].trap && !grid[i][j].destroyableObs)
                     {
-                        int r = new System.Random().Next(0, 10);
                         int powerIndex = new System.Random().Next(0, GameManager.gameManeger.powerList.Count);
+                        int r = new System.Random().Next(0, GameManager.gameManeger.powerList[powerIndex].rarity);
                         if (r == 1)
                         {
 

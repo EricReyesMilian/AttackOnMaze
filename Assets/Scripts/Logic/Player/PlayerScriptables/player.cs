@@ -16,4 +16,6 @@ public class player : ScriptableObject
 
     public bool isTitan;
     public int TitanIQ;
+
+    public Skill skill;
 }

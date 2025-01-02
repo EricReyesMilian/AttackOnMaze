@@ -15,4 +15,6 @@ public class PowerUp : ScriptableObject
     public string namepowerUp;
     public string description;
     public EPower ePower;
+    public int rarity = 10;
+    public PowerEffect powerEffect;
 }

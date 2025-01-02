@@ -10,9 +10,9 @@ public class trap : ScriptableObject
     public Trap type;
     public string description;
     public int range = 1;
-
+    public int rarity = 5;
     public bool activationTrap;
-
+    public TrapEffect trapEffect;
 
 
 }

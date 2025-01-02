@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TitanAI : MonoBehaviour
+public class TitanAI
 {
     List<List<List<int>>> distanciaToDoor = new List<List<List<int>>>();
 

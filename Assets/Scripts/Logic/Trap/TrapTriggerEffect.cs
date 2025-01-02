@@ -21,14 +21,15 @@ public class TrapTriggerEffect
     }
     public void Effect(trap trap)
     {
-        switch (trap.type)
-        {
-            case Trap.none: None(); break;
-            case Trap.spikes: Spikes(); break;
-            case Trap.impostor: Impostor(); break;
-            case Trap.cold: Cold(); break;
-            case Trap.swap: Swamp(); break;
-        }
+        trap.trapEffect.Active(player);
+        // switch (trap.type)
+        // {
+        //     case Trap.none: None(); break;
+        //     case Trap.spikes: Spikes(); break;
+        //     case Trap.impostor: Impostor(); break;
+        //     case Trap.cold: Cold(); break;
+        //     case Trap.swap: Swamp(); break;
+        // }
     }
     void None()
     {
@@ -40,7 +41,6 @@ public class TrapTriggerEffect
     }
     void Cold()
     {
-        player.ResetCooldown();
     }
     void Spikes()
     {

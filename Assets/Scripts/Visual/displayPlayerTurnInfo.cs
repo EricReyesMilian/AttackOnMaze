@@ -61,7 +61,7 @@ public class displayPlayerTurnInfo : MonoBehaviour
 
         }
         if (gm.players[i].CtransformTime > 0)
-            transf.text = "Transform: " + gm.players[i].CtransformTime;
+            transf.text = "Transform: " + (gm.players[i].TransformTime - gm.players[i].CtransformTime);
         else
             transf.text = " ";
 
