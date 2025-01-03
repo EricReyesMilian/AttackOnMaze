@@ -792,6 +792,15 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                if (player2.play.isTitan)
+                {
+                    if (player1.haveKey)
+                    {
+                        player1.LoseKey();
+                        Board.DropKeyIn((int)player1.Pos.x, (int)player1.Pos.y);
+                    }
+                }
+                else
                 if (player1.haveKey)
                 {
                     player1.LoseKey();
