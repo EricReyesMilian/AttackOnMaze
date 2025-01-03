@@ -245,7 +245,11 @@ public class TitanAI
             {
                 int newX = (int)titan.Pos.x + df[r];
                 int newY = (int)titan.Pos.y + dc[r];
-
+                if ((Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].hasAplayer &&
+                     Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].player.isTitan))
+                {
+                    continue;
+                }
                 if (newX < Board.grid[0].Count && newX >= 0 && newY < Board.grid[0].Count && newY >= 0)
                 {
                     if (distanciaToDoor[l][newX][newY] < min4)
@@ -299,64 +303,10 @@ public class TitanAI
             titan.lastMove.Clear();
         }
 
-        return UnityEngine.Random.Range(0, targets.Count);
-    }
-
-    int IQ4(PlayerManager titan, List<(int x, int y)> targets)//avanza sin distraccion hacia el centro de las murallas si hay un agujero
-    {
-        int max = int.MinValue;
-        int min = int.MaxValue;
-        int i = 0;
-        bool huboCambio = false;
-        int agroIndex = 0;
-        for (int l = 0; l < 4; l++)
-        {
-            if (distanciaToDoor[l][(int)titan.Pos.x][(int)titan.Pos.y] < min)
-            {
-                min = distanciaToDoor[l][(int)titan.Pos.x][(int)titan.Pos.y];
-                agroIndex = l;
-            }
-
-
-        }
-        bool Enter = false;
-        for (int p = 0; p < DoorCells.Count; p++)
-        {
-            if (!Board.grid[DoorCells[p].x][DoorCells[p].y].obstacle)
-            {
-                distanciaToCenter = Board.Lee(8, 8, Board.grid[0].Count * Board.grid[0].Count, true);
-                Enter = true;
-                break;
-            }
-        }
-
-        if (!Enter)
-        {
-            Board.distanciaToCenterAux = distanciaToDoor[agroIndex];
-            distanciaToCenter = distanciaToDoor[agroIndex];
-
-        }
-        foreach (var coord in targets)
-        {
-
-            if (Board.distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y] >= max)
-            {
-                if (!titan.lastMove.Contains(coord))
-                {
-                    i = targets.IndexOf(coord);
-                    max = Board.distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y];
-                    huboCambio = true;
-                }
-            }
-
-        }
-        if (!huboCambio)
-        {
-            titan.lastMove.Clear();
-        }
         return i;
-
     }
+
+
 
 
 }

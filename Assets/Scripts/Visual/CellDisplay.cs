@@ -245,8 +245,8 @@ public class CellDisplay : MonoBehaviour
         if (!gm.isInCombat)
         {
 
-
-            gm.MoveplayerTo(cell.coord, gm.turn);
+            if (gm.players[gm.turn].Pos != cell.coord)
+                gm.MoveplayerTo(cell.coord, gm.turn);
 
         }
         else

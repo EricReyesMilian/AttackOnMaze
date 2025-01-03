@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 public class GetWinner : MonoBehaviour
 {
@@ -25,5 +26,13 @@ public class GetWinner : MonoBehaviour
         }
     }
 
+    public void Inicio()
+    {
+        Invoke("loadscene", 3f);
+    }
+    void loadscene()
+    {
+        SceneManager.LoadScene(0);
 
+    }
 }
