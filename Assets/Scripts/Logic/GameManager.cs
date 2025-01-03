@@ -349,7 +349,7 @@ public class GameManager : MonoBehaviour
     }
     public void Skill()
     {
-        if (SkillEnable && !players[turn].titanForm)
+        if (SkillEnable && !players[turn].titanForm && !isInCombat)
         {
             AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
 
