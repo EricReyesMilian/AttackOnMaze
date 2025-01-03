@@ -24,5 +24,5 @@ MonoBehaviour:
   infoSkill: '"And in those days men will seek death and will not find it; they will
     desire to die, and death will flee from them." - Apocalipsis 9:6'
   isTitan: 1
-  TitanIQ: 3
+  TitanIQ: 2
   skill: {fileID: 11400000, guid: 72a846f574a21234994600435af71a88, type: 2}

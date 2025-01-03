@@ -92,6 +92,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\ResolutionAndroid.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Colorbackground.cs" />
     <Compile Include="Assets\Scripts\Logic\Power Ups\Effects Scriptables\KeyPower.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Assets\Scripts\Visual\Panels\PanelCombat.cs" />
     <Compile Include="Assets\Scripts\Logic\Player\Skill.cs" />
     <Compile Include="Assets\Scripts\Logic\Power Ups\Effects Scriptables\SerumPower.cs" />
+    <Compile Include="Assets\AndroidConfig.cs" />
     <Compile Include="Assets\Scripts\Logic\Trap\trap.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Visual\CellDisplay.cs" />

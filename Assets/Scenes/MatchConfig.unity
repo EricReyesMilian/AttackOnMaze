@@ -803,6 +803,8 @@ GameObject:
   - component: {fileID: 829799563}
   - component: {fileID: 829799562}
   - component: {fileID: 829799565}
+  - component: {fileID: 829799566}
+  - component: {fileID: 829799567}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -982,6 +984,32 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &829799566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829799561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c0cf035a94398a4f9cfe75f7db9abbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetAspect: 1.7777778
+--- !u!114 &829799567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829799561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6c5284f1bd2354aa271e8179caf5c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cs: {fileID: 914348130}
 --- !u!1 &883632107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1292,7 +1320,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 2
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -1345,6 +1373,7 @@ MonoBehaviour:
   selectables: 0
   anim: {fileID: 914348133}
   audioO: {fileID: 0}
+  slider: {fileID: 0}
   progressBar: {fileID: 0}
 --- !u!95 &914348133
 Animator:
@@ -2971,7 +3000,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 19.866028, y: 0}
+  m_AnchoredPosition: {x: 19.865967, y: 0}
   m_SizeDelta: {x: -546.9178, y: -266.4539}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1716949298
