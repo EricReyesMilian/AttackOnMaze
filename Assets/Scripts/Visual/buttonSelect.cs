@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 public class buttonSelect : buttonMenu
 {
-
+    bool loaded = false;
     // Update is called once per frame
     public override void Hover()
     {
@@ -37,8 +37,13 @@ public class buttonSelect : buttonMenu
             else
             {
                 //load scene
-                MainMenuManeger.mm.AddTitans();
-                MainMenuManeger.mm.LoadScene(2);
+                if (!loaded)
+                {
+                    MainMenuManeger.mm.AddTitans();
+                    MainMenuManeger.mm.LoadScene(2);
+
+                    loaded = true;
+                }
 
             }
             if (MainMenuManeger.mm.PlayerIndex == MainMenuManeger.mm.PlayerCount)

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using UnityEngine;
 public enum Algorithm
 {
     Prim,
@@ -13,15 +13,13 @@ public class MazeGenerator
     private int size;
     private int startX;
     private int startY;
-    private List<List<Cell>> maze;
-    private Random rand = new Random();
+    private System.Random rand = new System.Random();
 
     public MazeGenerator(int size, int startX, int startY, List<List<Cell>> maze, Algorithm alg)
     {
         this.size = size;
         this.startX = startX;
         this.startY = startY;
-        this.maze = maze;
 
         switch (alg)
         {
@@ -40,14 +38,14 @@ public class MazeGenerator
 
         foreach (var cell in Board.predefinedEmptyCells)
         {
-            maze[cell.x][cell.y].obstacle = false;
+            Board.grid[cell.x][cell.y].obstacle = false;
         }
         foreach (var cell in Board.predefinedObstacleCells)
         {
-            maze[cell.x][cell.y].obstacle = true;
+            Board.grid[cell.x][cell.y].obstacle = true;
         }
 
-        maze[startX][startY].obstacle = false;
+        Board.grid[startX][startY].obstacle = false;
         AddWalls(startX, startY, walls);
 
         while (walls.Count > 0)
@@ -57,7 +55,7 @@ public class MazeGenerator
 
             if (CountAdjacent(x, y) == 1 && !Board.predefinedEmptyCells.Contains((x, y)) && !Board.predefinedObstacleCells.Contains((x, y)))
             {
-                maze[x][y].obstacle = false;
+                Board.grid[x][y].obstacle = false;
                 AddWalls(x, y, walls);
             }
         }
@@ -66,9 +64,9 @@ public class MazeGenerator
         {
             for (int j = 0; j < size; j++)
             {
-                if (maze[i][j].obstacle && CountAdjacent(i, j) == 1 && !Board.predefinedObstacleCells.Contains((i, j)))
+                if (Board.grid[i][j].obstacle && CountAdjacent(i, j) == 1 && !Board.predefinedObstacleCells.Contains((i, j)))
                 {
-                    maze[i][j].obstacle = false;
+                    Board.grid[i][j].obstacle = false;
                 }
             }
         }
@@ -76,13 +74,13 @@ public class MazeGenerator
         Conec();
         foreach (var cell in Board.predefinedEmptyCells)
         {
-            maze[cell.x][cell.y].obstacle = false;
+            Board.grid[cell.x][cell.y].obstacle = false;
         }
 
     }
     void Conec()
     {
-        int size = maze[0].Count;
+        int size = Board.grid[0].Count;
         //Marcar casilla inicial
         //           N   S  E  W
         int[] df = { -1, 1, 0, 0 };
@@ -105,14 +103,23 @@ public class MazeGenerator
                             int vf = f + df[d];
                             int vc = c + dc[d];
                             //determinar si es un vecino valido
-                            if (PosicionValida(size, vf, vc)
+                            if (PosicionValida(17, vf, vc)
                             && !Board.predefinedObstacleCells.Contains((vf, vc)) && !Board.predefinedEmptyCells.Contains((vf, vc)))
                             {
-                                if (maze[vf][vc].obstacle)
+                                try
                                 {
-                                    Board.predefinedEmptyCells.Add((vf, vc));
+                                    if (Board.grid[vf][vc].obstacle)
+                                    {
+                                        Board.predefinedEmptyCells.Add((vf, vc));
 
+                                    }
                                 }
+                                catch
+                                {
+                                    Debug.LogError(vf + " " + vc);
+                                }
+
+
                             }
                         }
 
@@ -130,13 +137,13 @@ public class MazeGenerator
 
     private void AddWalls(int x, int y, List<(int, int)> walls)
     {
-        if (x > 0 && maze[x - 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x - 1, y)) && !Board.predefinedObstacleCells.Contains((x - 1, y)))
+        if (x > 0 && Board.grid[x - 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x - 1, y)) && !Board.predefinedObstacleCells.Contains((x - 1, y)))
             walls.Add((x - 1, y));
-        if (y > 0 && maze[x][y - 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y - 1)) && !Board.predefinedObstacleCells.Contains((x, y - 1)))
+        if (y > 0 && Board.grid[x][y - 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y - 1)) && !Board.predefinedObstacleCells.Contains((x, y - 1)))
             walls.Add((x, y - 1));
-        if (x < size - 1 && maze[x + 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x + 1, y)) && !Board.predefinedObstacleCells.Contains((x + 1, y)))
+        if (x < size - 1 && Board.grid[x + 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x + 1, y)) && !Board.predefinedObstacleCells.Contains((x + 1, y)))
             walls.Add((x + 1, y));
-        if (y < size - 1 && maze[x][y + 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y + 1)) && !Board.predefinedObstacleCells.Contains((x, y + 1)))
+        if (y < size - 1 && Board.grid[x][y + 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y + 1)) && !Board.predefinedObstacleCells.Contains((x, y + 1)))
             walls.Add((x, y + 1));
     }
     private List<(int x, int y)> GetNeighbors(int x, int y)
@@ -152,10 +159,10 @@ public class MazeGenerator
     private int CountAdjacent(int x, int y)
     {
         int count = 0;
-        if (x > 0 && !maze[x - 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x - 1, y)) && !Board.predefinedObstacleCells.Contains((x - 1, y))) count++;
-        if (y > 0 && !maze[x][y - 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y - 1)) && !Board.predefinedObstacleCells.Contains((x, y - 1))) count++;
-        if (x < size - 1 && !maze[x + 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x + 1, y)) && !Board.predefinedObstacleCells.Contains((x + 1, y))) count++;
-        if (y < size - 1 && !maze[x][y + 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y + 1)) && !Board.predefinedObstacleCells.Contains((x, y + 1))) count++;
+        if (x > 0 && !Board.grid[x - 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x - 1, y)) && !Board.predefinedObstacleCells.Contains((x - 1, y))) count++;
+        if (y > 0 && !Board.grid[x][y - 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y - 1)) && !Board.predefinedObstacleCells.Contains((x, y - 1))) count++;
+        if (x < size - 1 && !Board.grid[x + 1][y].obstacle && !Board.predefinedEmptyCells.Contains((x + 1, y)) && !Board.predefinedObstacleCells.Contains((x + 1, y))) count++;
+        if (y < size - 1 && !Board.grid[x][y + 1].obstacle && !Board.predefinedEmptyCells.Contains((x, y + 1)) && !Board.predefinedObstacleCells.Contains((x, y + 1))) count++;
         return count;
     }
 
@@ -166,7 +173,7 @@ public class MazeGenerator
         {
             for (int j = 0; j < size; j++)
             {
-                if (maze[j][i].obstacle)
+                if (Board.grid[j][i].obstacle)
                 {
                     info[i, j] = true;
                 }

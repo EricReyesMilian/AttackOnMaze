@@ -22,15 +22,32 @@ public class Board
             {
                 grid[i].Add(new Cell());
                 grid[i][j].coord = new Vector2(i, j);
+                grid[i][j].NearPlayers.Clear();
+                grid[i][j].powerUpType = null;
+                grid[i][j].trapType = null;
+                grid[i][j].endurence = 5;
+                grid[i][j].hasAplayer = false;
+                grid[i][j].player = null;
+                grid[i][j].powerUp = false;
+                grid[i][j].trap = false;
+                grid[i][j].special = false;
+                grid[i][j].destroyableObs = false;
+                grid[i][j].VictoryCell = false;
+                grid[i][j].enableTrap = true;
+                grid[i][j].childsTrap.Clear();
+                grid[i][j].trapActivated = false;
+                grid[i][j].nearPlayer = false;
+                grid[i][j].visitedOnMove = false;
+                grid[i][j].reach = false;
 
             }
         }
     }
     public static List<List<int>> Lee(int filaInical, int columnaInicial, int speed, bool check = false)
     {
-        int size = grid[0].Count;
+        int size = 17;
         List<List<int>> distancias = new List<List<int>>();
-        IniciarDistancias(ref distancias, grid[0].Count);
+        IniciarDistancias(ref distancias, size);
         //Marcar casilla inicial
         distancias[filaInical][columnaInicial] = 0;
         //           N   S  E  W

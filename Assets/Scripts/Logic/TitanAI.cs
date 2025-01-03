@@ -24,10 +24,10 @@ public class TitanAI
         for (int l = 0; l < 4; l++)
         {
             distanciaToDoor.Add(new List<List<int>>());
-            for (int i = 0; i < Board.grid.Count; i++)
+            for (int i = 0; i < 17; i++)
             {
                 distanciaToDoor[l].Add(new List<int>());
-                for (int j = 0; j < Board.grid.Count; j++)
+                for (int j = 0; j < 17; j++)
                 {
                     distanciaToDoor[l][i].Add(-1);
                 }
@@ -240,28 +240,26 @@ public class TitanAI
             int min4 = int.MaxValue;
             int[] df = { -1, 1, 0, 0 };
             int[] dc = { 0, 0, 1, -1 };
-
+            if ((Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].hasAplayer
+            && Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].player.isTitan))
+            {
+                continue;
+            }
             for (int r = 0; r < 4; r++)
             {
                 int newX = (int)titan.Pos.x + df[r];
                 int newY = (int)titan.Pos.y + dc[r];
-                if ((Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].hasAplayer &&
-                     Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].player.isTitan))
-                {
-                    continue;
-                }
-                if (newX < Board.grid[0].Count && newX >= 0 && newY < Board.grid[0].Count && newY >= 0)
+
+                if (newX < 17 && newX >= 0 && newY < 17 && newY >= 0)
                 {
                     if (distanciaToDoor[l][newX][newY] < min4)
                     {
-                        if (!(Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].hasAplayer &&
-                              Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].player.isTitan))
+
+                        if (Board.distancia[newX][newY] >= 0)
                         {
-                            if (distanciaToDoor[l][newX][newY] >= 0)
-                            {
-                                min4 = distanciaToDoor[l][newX][newY];
-                            }
+                            min4 = distanciaToDoor[l][newX][newY];
                         }
+
                     }
                 }
             }

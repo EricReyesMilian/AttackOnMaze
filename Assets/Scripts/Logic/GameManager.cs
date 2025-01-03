@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
         {
             gameManeger = this;
         }
+        //  Board.grid.Clear();
         Board.AddCellsToMatriz(n);
 
     }
@@ -86,6 +87,7 @@ public class GameManager : MonoBehaviour
         InitializeBoard();
         InitializeGame();
     }
+
     void Update()
     {
         #region DebugInputs
@@ -100,6 +102,10 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))//romper pared
         {
             Board.grid[6][8].TakeDamage(5);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            GoMenu();
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -204,6 +210,10 @@ public class GameManager : MonoBehaviour
 
 
         }
+    }
+    public void GoMenu()
+    {
+        SceneManager.LoadScene(0);
     }
     public void NextTurnBut()
     {
