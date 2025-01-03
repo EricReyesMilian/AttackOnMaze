@@ -900,7 +900,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1338,11 +1338,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21b53625e6df3554cbc1392c959eca5d, type: 2}
   - {fileID: 11400000, guid: 46513b720583b2b4a9536239106cb7c6, type: 2}
   - {fileID: 11400000, guid: cd009999f39a1424ba29ab80a2474d3e, type: 2}
+  panelInfo: {fileID: 0}
   PlayerCount: 1
   PlayerIndex: 0
   PlayerRemain: 5
   selectables: 0
   anim: {fileID: 914348133}
+  audioO: {fileID: 0}
+  progressBar: {fileID: 0}
 --- !u!95 &914348133
 Animator:
   serializedVersion: 5

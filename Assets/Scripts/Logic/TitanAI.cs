@@ -152,7 +152,82 @@ public class TitanAI
         return i;
 
     }
-    int IQ3(PlayerManager titan, List<(int x, int y)> targets)//avanza con ligeras distracciones hacia las puertas de las murallas
+    // int IQ3(PlayerManager titan, List<(int x, int y)> targets)//avanza con ligeras distracciones hacia las puertas de las murallas
+    // {
+    //     int max = int.MinValue;
+    //     int min = int.MaxValue;
+    //     int i = 0;
+    //     bool huboCambio = false;
+    //     int agroIndex = 0;
+
+    //     for (int l = 0; l < 4; l++)
+    //     {
+    //         int min4 = int.MaxValue;
+    //         int[] df = { -1, 1, 0, 0 };
+    //         int[] dc = { 0, 0, 1, -1 };
+
+    //         for (int r = 0; r < 4; r++)
+    //         {
+    //             if (((int)titan.Pos.x + df[r]) < Board.grid[0].Count - 1 && ((int)titan.Pos.x + df[r]) >= 0
+    //              && ((int)titan.Pos.y + dc[r]) < Board.grid[0].Count - 1 && ((int)titan.Pos.y + dc[r]) >= 0)
+    //             {
+    //                 if (distanciaToDoor[l][(int)titan.Pos.x + df[r]][(int)titan.Pos.y + dc[r]] < min4)
+    //                 {
+    //                     if (Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].hasAplayer &&
+    //                     Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].player.isTitan)
+    //                     {
+
+    //                     }
+    //                     else
+    //                     {
+    //                         if (distanciaToDoor[l][(int)titan.Pos.x + df[r]][(int)titan.Pos.y + dc[r]] >= 0)
+    //                             min4 = distanciaToDoor[l][(int)titan.Pos.x + df[r]][(int)titan.Pos.y + dc[r]];
+
+    //                     }
+    //                 }
+
+    //             }
+    //         }
+    //         if (min4 < min)
+    //         {
+    //             min = min4;
+    //             agroIndex = l;
+    //         }
+
+
+    //     }
+    //     Board.distanciaToCenterAux = distanciaToDoor[agroIndex];
+    //     distanciaToCenter = distanciaToDoor[agroIndex];
+    //     foreach (var coord in targets)
+    //     {
+    //         if (Board.grid[coord.x][coord.y].nearPlayer)
+    //         {
+    //             if (!Board.grid[coord.x][coord.y].NearPlayers[0].isTitan)
+    //             {
+    //                 huboCambio = true;
+    //                 return targets.IndexOf(coord);
+
+    //             }
+    //         }
+    //         if (Board.distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y] >= max)
+    //         {
+    //             if (!titan.lastMove.Contains(coord))
+    //             {
+    //                 i = targets.IndexOf(coord);
+    //                 max = Board.distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y];
+    //                 huboCambio = true;
+    //             }
+    //         }
+
+    //     }
+    //     if (!huboCambio)
+    //     {
+    //         titan.lastMove.Clear();
+    //     }
+    //     return Random.Range(0, targets.Count);
+
+    // }
+    int IQ3(PlayerManager titan, List<(int x, int y)> targets)
     {
         int max = int.MinValue;
         int min = int.MaxValue;
@@ -168,36 +243,35 @@ public class TitanAI
 
             for (int r = 0; r < 4; r++)
             {
-                if (((int)titan.Pos.x + df[r]) < Board.grid[0].Count - 1 && ((int)titan.Pos.x + df[r]) >= 0
-                 && ((int)titan.Pos.y + dc[r]) < Board.grid[0].Count - 1 && ((int)titan.Pos.y + dc[r]) >= 0)
+                int newX = (int)titan.Pos.x + df[r];
+                int newY = (int)titan.Pos.y + dc[r];
+
+                if (newX < Board.grid[0].Count && newX >= 0 && newY < Board.grid[0].Count && newY >= 0)
                 {
-                    if (distanciaToDoor[l][(int)titan.Pos.x + df[r]][(int)titan.Pos.y + dc[r]] < min4)
+                    if (distanciaToDoor[l][newX][newY] < min4)
                     {
-                        if (Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].hasAplayer &&
-                        Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].player.isTitan)
+                        if (!(Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].hasAplayer &&
+                              Board.grid[predefinedAgroCells[l].x][predefinedAgroCells[l].y].player.isTitan))
                         {
-
-                        }
-                        else
-                        {
-                            if (distanciaToDoor[l][(int)titan.Pos.x + df[r]][(int)titan.Pos.y + dc[r]] >= 0)
-                                min4 = distanciaToDoor[l][(int)titan.Pos.x + df[r]][(int)titan.Pos.y + dc[r]];
-
+                            if (distanciaToDoor[l][newX][newY] >= 0)
+                            {
+                                min4 = distanciaToDoor[l][newX][newY];
+                            }
                         }
                     }
-
                 }
             }
+
             if (min4 < min)
             {
                 min = min4;
                 agroIndex = l;
             }
-
-
         }
+
         Board.distanciaToCenterAux = distanciaToDoor[agroIndex];
         distanciaToCenter = distanciaToDoor[agroIndex];
+
         foreach (var coord in targets)
         {
             if (Board.grid[coord.x][coord.y].nearPlayer)
@@ -206,9 +280,9 @@ public class TitanAI
                 {
                     huboCambio = true;
                     return targets.IndexOf(coord);
-
                 }
             }
+
             if (Board.distancia[coord.x][coord.y] - distanciaToCenter[coord.x][coord.y] >= max)
             {
                 if (!titan.lastMove.Contains(coord))
@@ -218,15 +292,16 @@ public class TitanAI
                     huboCambio = true;
                 }
             }
-
         }
+
         if (!huboCambio)
         {
             titan.lastMove.Clear();
         }
-        return i;
 
+        return UnityEngine.Random.Range(0, targets.Count);
     }
+
     int IQ4(PlayerManager titan, List<(int x, int y)> targets)//avanza sin distraccion hacia el centro de las murallas si hay un agujero
     {
         int max = int.MinValue;

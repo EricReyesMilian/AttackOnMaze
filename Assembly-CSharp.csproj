@@ -106,6 +106,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\Scripts\Logic\Power Ups\Effects Scriptables\FuelPower.cs" />
     <Compile Include="Assets\Scripts\Logic\Player\SkillEffect.cs\ErenSkill.cs" />
+    <Compile Include="Assets\BackgroundMusic.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Scripts\Logic\maze\Cell.cs" />
     <Compile Include="Assets\Scripts\Logic\TitanAI.cs" />

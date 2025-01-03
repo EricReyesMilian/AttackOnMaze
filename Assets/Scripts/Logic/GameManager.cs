@@ -584,8 +584,14 @@ public class GameManager : MonoBehaviour
                         notTitan = true;
                     }
                 }
+                if (notTitan)
+                {
+                    Board.InitReachCell();
+                    SelectPlayer(target, players[index].isTitan);
+
+                }
             }
-            if (!notTitan)
+            else
             {
                 Board.InitReachCell();
                 SelectPlayer(target, players[index].isTitan);
