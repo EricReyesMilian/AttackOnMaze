@@ -10,7 +10,7 @@ Welcome to **Attack on Maze**! This is an exciting inspired by Attack on Titan, 
 
 - **Multiplayer Gameplay**: Compete against your friends.
 - **Unique Characters**: Choose from various characters, each with special abilities.
-- ![Screenshot 2](captures/3.png)
+ ![Screenshot 2](captures/3.png)
 
 - **Intelligent Titans**: As the game progresses, the Titans will make better decisions to destroy the walls.
 - **Power Ups**: On your journey, you will find items that will aid you in your adventure.
