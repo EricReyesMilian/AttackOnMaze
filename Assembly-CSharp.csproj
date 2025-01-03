@@ -121,8 +121,8 @@
     <Compile Include="Assets\Scripts\Logic\Player\PlayerManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\Scripts\Visual\Panels\PanelCombat.cs" />
-    <Compile Include="Assets\Scripts\Logic\Power Ups\Effects Scriptables\SerumPower.cs" />
     <Compile Include="Assets\Scripts\Logic\Player\Skill.cs" />
+    <Compile Include="Assets\Scripts\Logic\Power Ups\Effects Scriptables\SerumPower.cs" />
     <Compile Include="Assets\Scripts\Logic\Trap\trap.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Visual\CellDisplay.cs" />
@@ -137,9 +137,9 @@
     <Compile Include="Assets\Scripts\Logic\Player\SkillEffect.cs\ArminSkill.cs" />
     <Compile Include="Assets\Scripts\Logic\Trap\Effects Scriptables\SpikesEffect.cs" />
     <Compile Include="Assets\Scripts\Logic\Trap\TrapEffect.cs" />
+    <Compile Include="Assets\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Visual\StatOnSide.cs" />
     <Compile Include="Assets\Scripts\Logic\maze\Board.cs" />
-    <Compile Include="Assets\AudioManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
   </ItemGroup>
   <ItemGroup>

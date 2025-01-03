@@ -25,5 +25,5 @@ MonoBehaviour:
     obstacles around him. His power increases by 20 units, and his speed is set to
     2."'
   isTitan: 0
-  TitanIQ: 0
+  TitanIQ: 2
   skill: {fileID: 11400000, guid: 02cb3a015a246bc4fac566236d68959e, type: 2}

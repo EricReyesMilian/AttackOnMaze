@@ -11,6 +11,7 @@ public class Board
     public static List<(int x, int y)> DoorCells = new List<(int, int)> { (8, 6), (6, 8), (10, 8), (8, 10) };
     public static List<List<int>> distancia = new List<List<int>>();
     public static List<List<int>> distanciaToCenter = new List<List<int>>();
+    public static List<List<int>> distanciaToCenterAux = new List<List<int>>();
 
     public static void AddCellsToMatriz(int n)
     {
@@ -25,7 +26,7 @@ public class Board
             }
         }
     }
-    public static List<List<int>> Lee(int filaInical, int columnaInicial, int speed)
+    public static List<List<int>> Lee(int filaInical, int columnaInicial, int speed, bool check = false)
     {
         int size = grid[0].Count;
         List<List<int>> distancias = new List<List<int>>();
@@ -56,12 +57,29 @@ public class Board
                         int vf = f + df[d];
                         int vc = c + dc[d];
                         //determinar si es un vecino valido
-                        if (PosicionValida(size, vf, vc) && !grid[vf][vc].hasAplayer
-                        && !grid[vf][vc].obstacle && distancias[vf][vc] == -1)
+
+                        if (GameManager.gameManeger.Savior() || GameManager.gameManeger.players[GameManager.gameManeger.turn].isTitan)
                         {
-                            distancias[vf][vc] = distancias[f][c] + 1;
-                            huboCambio = true;
+                            if (PosicionValida(size, vf, vc) && !grid[vf][vc].hasAplayer
+                        && !grid[vf][vc].obstacle && distancias[vf][vc] == -1)
+                            {
+                                distancias[vf][vc] = distancias[f][c] + 1;
+                                huboCambio = true;
+                            }
                         }
+                        else
+                        {
+
+                            if (PosicionValida(size, vf, vc) && !grid[vf][vc].hasAplayer && !predefinedCenterCells.Contains((vf, vc))
+                        && !grid[vf][vc].obstacle && distancias[vf][vc] == -1)
+                            {
+                                distancias[vf][vc] = distancias[f][c] + 1;
+                                huboCambio = true;
+                            }
+                        }
+
+
+
                     }
                 }
             }

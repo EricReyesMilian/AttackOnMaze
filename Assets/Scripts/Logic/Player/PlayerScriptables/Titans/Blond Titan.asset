@@ -19,7 +19,7 @@ MonoBehaviour:
   color: {r: 0.7686275, g: 0.7725491, b: 0.7411765, a: 1}
   sprite: {fileID: 21300000, guid: 63ff868bca9640443b1e2b97a325e395, type: 3}
   sprite2: {fileID: 0}
-  team: 0
+  team: 2
   TransformTime: 0
   infoSkill: '"And the fifth angel sounded, and I saw a star fall from heaven unto
     the earth: and to him was given the key of the bottomless pit." - Apocalipsis

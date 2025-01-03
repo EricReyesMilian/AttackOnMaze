@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,10 +34,6 @@ public class GameManager : MonoBehaviour
     public bool NextEnable = true;
     public bool SkillEnable = false;
     public bool ZekeSkill;
-    public bool ErenSkill;
-    public bool ReinerSkill;
-    public bool ArminSkill;
-    public bool LeviSkill;
     public bool HasMoved = false;
     bool skillWasActivatedThisTurn = false;
     public Vector2 combatZoneCoord;
@@ -92,9 +89,25 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         #region DebugInputs
+        if (Input.GetKeyDown(KeyCode.R))//remover cooldown
+        {
+            for (int i = 0; i < player_Scriptable.Count; i++)
+            {
+                players[i].RemoveCooldown();
+            }
+
+        }
         if (Input.GetKeyDown(KeyCode.D))//romper pared
         {
             Board.grid[6][8].TakeDamage(5);
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            print(players[turn].TitanIQ);
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            players[turn].IntUp(1);
         }
         if (Input.GetKeyDown(KeyCode.T))//fuerza el avance de un turno
         {
@@ -119,6 +132,9 @@ public class GameManager : MonoBehaviour
         {
             SkillEnable = false;
         }
+        if (turn >= 0)
+            players[turn].UpdateDebuff();
+
     }
     void LoadPlayers()
     {
@@ -176,9 +192,12 @@ public class GameManager : MonoBehaviour
         {
             int speed = players[turn].currentSpeed;
             Board.InitReachCell();
-            Board.distancia = Board.Lee((int)players[turn].Pos.x, (int)players[turn].Pos.y, speed);
+
+            Board.distancia = Board.Lee((int)players[turn].Pos.x, (int)players[turn].Pos.y, speed, false);
+
+
             Board.ColorReachCell();
-            if (players[turn].titanForm)
+            if (players[turn].titanForm && players[turn].currentSpeed > 0)
                 players[turn].play.skill.PasiveOnWalk(players[turn]);
             Board.SetBattleZone(players);
             UpdateDisplay();
@@ -218,7 +237,7 @@ public class GameManager : MonoBehaviour
 
         if (turn >= 0)
         {
-            if (players[turn].play.isTitan && !players[turn].isTitan && ZekeSkill)
+            if (players[turn].play.isTitan && !players[turn].isTitan)
             {
                 players[turn].isTitan = true;
 
@@ -237,7 +256,6 @@ public class GameManager : MonoBehaviour
 
         }
         turn = NextTurnIndex(turn);
-        players[turn].Update();
         if (players[turn].haveKey)
         {
             players[turn].PowerUp(5);
@@ -273,8 +291,13 @@ public class GameManager : MonoBehaviour
         if (turn == 0)
         {
             round++;
-            if (round % 6 == 0)
+            if (round % players.Count == 0)
             {
+                for (int i = 0; i < players.Count; i++)
+                {
+                    players[i].IntUp(1);
+
+                }
 
                 Board.AddPowerUps();
 
@@ -362,21 +385,16 @@ public class GameManager : MonoBehaviour
             }
         }
         print(players[turn].nameC);
-        for (int j = 0; j < targets.Count; j++)
-        {
-            print("index " + j + ": (" + targets[j].x + "," + targets[j].y + ")");
-        }
+
         TitanAI titanAI = new TitanAI();
         int destination = titanAI.GetMove(players[turn], targets);
-        print(destination);
-        if (destination != -1 || destination < targets.Count)
+        if (destination != -1 && destination < targets.Count)
         {
-            print("(" + targets[destination].x + " " + targets[destination].y + ")");
             MoveplayerTo(new Vector2(targets[destination].x, targets[destination].y), turn);
 
         }
-        //else
-        // Invoke("NextTurn", 0.5f);
+        else if (destination == -1)
+            Invoke("NextTurn", 0.5f);
 
     }
     bool Win(PlayerManager player)
@@ -390,13 +408,6 @@ public class GameManager : MonoBehaviour
         if (index == turn && !isInCombat && Board.ReachPoint(target) && !playingCorrutine)
         {
             AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
-
-            bool aux = LeviSkill;
-            if (LeviSkill)
-            {
-                ApplyDamageOnLeviMove(target);
-                LeviSkill = false;
-            }
 
             players[turn].lastMove.Add(((int)players[turn].Pos.x, (int)players[turn].Pos.y));
             Board.UnPlacePlayer((int)players[turn].Pos.x, (int)players[turn].Pos.y);
@@ -434,35 +445,7 @@ public class GameManager : MonoBehaviour
 
             UpdateStats(turn);
         }
-
     }
-    void ApplyDamageOnLeviMove(Vector2 target)//sacar
-    {
-        if ((int)players[turn].Pos.x == (int)target.x)
-        {
-            foreach (var play in players)
-            {
-                if (play.Pos.x == players[turn].Pos.x
-                    && play.Pos.y < target.y && play.Pos.y != players[turn].Pos.y)
-                {
-                    play.PowerUp(-players[turn].power / 4);
-                }
-            }
-        }
-        if ((int)players[turn].Pos.y == (int)target.y)
-        {
-            foreach (var play in players)
-            {
-                if (play.Pos.y == players[turn].Pos.y
-                    && play.Pos.x < target.y && play.Pos.x != players[turn].Pos.x)
-                {
-                    play.PowerUp(-players[turn].power / 4);
-                }
-            }
-        }
-
-    }
-
     public void ActivateTrap(trap trap, Vector2 target, PlayerManager player)
     {
         Board.grid[(int)target.x][(int)target.y].trapActivated = true;
@@ -564,13 +547,12 @@ public class GameManager : MonoBehaviour
             Board.InitReachCell();
             Board.SetDist();
             ReachPointInMatriz();
-            //
-            ActivateInteraction(target, turn, LeviSkill);
-            //
+            ActivateInteraction(target, turn);
+
 
         }
         playingCorrutine = false;
-        if (players[turn].isTitan && !Board.grid[(int)target.x][(int)target.y].nearPlayer)
+        if (players[turn].isTitan && !isInCombat)
         {
 
             NextTurn();
@@ -578,7 +560,7 @@ public class GameManager : MonoBehaviour
         StopCoroutine(MovePlayerCorutine(target, index));
 
     }
-    void ActivateInteraction(Vector2 target, int index, bool levi)
+    void ActivateInteraction(Vector2 target, int index)
     {
         if (Board.isPowerUp(target) && !players[index].play.isTitan)
         {
@@ -590,11 +572,25 @@ public class GameManager : MonoBehaviour
             ActivateTrap(Board.grid[(int)target.x][(int)target.y].trapType, target, players[index]);
 
         }
-        if (Board.grid[(int)target.x][(int)target.y].nearPlayer && !LeviSkill)
+        if (Board.grid[(int)target.x][(int)target.y].nearPlayer)
         {
+            bool notTitan = false;
+            if (players[turn].isTitan)
+            {
+                for (int i = 0; i < Board.grid[(int)target.x][(int)target.y].NearPlayers.Count; i++)
+                {
+                    if (!Board.grid[(int)target.x][(int)target.y].NearPlayers[i].isTitan)
+                    {
+                        notTitan = true;
+                    }
+                }
+            }
+            if (!notTitan)
+            {
+                Board.InitReachCell();
+                SelectPlayer(target, players[index].isTitan);
 
-            Board.InitReachCell();
-            SelectPlayer(target, players[index].isTitan);
+            }
 
         }
         else if (!players[index].isTitan)
@@ -666,7 +662,6 @@ public class GameManager : MonoBehaviour
         StartCombate();
         AudioManager.speaker.Play(Resources.Load<AudioClip>("fight"));
 
-
         //combat maneger
         lastWinner1 = combatScene.Player1IsWinner();
 
@@ -687,8 +682,23 @@ public class GameManager : MonoBehaviour
                 int newDe = at < de ? at + 1 : at;
                 players.Insert(newDe, player2);
                 turn = players.IndexOf(player1);
+                turn--;
+                if (turn < 0)
+                    turn = players.Count - 1;
                 ChangeTurnOrd();
 
+            }
+            else
+            {
+                players.RemoveAt(de);
+                int newDe = at < de ? at + 1 : at;
+                players.Insert(newDe, player2);
+                turn = players.IndexOf(player2);
+                turn--;
+                if (turn < 0)
+                    turn = players.Count - 1;
+
+                ChangeTurnOrd();
             }
             Board.ColorReachCell();
             UpdateDisplay();
@@ -700,6 +710,9 @@ public class GameManager : MonoBehaviour
             {
                 looserTitan = false;
                 List<Cell> posiblesMoves = new List<Cell>();
+                Board.distancia = Board.ReachPointInSubMatriz((int)player2.Pos.x, (int)player2.Pos.y);
+                Board.ColorReachCell();
+                UpdateDisplay();
 
                 for (int i = 0; i < n; i++)
                 {
@@ -717,11 +730,7 @@ public class GameManager : MonoBehaviour
                     player2.LoseKey();
                     Board.DropKeyIn((int)player2.Pos.x, (int)player2.Pos.y);
                 }
-                // players.RemoveAt(de);
-                // int newDe = at < de ? at + 1 : at;
-                // players.Insert(newDe, player2);
-                // turn = players.IndexOf(player1);
-                // ChangeTurnOrd();
+
                 MoveplayerTo(posiblesMoves[UnityEngine.Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player2));
 
             }
@@ -738,22 +747,28 @@ public class GameManager : MonoBehaviour
         }
         else//si pierde el jugador poseedor del turno (player1)
         {
-            Board.distancia = Board.ReachPointInSubMatriz((int)player1.Pos.x, (int)player1.Pos.y);
+            Board.distancia = Board.ReachPointInSubMatriz((int)player2.Pos.x, (int)player2.Pos.y);
             Board.ColorReachCell();
+            UpdateDisplay();
+            ChangeTurnOrd();
+
             UpdateDisplay();
 
             looserTitan = false;
 
             if (player2.isTitan)//si gano un titan
             {
-                looserTitan = true;
-
+                looserTitan = false;
                 List<Cell> posiblesMoves = new List<Cell>();
+                Board.distancia = Board.ReachPointInSubMatriz((int)player2.Pos.x, (int)player2.Pos.y);
+                Board.ColorReachCell();
+                UpdateDisplay();
+
                 for (int i = 0; i < n; i++)
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (Board.grid[i][j].reach && !Board.predefinedEmptyCells.Contains((i, j)))
+                        if (Board.grid[i][j].reach && !Board.predefinedCenterCells.Contains((i, j)))
                         {
                             posiblesMoves.Add(Board.grid[i][j]);
                         }
@@ -765,7 +780,9 @@ public class GameManager : MonoBehaviour
                     player1.LoseKey();
                     Board.DropKeyIn((int)player1.Pos.x, (int)player1.Pos.y);
                 }
+
                 MoveplayerTo(posiblesMoves[UnityEngine.Random.Range(0, posiblesMoves.Count)].coord, players.IndexOf(player1));
+
             }
             else
             {
@@ -777,6 +794,7 @@ public class GameManager : MonoBehaviour
                 isInCombat = true;
 
             }
+
             UpdateDisplay();
 
         }

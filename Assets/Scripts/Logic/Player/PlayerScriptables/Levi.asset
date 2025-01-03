@@ -24,5 +24,5 @@ MonoBehaviour:
   infoSkill: '"Levi uses his 3D maneuver gear and can advance to an obstacle in a
     straight line without spending speed."'
   isTitan: 0
-  TitanIQ: 0
+  TitanIQ: 2
   skill: {fileID: 11400000, guid: e53e1f02610b9e949832b8939f960989, type: 2}

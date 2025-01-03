@@ -60,7 +60,8 @@ public class CellDisplay : MonoBehaviour
             reach = cell.reach;
             obstacule = cell.obstacle;
             NearPlayers = cell.NearPlayers;
-            distToCell = Board.distancia[(int)coord.x][(int)coord.y]; //+ gm.distanciaToCenter[(int)coord.x][(int)coord.y];
+            if (Board.distanciaToCenterAux.Count > 0)
+                distToCell = /*Board.distancia[(int)coord.x][(int)coord.y] + */Board.distanciaToCenterAux[(int)coord.x][(int)coord.y];
             num.text = distToCell + "";
             cordText.text = cell.coord + "";
             visited_color = gm.players[gm.turn].color;
@@ -223,11 +224,7 @@ public class CellDisplay : MonoBehaviour
                     gm.players.Insert(newDe, cell.player);
                     cell.player.isTitan = false;
                     gm.turn = gm.players.IndexOf(gm.players[at]);
-                    gm.turn--;
-                    if (gm.turn < 0)
-                    {
-                        gm.turn = gm.players.Count;
-                    }
+
                     for (int i = 0; i < gm.players.Count; i++)
                     {
                         if (gm.players[i].nameC == "Zeke")
@@ -236,6 +233,7 @@ public class CellDisplay : MonoBehaviour
 
                         }
                     }
+                    gm.ZekeSkill = false;
                     gm.NextTurn();
 
 
@@ -246,13 +244,7 @@ public class CellDisplay : MonoBehaviour
         }
         if (!gm.isInCombat)
         {
-            if (gm.ReinerSkill)
-            {
-                if (cell.special)
-                {
-                    gm.players[gm.turn].DownCurrentSpeed(1);
-                }
-            }
+
 
             gm.MoveplayerTo(cell.coord, gm.turn);
 

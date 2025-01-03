@@ -19,7 +19,7 @@ MonoBehaviour:
   color: {r: 0.23137257, g: 0.37647063, b: 0.45098042, a: 1}
   sprite: {fileID: 21300000, guid: 366fb7da68dda0e40bff3936b0c29c2b, type: 3}
   sprite2: {fileID: 0}
-  team: 0
+  team: 2
   TransformTime: 0
   infoSkill: '"And in those days men will seek death and will not find it; they will
     desire to die, and death will flee from them." - Apocalipsis 9:6'

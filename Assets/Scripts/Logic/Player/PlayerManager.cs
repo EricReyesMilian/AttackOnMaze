@@ -29,7 +29,7 @@ public class PlayerManager
     List<(int x, int y)> speedUpTimer = new List<(int x, int y)>();
     List<(int x, int y)> cooldownUpTimer = new List<(int x, int y)>();
 
-
+    public int TitanIQ = 0;
     public List<(int x, int y)> lastMove = new List<(int x, int y)>();
 
     public bool haveKey = false;
@@ -40,7 +40,7 @@ public class PlayerManager
         spriteTitan = Resources.Load<Sprite>("norm");
     }
     // Update is called once per frame
-    public void Update()
+    public void UpdateDebuff()
     {
 
         for (int i = 0; i < powerUpTimer.Count; i++)
@@ -75,6 +75,7 @@ public class PlayerManager
     }
     public void InitStats()
     {
+        TitanIQ = play.TitanIQ;
         nameC = play.Name;
         speed = play.speed;
         currentSpeed = speed;
@@ -101,7 +102,25 @@ public class PlayerManager
         }
 
     }
+    public void IntUp(int amount)
+    {
+        if (amount < 0)
+        {
+            TitanIQ += amount;
+            if (TitanIQ < 0)
+            {
+                TitanIQ = 0;
+            }
+        }
+        else
+        {
+            if (TitanIQ < 4)
+            {
+                TitanIQ += amount;
+            }
 
+        }
+    }
     public void PowerUp(int amount)
     {
         power += amount;
@@ -151,7 +170,7 @@ public class PlayerManager
     }
     public void SpeedUpNormalize(int norm, int dur)
     {
-        speedUpTimer.Add((speed, GameManager.gameManeger.round + dur));
+        speedUpTimer.Add((-(speed - 1), GameManager.gameManeger.round + dur));
         speed = norm;
         if (currentSpeed > speed)
         {

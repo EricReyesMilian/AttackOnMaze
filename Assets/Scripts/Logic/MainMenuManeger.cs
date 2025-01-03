@@ -10,7 +10,7 @@ public class MainMenuManeger : MonoBehaviour
 
     public static MainMenuManeger mm;
 
-    public int PlayerCount = 2;
+    public int PlayerCount = 1;
     public int PlayerIndex = 1;
     public int PlayerRemain;
     public int selectables;
@@ -54,7 +54,7 @@ public class MainMenuManeger : MonoBehaviour
         PlayerCount++;
         if (PlayerCount > PlayerRemain)
         {
-            PlayerCount = 2;
+            PlayerCount = 1;
         }
     }
     public void Less()
@@ -62,7 +62,7 @@ public class MainMenuManeger : MonoBehaviour
         AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
 
         PlayerCount--;
-        if (PlayerCount < 2)
+        if (PlayerCount < 1)
         {
             PlayerCount = PlayerRemain;
         }
