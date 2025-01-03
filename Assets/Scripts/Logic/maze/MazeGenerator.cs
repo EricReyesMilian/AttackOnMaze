@@ -38,14 +38,10 @@ public class MazeGenerator
     {
         List<(int x, int y)> walls = new List<(int, int)>();
 
-
-
-        // Predefinir celdas sin obstáculos 
         foreach (var cell in Board.predefinedEmptyCells)
         {
             maze[cell.x][cell.y].obstacle = false;
         }
-        // Predefinir celdas con obstáculos 
         foreach (var cell in Board.predefinedObstacleCells)
         {
             maze[cell.x][cell.y].obstacle = true;
@@ -66,7 +62,6 @@ public class MazeGenerator
             }
         }
 
-        // Asegurar que todas las celdas sean alcanzables
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
@@ -74,7 +69,6 @@ public class MazeGenerator
                 if (maze[i][j].obstacle && CountAdjacent(i, j) == 1 && !Board.predefinedObstacleCells.Contains((i, j)))
                 {
                     maze[i][j].obstacle = false;
-                    // AddWalls(i, j, walls, predefinedEmptyCells, predefinedObstacleCells);
                 }
             }
         }
