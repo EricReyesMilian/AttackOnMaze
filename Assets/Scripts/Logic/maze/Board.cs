@@ -114,17 +114,33 @@ public class Board
         }
         return distancias;
     }
+    public static List<List<int>> ReachPointInMap()
+    {
+        List<List<int>> distancias = new List<List<int>>();
+        IniciarDistancias(ref distancias, grid[0].Count);
+
+        for (int i = 0; i < 17; i++)
+        {
+            for (int j = 0; j < 17; j++)
+            {
+                if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
+                    distancias[i][j] = 0;
+
+            }
+        }
+        return distancias;
+    }
     public static List<List<int>> ReachPointInSubMatriz(int playerPosF, int playerPosC)
     {
         List<List<int>> distancias = new List<List<int>>();
-        int n = grid[0].Count;
-        IniciarDistancias(ref distancias, grid[0].Count);
-        if (playerPosC < (n) / 2 && playerPosF <= (n) / 2)
+        int n = 17;
+        IniciarDistancias(ref distancias, 17);
+        if (playerPosC < (n - 1) / 2 && playerPosF <= (n - 1) / 2)
         {
 
-            for (int i = (n) / 2; i < n; i++)
+            for (int i = (n - 1) / 2; i < n; i++)
             {
-                for (int j = (n) / 2; j < n; j++)
+                for (int j = (n - 1) / 2; j < n; j++)
                 {
                     if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
@@ -133,11 +149,11 @@ public class Board
             }
 
         }
-        else if (playerPosC >= (n) / 2 && playerPosF > (n) / 2)
+        else if (playerPosC >= (n - 1) / 2 && playerPosF > (n - 1) / 2)
         {
-            for (int i = 0; i < n / 2; i++)
+            for (int i = 0; i < (n - 1) / 2; i++)
             {
-                for (int j = 0; j < n / 2; j++)
+                for (int j = 0; j < (n - 1) / 2; j++)
                 {
                     if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
@@ -147,11 +163,11 @@ public class Board
             }
 
         }
-        else if (playerPosC < (n) / 2 && playerPosF > (n) / 2)
+        else if (playerPosC < (n - 1) / 2 && playerPosF > (n - 1) / 2)
         {
-            for (int i = 0; i < n / 2; i++)
+            for (int i = 0; i < (n - 1) / 2; i++)
             {
-                for (int j = (n) / 2; j < n; j++)
+                for (int j = (n - 1) / 2; j < n; j++)
                 {
                     if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;
@@ -163,9 +179,9 @@ public class Board
         }
         else
         {
-            for (int i = (n) / 2; i < n; i++)
+            for (int i = (n - 1) / 2; i < n; i++)
             {
-                for (int j = 0; j < n / 2; j++)
+                for (int j = 0; j < (n - 1) / 2; j++)
                 {
                     if (!grid[i][j].hasAplayer && !grid[i][j].obstacle && !predefinedCenterCells.Contains((i, j)))
                         distancias[i][j] = 0;

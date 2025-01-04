@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3576dbcfbca03c748a8e083948372a03, type: 3}
+  m_Name: Falco
+  m_EditorClassIdentifier: 
+  Name: Falco
+  speed: 2
+  cooldown: 3
+  power: 7
+  color: {r: 0.61960787, g: 0.6117647, b: 0.52156866, a: 1}
+  sprite: {fileID: 21300000, guid: f8ff4c5c2b019e8438c60426f8c1185d, type: 3}
+  sprite2: {fileID: 21300000, guid: 125ce1864769c4044a1ddb2e0a15bee5, type: 3}
+  team: 0
+  TransformTime: 0
+  infoSkill: '"spreads its wings and can quickly travel to any part of the board."'
+  isTitan: 0
+  TitanIQ: 2
+  skill: {fileID: 11400000, guid: 7f6c005b58cb6af4ebd858c321822e6b, type: 2}

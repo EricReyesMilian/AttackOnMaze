@@ -360,7 +360,7 @@ public class GameManager : MonoBehaviour
             if (players[turn].play.Name != "Levi")
                 ReachPointInMatriz();
             players[turn].play.skill.Active(players[turn]);
-            if (players[turn].play.Name != "Levi")
+            if (players[turn].play.Name != "Levi" && players[turn].play.Name != "Falco")
                 ReachPointInMatriz();
             UpdateStats(turn);
             UpdateDisplay();
