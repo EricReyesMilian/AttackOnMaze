@@ -19,6 +19,8 @@ public class MainMenuManeger : MonoBehaviour
     public GameObject slider;
     public Slider progressBar;
     bool activeScene = false;
+    public int TopSelection;
+    public bool checkAmount;
     void Awake()
     {
         if (mm)
@@ -30,7 +32,8 @@ public class MainMenuManeger : MonoBehaviour
             mm = this;
         }
         PlayerIndex = 1;
-        PlayerRemain = 5;//cantidad de personajes jugables
+        PlayerRemain = 6;//cantidad de personajes jugables
+        selectables = PlayerRemain;
     }
     void Start()
     {
@@ -38,11 +41,8 @@ public class MainMenuManeger : MonoBehaviour
     }
     public void AddTitans()
     {
+
         playersList.Add(titanList);
-    }
-    void Update()
-    {
-        selectables = PlayerRemain - (PlayerCount - PlayerIndex);
 
     }
     public void PanelInfo(bool active)
@@ -118,10 +118,12 @@ public class MainMenuManeger : MonoBehaviour
         AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
 
         PlayerCount++;
+
         if (PlayerCount > PlayerRemain)
         {
             PlayerCount = 1;
         }
+        selectables = PlayerRemain / PlayerCount;
     }
     public void Less()
     {
@@ -132,5 +134,7 @@ public class MainMenuManeger : MonoBehaviour
         {
             PlayerCount = PlayerRemain;
         }
+        selectables = PlayerRemain / PlayerCount;
+
     }
 }

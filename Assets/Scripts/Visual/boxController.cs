@@ -30,6 +30,7 @@ public class boxController : MonoBehaviour
     }
     public void Hover()
     {
+  
         if (MainMenuManeger.mm.selectables > 0)
         {
             anim.SetBool("hover", true);
@@ -49,6 +50,9 @@ public class boxController : MonoBehaviour
             AudioManager.speaker.Play(Resources.Load<AudioClip>("click"));
 
             MainMenuManeger.mm.PlayerRemain--;
+          
+                MainMenuManeger.mm.selectables--;
+            
             selected = true;
             MainMenuManeger.mm.playersList[MainMenuManeger.mm.PlayerIndex - 1].Add(play);
 
