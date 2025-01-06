@@ -37,10 +37,12 @@ To get started with the project, follow these steps:
 
 1. **Clone** the repository:
    ```sh
-   git clone https://github.com/EricReyesMilian/AttackOnMaze
+   git clone https://github.com/EricReyesMilian/AttackOnMaze.git
 2. **Open** the project in Unity.
 
 3. **Build** and run the project .
+
+or download an executable of the game from the **Executables** folder depending on your OS (Android/Windows)
 
 ## 📄 Game Functionalities
 
